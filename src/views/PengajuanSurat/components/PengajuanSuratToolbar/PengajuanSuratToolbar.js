@@ -28,8 +28,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UsersToolbar = props => {
-  const { className, ...rest } = props;
+const UsersToolbar = (props) => {
+  const { className, toggle, ...rest } = props;
   const classes = useStyles();
 
   return (
@@ -42,6 +42,7 @@ const UsersToolbar = props => {
         <Button
           color="primary"
           variant="contained"
+          onClick={toggle}
         >
           Tambah Pengajuan Surat
         </Button>
