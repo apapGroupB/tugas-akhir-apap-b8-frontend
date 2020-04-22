@@ -85,7 +85,7 @@ const AddSurat = props => {
       <Modal>
       <div>
       <Title>Tambah Pengajuan Surat</Title>
-      <ColumnContainer>
+      <ColumnContainer full>
       <TextField
           // error={errorField.find((dt) => dt === data.id) ? true : false}
           id="nomor"

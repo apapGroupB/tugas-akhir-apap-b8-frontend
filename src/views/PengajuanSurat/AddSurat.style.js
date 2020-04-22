@@ -23,7 +23,7 @@ export const Title = styled.div`
 `
 
 export const ColumnContainer = styled.div`
-  padding: 15px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   color: ${Colors.Navy};
