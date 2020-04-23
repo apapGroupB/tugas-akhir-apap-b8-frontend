@@ -11,7 +11,6 @@ import moment from 'moment'
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import 'date-fns';
 import MomentUtils from '@date-io/moment';
 import {
   MuiPickersUtilsProvider,

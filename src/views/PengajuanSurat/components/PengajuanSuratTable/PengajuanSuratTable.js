@@ -42,6 +42,22 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UsersTable = props => {
+  const jenisSurat = [{
+    id: 1,
+    description: 'Surat Izin Ikut Kegiatan'
+  },
+  {
+    id: 2,
+    description: 'Surat Izin Sakit'
+  },
+  {
+    id: 3,
+    description: 'Surat Keterangan Lulus'
+  },
+  {
+    id: 4,
+    description: 'Surat Rekomendasi Beasiswa'
+  }]
   const { className, users, ...rest } = props;
 
   const classes = useStyles();
@@ -140,11 +156,11 @@ const UsersTable = props => {
                       />
                     </TableCell>
                     <TableCell>{user.nomor_surat}</TableCell>
-                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{jenisSurat.find(data => data.id === user.id_jenis_surat) ? jenisSurat.find(data => data.id === user.id_jenis_surat).description : '-'  }</TableCell>
                     <TableCell>{user.status}</TableCell>
-                    <TableCell>{moment(user.createdAt).format('DD/MM/YYYY')}</TableCell>
+                    <TableCell>{moment(user.tanggal_pengajuan).format('DD/MM/YYYY')}</TableCell>
                     <TableCell>
-                      {moment(user.createdAt).format('DD/MM/YYYY')}
+                      {moment(user.tanggal_disetujui).format('DD/MM/YYYY')}
                     </TableCell>
                     <TableCell>{user.keterangan}</TableCell>
                     <TableCell>{user.keterangan}</TableCell>
