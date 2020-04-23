@@ -18,8 +18,15 @@ import {
   Typography,
   TablePagination
 } from '@material-ui/core';
+import { SpinnerCard } from './PengajuanSuratTable.style'
+import Fab from '@material-ui/core/Fab';
+import EditIcon from '@material-ui/icons/Edit';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { getInitials } from 'helpers';
+import { Colors } from 'styles';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -41,7 +48,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UsersTable = props => {
+const PengajuanSuratTable = props => {
   const jenisSurat = [{
     id: 1,
     description: 'Surat Izin Ikut Kegiatan'
@@ -58,8 +65,7 @@ const UsersTable = props => {
     id: 4,
     description: 'Surat Rekomendasi Beasiswa'
   }]
-  const { className, users, ...rest } = props;
-
+  const { className, dataState, deleteToggle, deleteAct, loading, ...rest } = props;
   const classes = useStyles();
 
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -67,12 +73,12 @@ const UsersTable = props => {
   const [page, setPage] = useState(0);
 
   const handleSelectAll = event => {
-    const { users } = props;
+    const { dataState } = props;
 
     let selectedUsers;
 
     if (event.target.checked) {
-      selectedUsers = users.map(user => user.id);
+      selectedUsers = dataState.map(user => user.id);
     } else {
       selectedUsers = [];
     }
@@ -120,15 +126,15 @@ const UsersTable = props => {
               <TableHead>
                 <TableRow>
                   <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selectedUsers.length === users.length}
+                    {deleteAct && <Checkbox
+                      checked={selectedUsers.length === dataState.length}
                       color="primary"
                       indeterminate={
                         selectedUsers.length > 0 &&
-                        selectedUsers.length < users.length
+                        selectedUsers.length < dataState.length
                       }
                       onChange={handleSelectAll}
-                    />
+                    />}
                   </TableCell>
                   <TableCell>Nomor</TableCell>
                   <TableCell>Jenis Surat</TableCell>
@@ -136,36 +142,44 @@ const UsersTable = props => {
                   <TableCell>Tgl Pengajuan</TableCell>
                   <TableCell>Tgl Disetujui</TableCell>
                   <TableCell>Keterangan</TableCell>
-                  <TableCell>Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.slice(0, rowsPerPage).map(user => (
-                  <TableRow
-                    className={classes.tableRow}
-                    hover
-                    key={user.id}
-                    selected={selectedUsers.indexOf(user.id) !== -1}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        checked={selectedUsers.indexOf(user.id) !== -1}
-                        color="primary"
-                        onChange={event => handleSelectOne(event, user.id)}
-                        value="true"
-                      />
-                    </TableCell>
-                    <TableCell>{user.nomor_surat}</TableCell>
-                    <TableCell>{jenisSurat.find(data => data.id === user.id_jenis_surat) ? jenisSurat.find(data => data.id === user.id_jenis_surat).description : '-'  }</TableCell>
-                    <TableCell>{user.status}</TableCell>
-                    <TableCell>{moment(user.tanggal_pengajuan).format('DD/MM/YYYY')}</TableCell>
-                    <TableCell>
-                      {moment(user.tanggal_disetujui).format('DD/MM/YYYY')}
-                    </TableCell>
-                    <TableCell>{user.keterangan}</TableCell>
-                    <TableCell>{user.keterangan}</TableCell>
-                  </TableRow>
-                ))}
+                {loading ? 
+                <TableCell colSpan={9} rowSpan={10} padding="checkbox">
+                  <SpinnerCard>
+                    <CircularProgress />
+                  </SpinnerCard>
+                </TableCell>
+                  : dataState.slice(0, rowsPerPage).map(user => (
+                    <TableRow
+                      className={classes.tableRow}
+                      hover
+                      key={user.id}
+                      selected={selectedUsers.indexOf(user.id) !== -1}
+                    >
+                      <TableCell padding="checkbox">
+                        {deleteAct ? 
+                        <Checkbox
+                          checked={selectedUsers.indexOf(user.id) !== -1}
+                          color="primary"
+                          onChange={event => handleSelectOne(event, user.id)}
+                          value="true"
+                        /> : 
+                        <IconButton color="primary" component="span">
+                          <EditIcon style={{width: 20, height: 20}} />
+                        </IconButton>}
+                      </TableCell>
+                      <TableCell>{user.nomor_surat}</TableCell>
+                      <TableCell>{jenisSurat.find(data => data.id === user.id_jenis_surat) ? jenisSurat.find(data => data.id === user.id_jenis_surat).description : '-'  }</TableCell>
+                      <TableCell>{user.status}</TableCell>
+                      <TableCell>{moment(user.tanggal_pengajuan).format('DD/MM/YYYY')}</TableCell>
+                      <TableCell>
+                        {moment(user.tanggal_disetujui).format('DD/MM/YYYY')}
+                      </TableCell>
+                      <TableCell>{user.keterangan}</TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </div>
@@ -174,7 +188,7 @@ const UsersTable = props => {
       <CardActions className={classes.actions}>
         <TablePagination
           component="div"
-          count={users.length}
+          count={dataState.length}
           onChangePage={handlePageChange}
           onChangeRowsPerPage={handleRowsPerPageChange}
           page={page}
@@ -186,9 +200,9 @@ const UsersTable = props => {
   );
 };
 
-UsersTable.propTypes = {
+PengajuanSuratTable.propTypes = {
   className: PropTypes.string,
-  users: PropTypes.array.isRequired
+  dataState: PropTypes.array.isRequired
 };
 
-export default UsersTable;
+export default PengajuanSuratTable;

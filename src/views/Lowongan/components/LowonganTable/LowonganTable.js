@@ -18,6 +18,12 @@ import {
   Typography,
   TablePagination
 } from '@material-ui/core';
+import EditIcon from '@material-ui/icons/Edit';
+import Button from '@material-ui/core/Button';
+import { SpinnerCard } from './LowonganTable.style'
+import IconButton from '@material-ui/core/IconButton';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 
 import { getInitials } from 'helpers';
 
@@ -42,46 +48,46 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UsersTable = props => {
-  const { className, users, ...rest } = props;
+  const { className, dataState, loading, deleteAct, ...rest } = props;
 
   const classes = useStyles();
 
-  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [selectedLowongan, setSelectedLowongan] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
 
   const handleSelectAll = event => {
-    const { users } = props;
+    const { dataState } = props;
 
-    let selectedUsers;
+    let selectedLowongan;
 
     if (event.target.checked) {
-      selectedUsers = users.map(user => user.id);
+      selectedLowongan = dataState.map(user => user.id);
     } else {
-      selectedUsers = [];
+      selectedLowongan = [];
     }
 
-    setSelectedUsers(selectedUsers);
+    setSelectedLowongan(selectedLowongan);
   };
 
   const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedUsers.indexOf(id);
-    let newSelectedUsers = [];
+    const selectedIndex = selectedLowongan.indexOf(id);
+    let newLowongan = [];
 
     if (selectedIndex === -1) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers, id);
+      newLowongan = newLowongan.concat(selectedLowongan, id);
     } else if (selectedIndex === 0) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers.slice(1));
-    } else if (selectedIndex === selectedUsers.length - 1) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers.slice(0, -1));
+      newLowongan = newLowongan.concat(selectedLowongan.slice(1));
+    } else if (selectedIndex === selectedLowongan.length - 1) {
+      newLowongan = newLowongan.concat(selectedLowongan.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelectedUsers = newSelectedUsers.concat(
-        selectedUsers.slice(0, selectedIndex),
-        selectedUsers.slice(selectedIndex + 1)
+      newLowongan = newLowongan.concat(
+        selectedLowongan.slice(0, selectedIndex),
+        selectedLowongan.slice(selectedIndex + 1)
       );
     }
 
-    setSelectedUsers(newSelectedUsers);
+    setSelectedLowongan(newLowongan);
   };
 
   const handlePageChange = (event, page) => {
@@ -113,15 +119,15 @@ const UsersTable = props => {
               <TableHead>
                 <TableRow>
                   <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selectedUsers.length === users.length}
+                    {deleteAct && <Checkbox
+                      checked={selectedLowongan.length === dataState.length}
                       color="primary"
                       indeterminate={
-                        selectedUsers.length > 0 &&
-                        selectedUsers.length < users.length
+                        selectedLowongan.length > 0 &&
+                        selectedLowongan.length < dataState.length
                       }
                       onChange={handleSelectAll}
-                    />
+                    />}
                   </TableCell>
                   <TableCell>Judul</TableCell>
                   <TableCell>Jenis Lowongan</TableCell>
@@ -129,24 +135,34 @@ const UsersTable = props => {
                   <TableCell>Tgl Dibuka</TableCell>
                   <TableCell>Tgl Ditutup</TableCell>
                   <TableCell>Keterangan</TableCell>
-                  <TableCell>Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.slice(0, rowsPerPage).map(user => (
+              {loading ?
+                <TableCell colSpan={9} rowSpan={10} padding="checkbox">
+                  <SpinnerCard>
+                    <CircularProgress />
+                  </SpinnerCard>
+                </TableCell> :
+                dataState.slice(0, rowsPerPage).map(user => (
                   <TableRow
                     className={classes.tableRow}
                     hover
                     key={user.id}
-                    selected={selectedUsers.indexOf(user.id) !== -1}
+                    selected={selectedLowongan.indexOf(user.id) !== -1}
                   >
                     <TableCell padding="checkbox">
+                      {deleteAct ?  
                       <Checkbox
-                        checked={selectedUsers.indexOf(user.id) !== -1}
+                        checked={selectedLowongan.indexOf(user.id) !== -1}
                         color="primary"
                         onChange={event => handleSelectOne(event, user.id)}
                         value="true"
-                      />
+                      /> : 
+                      <IconButton color="primary" component="span">
+                        <EditIcon style={{width: 20, height: 20}} />
+                      </IconButton>
+                      }
                     </TableCell>
                     <TableCell>{user.judul}</TableCell>
                     <TableCell>{user.id_jenis_lowongan}</TableCell>
@@ -155,7 +171,6 @@ const UsersTable = props => {
                     <TableCell>
                       {moment(user.tanggal_ditutup).format('DD/MM/YYYY')}
                     </TableCell>
-                    <TableCell>{user.keterangan}</TableCell>
                     <TableCell>{user.keterangan}</TableCell>
                   </TableRow>
                 ))}
@@ -167,7 +182,7 @@ const UsersTable = props => {
       <CardActions className={classes.actions}>
         <TablePagination
           component="div"
-          count={users.length}
+          count={dataState.length}
           onChangePage={handlePageChange}
           onChangeRowsPerPage={handleRowsPerPageChange}
           page={page}
@@ -181,7 +196,7 @@ const UsersTable = props => {
 
 UsersTable.propTypes = {
   className: PropTypes.string,
-  users: PropTypes.array.isRequired
+  dataState: PropTypes.array.isRequired
 };
 
 export default UsersTable;

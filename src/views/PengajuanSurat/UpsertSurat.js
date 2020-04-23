@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
 import { makeStyles, useTheme } from '@material-ui/styles';
-import { useMediaQuery } from '@material-ui/core';
 import { Button } from '@material-ui/core';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Backdrop from '@material-ui/core/Backdrop';
 import Dialog from '@material-ui/core/Dialog';
-import { Modal, Title, ColumnContainer, ButtonContainer } from './AddSurat.style'
+import { Modal, Title, ColumnContainer, ButtonContainer } from './UpsertSurat.style'
 import TextField from "@material-ui/core/TextField";
 import moment from 'moment'
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import MomentUtils from '@date-io/moment';
+import DateFnsUtils from '@date-io/date-fns';
+import 'date-fns';
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
@@ -37,8 +35,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const AddSurat = props => {
-  const { toggle } = props;
+const UpsertSurat = props => {
+  const { toggle, actionType } = props;
   const classes = useStyles();
   const sports = [ "Baseball", "Basketball", "Cricket", "Field Hockey", "Football", "Table Tennis", "Tennis", "Volleyball" ];
 
@@ -46,7 +44,7 @@ const AddSurat = props => {
     nomor: "",
     jenis_surat: 0,
     status: 0,
-    tanggal_pengajuan: moment(),
+    tanggal_pengajuan: moment().format('DD MMMM YYYY'),
     tanggal_disetujui: moment(),
     keterangan: ""
   })
@@ -131,12 +129,12 @@ const AddSurat = props => {
       </ColumnContainer>
       </div>
       <div style={{display: 'flex', flexDirection: 'row'}}>
-      <MuiPickersUtilsProvider utils={MomentUtils}>
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <ColumnContainer>
       <KeyboardDatePicker
           disableToolbar
           variant="inline"
-          format="DD MMMM YYYY"
+          format="MM/dd/yyy"
           margin="normal"
           id="date-picker-inline"
           label="Date picker inline"
@@ -151,7 +149,7 @@ const AddSurat = props => {
       <KeyboardDatePicker
           disableToolbar
           variant="inline"
-          format="DD MMMM YYYY"
+          format="MM/dd/yyy"
           margin="normal"
           id="date-picker-inline"
           label="Date picker inline"
@@ -189,4 +187,4 @@ const AddSurat = props => {
   );
 };
 
-export default AddSurat;
+export default UpsertSurat;
