@@ -3,7 +3,9 @@ import { makeStyles } from '@material-ui/styles';
 
 import { LowonganToolbar, LowonganTable } from './components';
 import mockData from './data';
-import AddLowongan from './AddLowongan'
+import UpsertLowongan from './UpsertLowongan'
+import { REST } from '../../utils'
+import useAxios from "axios-hooks";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,6 +22,8 @@ const UserList = () => {
   const [users] = useState(mockData);
   const [showModal, setShowModal] = useState(false)
   const [deleteAct, setDeleteAct] = useState(false)
+  const [actionType, setActionType] = useState('Tambah')
+  const [dataItem, setDataItem] = useState({})
 
   const toggle = () => {
     setShowModal(!showModal)
@@ -29,24 +33,31 @@ const UserList = () => {
     setDeleteAct(!deleteAct)
   }
 
-  const loading = false
-
-  // const [{ data: getData, loading, error: getError }] = useAxios(
-  //   "https://backend-situ.herokuapp.com/pengajuan-surat"
-  // );
+  const [{ data: getData, loading, error: getError }] = useAxios(
+    REST.GET_ALL_LOWONGAN
+  );
 
   return (
     <div className={classes.root}>
-      {showModal && <AddLowongan toggle={toggle} />}
+      {showModal && 
+      <UpsertLowongan 
+        toggle={toggle} 
+        dataItem={dataItem}
+        actionType={actionType} 
+      />}
       <LowonganToolbar 
         toggle={toggle}
         deleteToggle={deleteToggle}
+        setActionType={setActionType} 
         />
       <div className={classes.content}>
         <LowonganTable 
-          dataState={users} 
+          toggle={toggle}
+          setActionType={setActionType}
+          setDataItem={setDataItem}
+          deleteAct={deleteAct} 
           loading={loading}
-          deleteAct={deleteAct}
+          dataState={loading ? [] : getData } 
         />
       </div>
     </div>

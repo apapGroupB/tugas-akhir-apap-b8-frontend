@@ -5,7 +5,7 @@ import { Button } from '@material-ui/core';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Backdrop from '@material-ui/core/Backdrop';
 import Dialog from '@material-ui/core/Dialog';
-import { Modal, Title, ColumnContainer, ButtonContainer } from './AddLowongan.style'
+import { Modal, Title, ColumnContainer, ButtonContainer } from './UpsertLowongan.style'
 import TextField from "@material-ui/core/TextField";
 import moment from 'moment'
 import InputLabel from '@material-ui/core/InputLabel';
@@ -19,6 +19,7 @@ import {
   KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
+import FormControl from '@material-ui/core/FormControl';
 
 
 
@@ -39,16 +40,19 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const AddLowongan = props => {
-  const { toggle } = props;
+const UpsertLowongan = props => {
+  const { toggle, actionType, dataItem } = props;
   const classes = useStyles();
-  const sports = [ "Baseball", "Basketball", "Cricket", "Field Hockey", "Football", "Table Tennis", "Tennis", "Volleyball" ];
+  
 
-  const [dataState, setDataState] = useState({
+  const [dataState, setDataState] = useState(
+    actionType === 'Edit' ?
+    dataItem : 
+    {
     judul: "",
-    jumlah: 0,
+    jumlah: "",
     keterangan: "",
-    jenis_lowongan: 0,
+    id_jenis_lowongan: 0,
     tanggal_dibuka: moment(),
     tanggal_ditutup: moment(),
   })
@@ -75,6 +79,8 @@ const AddLowongan = props => {
     });
   }
 
+  console.log('dataState: ', dataState)
+
   return (
     <Backdrop className={classes.backdrop} open={true}>
       <Dialog 
@@ -85,7 +91,7 @@ const AddLowongan = props => {
     >
       <Modal>
       <div>
-        <Title>Tambah Lowongan</Title>
+        <Title>{actionType + ' Lowongan'}</Title>
         <ColumnContainer full>
         <TextField
             id="nomor"
@@ -93,37 +99,33 @@ const AddLowongan = props => {
             label={'Judul'}
             value={dataState.judul}
             onChange={e => (handleChange("judul", e))}
-            InputLabelProps={{
-              shrink: true,
-            }}
           />
         </ColumnContainer>
         <div style={{display: 'flex', flexDirection: 'row'}}>
         <ColumnContainer>
-        <InputLabel id="demo-simple-select-label">Jenis Lowongan</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="jenis_lowongan"
-            value={dataState.jenis_lowongan}
-            onChange={e => (handleChange("jenis_lowongan", e))}
-          >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-          </Select>
+        <FormControl>
+          <InputLabel id="demo-simple-select-label">Jenis Lowongan</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="id_jenis_lowongan"
+              value={dataState.id_jenis_lowongan}
+              onChange={e => (handleChange("id_jenis_lowongan", e))}
+            >
+              <MenuItem value="">None</MenuItem>
+              <MenuItem value={1}>Full Time</MenuItem>
+              <MenuItem value={2}>Part Time</MenuItem>
+              <MenuItem value={3}>Kontrak</MenuItem>
+            </Select>
+        </FormControl>
         </ColumnContainer>
         <ColumnContainer>
-        <InputLabel id="demo-simple-select-label">Jumlah</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
+        <TextField
             id="jumlah"
+            style={{ marginBottom: 15 }}
+            label="Jumlah"
             value={dataState.jumlah}
             onChange={handleNumberChange}
-          >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-          </Select>
+          />
         </ColumnContainer>
         </div>
         <div style={{display: 'flex', flexDirection: 'row'}}>
@@ -167,22 +169,27 @@ const AddLowongan = props => {
             label="Keterangan"
             value={dataState.keterangan}
             onChange={e => handleChange('keterangan', e)}
-            InputLabelProps={{
-              shrink: true,
-            }}
           />
         </ColumnContainer>
       
       </div>
       <ButtonContainer>
-        <Button color="primary" style={{width: 100}} onClick={toggle}>Save</Button>
-        <Button color="primary" style={{width: 100}} onClick={toggle}>Cancel</Button>
+        <Button 
+          color="primary" 
+          style={{width: 100, marginLeft: 20}} 
+          onClick={toggle}
+          variant="contained"
+        >Save</Button>
+        <Button 
+        color="primary" 
+        style={{width: 100}} 
+        onClick={toggle}
+      >Cancel</Button>
       </ButtonContainer>
-        
       </Modal>
       </Dialog>
     </Backdrop>
   );
 };
 
-export default AddLowongan;
+export default UpsertLowongan;

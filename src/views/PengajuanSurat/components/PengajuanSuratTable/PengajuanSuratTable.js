@@ -65,7 +65,15 @@ const PengajuanSuratTable = props => {
     id: 4,
     description: 'Surat Rekomendasi Beasiswa'
   }]
-  const { className, dataState, deleteToggle, deleteAct, loading, ...rest } = props;
+  const { 
+    className, 
+    dataState, 
+    deleteToggle, 
+    deleteAct, 
+    toggle,
+    setActionType,
+    setDataItem, 
+    loading, ...rest } = props;
   const classes = useStyles();
 
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -166,7 +174,14 @@ const PengajuanSuratTable = props => {
                           onChange={event => handleSelectOne(event, user.id)}
                           value="true"
                         /> : 
-                        <IconButton color="primary" component="span">
+                        <IconButton  
+                          color="primary" 
+                          onClick={() => {
+                            setActionType('Edit')
+                            setDataItem(user)
+                            toggle()
+                          }}
+                          component="span">
                           <EditIcon style={{width: 20, height: 20}} />
                         </IconButton>}
                       </TableCell>

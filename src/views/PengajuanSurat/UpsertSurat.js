@@ -36,13 +36,18 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UpsertSurat = props => {
-  const { toggle, actionType } = props;
+  const { toggle, actionType, dataItem } = props;
   const classes = useStyles();
   const sports = [ "Baseball", "Basketball", "Cricket", "Field Hockey", "Football", "Table Tennis", "Tennis", "Volleyball" ];
 
-  const [dataState, setDataState] = useState({
-    nomor: "",
-    jenis_surat: 0,
+  console.log('actionType: ', actionType)
+  console.log('dataItem: ', dataItem)
+  const [dataState, setDataState] = useState(
+    actionType === 'Edit' ?
+    dataItem :
+    {
+    nomor_surat: "",
+    id_jenis_surat: 0,
     status: 0,
     tanggal_pengajuan: moment().format('DD MMMM YYYY'),
     tanggal_disetujui: moment(),
@@ -52,7 +57,7 @@ const UpsertSurat = props => {
   const handleNumberChange = (event) => {
     setDataState({
       ...dataState,
-      nomor: event.target.value.replace(/[^0-9]/g, "")
+      nomor_surat: event.target.value.replace(/[^0-9]/g, "")
     });
   };
 
@@ -81,14 +86,14 @@ const UpsertSurat = props => {
     >
       <Modal>
       <div>
-      <Title>Tambah Pengajuan Surat</Title>
+      <Title>{actionType + ' Pengajuan Surat'}</Title>
       <ColumnContainer full>
       <TextField
           // error={errorField.find((dt) => dt === data.id) ? true : false}
-          id="nomor"
+          id="nomor_surat"
           style={{ marginBottom: 15 }}
           label={'Nomor Surat'}
-          value={dataState.nomor}
+          value={dataState.nomor_surat}
           onChange={handleNumberChange}
           InputLabelProps={{
             shrink: true,
@@ -105,13 +110,13 @@ const UpsertSurat = props => {
       <InputLabel id="demo-simple-select-label">Jenis Surat</InputLabel>
         <Select
           labelId="demo-simple-select-label"
-          id="jenis_surat"
-          value={dataState.jenis_surat}
-          onChange={e => (handleChange("jenis_surat", e))}
+          id="id_jenis_surat"
+          value={dataState.id_jenis_surat}
+          onChange={e => (handleChange("id_jenis_surat", e))}
         >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
+          <MenuItem value={1}>Ten</MenuItem>
+          <MenuItem value={2}>Twenty</MenuItem>
+          <MenuItem value={3}>Thirty</MenuItem>
         </Select>
       </ColumnContainer>
       <ColumnContainer>
@@ -122,9 +127,9 @@ const UpsertSurat = props => {
           value={dataState.status}
           onChange={e => (handleChange("status", e))}
         >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
+          <MenuItem value={1}>Ten</MenuItem>
+          <MenuItem value={2}>Twenty</MenuItem>
+          <MenuItem value={3}>Thirty</MenuItem>
         </Select>
       </ColumnContainer>
       </div>
@@ -164,7 +169,7 @@ const UpsertSurat = props => {
       </div>
       <ColumnContainer full>
       <TextField
-          id="nomor"
+          id="nomor_surat"
           style={{ marginBottom: 15 }}
           label="Keterangan"
           value={dataState.keterangan}
@@ -177,8 +182,17 @@ const UpsertSurat = props => {
       
       </div>
       <ButtonContainer>
-        <Button color="primary" style={{width: 100}} onClick={toggle}>Save</Button>
-        <Button color="primary" style={{width: 100}} onClick={toggle}>Cancel</Button>
+        <Button 
+          color="primary" 
+          variant="contained"
+          style={{width: 100, marginLeft: 20}} 
+          onClick={toggle}
+        >Save</Button>
+        <Button 
+          color="primary" 
+          style={{width: 100}} 
+          onClick={toggle}
+        >Cancel</Button>
       </ButtonContainer>
         
       </Modal>

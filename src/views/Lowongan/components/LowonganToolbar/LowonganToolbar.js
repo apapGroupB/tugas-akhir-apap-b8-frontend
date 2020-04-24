@@ -29,7 +29,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UsersToolbar = props => {
-  const { className, deleteToggle, toggle, ...rest } = props;
+  const { 
+    className, 
+    deleteToggle, 
+    setActionType, 
+    toggle, 
+    ...rest } = props;
   const classes = useStyles();
 
   return (
@@ -50,7 +55,10 @@ const UsersToolbar = props => {
         <Button
           color="primary"
           variant="contained"
-          onClick={toggle}
+          onClick={() => {
+            toggle()
+            setActionType('Tambah')
+          }}
         >
           Tambah Lowongan
         </Button>

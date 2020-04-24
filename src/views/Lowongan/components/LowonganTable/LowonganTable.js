@@ -48,9 +48,31 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UsersTable = props => {
-  const { className, dataState, loading, deleteAct, ...rest } = props;
+  const { 
+    className, 
+    dataState, 
+    deleteToggle, 
+    loading, 
+    deleteAct, 
+    toggle,
+    setActionType,
+    setDataItem,
+    ...rest } = props;
 
   const classes = useStyles();
+
+  const jenis = [{
+    id: 1,
+    description: "Full Time"
+  },
+  {
+    id: 2,
+    description: "Part Time"
+  },
+  {
+    id: 3,
+    description: "Kontrak"
+  }];
 
   const [selectedLowongan, setSelectedLowongan] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -159,13 +181,24 @@ const UsersTable = props => {
                         onChange={event => handleSelectOne(event, user.id)}
                         value="true"
                       /> : 
-                      <IconButton color="primary" component="span">
+                      <IconButton 
+                        color="primary" 
+                        component="span"
+                        onClick={() => {
+                          setActionType('Edit')
+                          setDataItem(user)
+                          toggle()
+                        }}
+                      >
                         <EditIcon style={{width: 20, height: 20}} />
                       </IconButton>
                       }
                     </TableCell>
                     <TableCell>{user.judul}</TableCell>
-                    <TableCell>{user.id_jenis_lowongan}</TableCell>
+                    <TableCell>{
+                    jenis.find(e => e.id === user.id_jenis_lowongan) ?
+                    jenis.find(e => e.id === user.id_jenis_lowongan).description : 
+                    "None"}</TableCell>
                     <TableCell>{user.jumlah}</TableCell>
                     <TableCell>{moment(user.tanggal_dibuka).format('DD/MM/YYYY')}</TableCell>
                     <TableCell>
