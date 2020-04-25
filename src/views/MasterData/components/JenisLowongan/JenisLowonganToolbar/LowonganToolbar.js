@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UsersToolbar = props => {
-  const { className, ...rest } = props;
+  const { className, toggle, ...rest } = props;
   const classes = useStyles();
 
   return (
@@ -43,10 +43,19 @@ const UsersToolbar = props => {
       <div className={classes.row}>
         <span className={classes.spacer} />
         <Button
+          color="inherit"
+          // variant="contained"
+          style={{marginRight: 20}}
+          // onClick={deleteToggle}
+        >
+          Hapus
+        </Button>
+        <Button
           color="primary"
           variant="contained"
+          onClick={toggle}
         >
-          Tambah Lowongan
+          Tambah Jenis Lowongan
         </Button>
         
       </div>
