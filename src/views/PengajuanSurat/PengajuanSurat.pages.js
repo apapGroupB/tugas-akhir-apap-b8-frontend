@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
   },
   content: {
     marginTop: theme.spacing(2)
-  }
+  },
 }));
 
 const UserList = () => {

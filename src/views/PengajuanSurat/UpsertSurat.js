@@ -15,6 +15,7 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
+import statusConfig from './statusConfig.json'
 
 
 
@@ -38,7 +39,6 @@ const useStyles = makeStyles(theme => ({
 const UpsertSurat = props => {
   const { toggle, actionType, dataItem } = props;
   const classes = useStyles();
-  const sports = [ "Baseball", "Basketball", "Cricket", "Field Hockey", "Football", "Table Tennis", "Tennis", "Volleyball" ];
 
   console.log('actionType: ', actionType)
   console.log('dataItem: ', dataItem)
@@ -127,9 +127,9 @@ const UpsertSurat = props => {
           value={dataState.status}
           onChange={e => (handleChange("status", e))}
         >
-          <MenuItem value={1}>Ten</MenuItem>
-          <MenuItem value={2}>Twenty</MenuItem>
-          <MenuItem value={3}>Thirty</MenuItem>
+          {statusConfig.map(data => 
+            <MenuItem value={data.id}>{data.name}</MenuItem>
+          )}
         </Select>
       </ColumnContainer>
       </div>

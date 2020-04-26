@@ -24,6 +24,9 @@ import EditIcon from '@material-ui/icons/Edit';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import statusConfig from '../../statusConfig.json'
+
+import { StatusBullet } from 'components';
 
 import { getInitials } from 'helpers';
 import { Colors } from 'styles';
@@ -45,8 +48,27 @@ const useStyles = makeStyles(theme => ({
   },
   actions: {
     justifyContent: 'flex-end'
-  }
+  },
+  statusContainer: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  status: {
+    marginRight: theme.spacing(1)
+  },
 }));
+
+const statusColors = {
+  "1": 'success',
+  "2": 'info',
+  "3": 'danger',
+  "4": 'neutral',
+    // 'primary',
+    // 'info',
+    // 'success',
+    // 'warning',
+    // 'danger'
+};
 
 const PengajuanSuratTable = props => {
   const jenisSurat = [{
@@ -187,7 +209,17 @@ const PengajuanSuratTable = props => {
                       </TableCell>
                       <TableCell>{user.nomor_surat}</TableCell>
                       <TableCell>{jenisSurat.find(data => data.id === user.id_jenis_surat) ? jenisSurat.find(data => data.id === user.id_jenis_surat).description : '-'  }</TableCell>
-                      <TableCell>{user.status}</TableCell>
+                      <TableCell>
+                        {statusConfig.find(data => data.id === user.status) ?
+                        <div  className={classes.statusContainer}>
+                          <StatusBullet
+                            className={classes.status}
+                            color={statusConfig[user.status].color}
+                            size="sm"
+                          />
+                          {statusConfig[user.status].name}
+                        </div> : 
+                        '-'  }</TableCell>
                       <TableCell>{moment(user.tanggal_pengajuan).format('DD/MM/YYYY')}</TableCell>
                       <TableCell>
                         {moment(user.tanggal_disetujui).format('DD/MM/YYYY')}
