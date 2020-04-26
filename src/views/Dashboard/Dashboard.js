@@ -6,10 +6,7 @@ import {
   Budget,
   TotalUsers,
   TasksProgress,
-  TotalProfit,
-  LatestSales,
   UsersByDevice,
-  LatestProducts,
   LatestOrders
 } from './components';
 

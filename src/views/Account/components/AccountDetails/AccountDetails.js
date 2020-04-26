@@ -23,8 +23,8 @@ const AccountDetails = props => {
   const classes = useStyles();
 
   const [values, setValues] = useState({
-    firstName: 'Izzatunnisa',
-    lastName: 'Arwadi',
+    firstName: 'Riza Fauzi',
+    lastName: 'Rahman',
     email: 'smart_group_b@gmail.com',
     phone: '',
     state: 'Depok',
