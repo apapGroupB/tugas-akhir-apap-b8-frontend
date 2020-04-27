@@ -82,17 +82,6 @@ const AccountProfile = props => {
           />
         </div>
       </CardContent>
-      <Divider />
-      <CardActions>
-        <Button
-          className={classes.uploadButton}
-          color="primary"
-          variant="text"
-        >
-          Upload picture
-        </Button>
-        <Button variant="text">Remove picture</Button>
-      </CardActions>
     </Card>
   );
 };

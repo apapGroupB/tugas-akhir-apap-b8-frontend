@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
-
-import { JenisSuratToolbar, JenisSuratTable } from './components/JenisSurat';
-import { JenisLowonganToolbar, JenisLowonganTable, InsertJenisLowongan } from './components/JenisLowongan';
-import dataJenisSurat from './dataJenisSurat';
-import dataJenisLowongan from './dataLowongan';
+import JenisSurat from './components/JenisSurat';
+import JenisLowongan from './components/JenisLowongan';
+import { Grid } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,35 +30,16 @@ const useStyles = makeStyles(theme => ({
 const UserList = () => {
   const classes = useStyles();
 
-  const [users] = useState(dataJenisSurat);
-  const [jenisLowongan, setJenisLowongan] = useState(dataJenisLowongan);
-  const [showLowonganModal, setShowLowonganModal] = useState(false)
-  const [showSuratModal, setSuratModal] = useState(false)
-
-  const lowonganToggle = () => {
-    setShowLowonganModal(!showLowonganModal)
-  } 
-
-  const suratToggle = () => {
-    setSuratModal(!showSuratModal)
-  } 
-
   return (
     <div className={classes.root}>
-      {showLowonganModal && <InsertJenisLowongan 
-        toggle={lowonganToggle} />
-      }
-      {showSuratModal && <InsertJenisLowongan 
-        toggle={suratToggle} />
-      }
-      <div className={classes.content}>
-        <JenisSuratToolbar toggle={suratToggle}/>
-        <JenisSuratTable users={users} />
-      </div>
-      <div className={classes.content}>
-        <JenisLowonganToolbar toggle={lowonganToggle}/>
-        <JenisLowonganTable users={jenisLowongan} />
-      </div>
+      <Grid container spacing={4}>
+        <Grid item lg={6}>
+          <JenisSurat />
+        </Grid>
+        <Grid item lg={6}>
+          <JenisLowongan />
+        </Grid>
+      </Grid>
     </div>
   );
 };

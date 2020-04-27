@@ -4,7 +4,7 @@ import { Button } from '@material-ui/core';
 import Backdrop from '@material-ui/core/Backdrop';
 import Dialog from '@material-ui/core/Dialog';
 import TextField from "@material-ui/core/TextField";
-import { Modal, Title, ColumnContainer, ButtonContainer } from './UpsertUser.style'
+import { Modal, Title, ColumnContainer, ButtonContainer } from './InsertPinjaman.style'
 import roles from './roles.json'
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';

@@ -34,5 +34,4 @@ export const ButtonContainer = styled.div`
   flex-direction: row-reverse;
   align-items: flex-start;
   padding: 20px;
-
 `

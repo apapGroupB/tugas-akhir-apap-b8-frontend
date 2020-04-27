@@ -58,18 +58,6 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const statusColors = {
-  "1": 'success',
-  "2": 'info',
-  "3": 'danger',
-  "4": 'neutral',
-    // 'primary',
-    // 'info',
-    // 'success',
-    // 'warning',
-    // 'danger'
-};
-
 const PengajuanSuratTable = props => {
   const jenisSurat = [{
     id: 1,

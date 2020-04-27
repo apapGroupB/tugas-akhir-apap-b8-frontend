@@ -29,7 +29,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UsersToolbar = props => {
-  const { className, ...rest } = props;
+  const { 
+    className, 
+    setActionType, 
+    deleteToggle,
+    toggle,
+    ...rest } = props;
 
   const classes = useStyles();
 
@@ -47,13 +52,17 @@ const UsersToolbar = props => {
         <Button
           color="inherit"
           style={{marginRight: 20}}
-          // onClick={deleteToggle}
+          onClick={deleteToggle}
         >
           Hapus
         </Button>
         <Button
           color="primary"
           variant="contained"
+          onClick={() => {
+            toggle()
+            setActionType('Tambah')
+          }}
         >
           Tambah user
         </Button>

@@ -19,19 +19,17 @@ import {
   TablePagination
 } from '@material-ui/core';
 
-import { getInitials } from 'helpers';
-
 const useStyles = makeStyles(theme => ({
   root: {
-    width: 520,
+    width: 500,
     marginRight: 50
   },
   content: {
     padding: 0,
-    minWidth: 520
+    minWidth: 500
   },
   inner: {
-    minWidth: 520
+    minWidth: 500
   },
   nameContainer: {
     display: 'flex',
@@ -46,13 +44,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UsersTable = props => {
-  const { className, users, ...rest } = props;
-
   const classes = useStyles();
-
-  const [selectedUsers, setSelectedUsers] = useState([]);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
+  const { className, users, ...rest } = props;
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedUsers, setSelectedUsers] = useState([]);
 
   const handleSelectAll = event => {
     const { users } = props;
@@ -129,7 +125,6 @@ const UsersTable = props => {
                   </TableCell>
                   <TableCell>Nama</TableCell>
                   <TableCell>Keterangan</TableCell>
-                  <TableCell>Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -149,7 +144,6 @@ const UsersTable = props => {
                       />
                     </TableCell>
                     <TableCell>{user.judul}</TableCell>
-                    <TableCell>{user.keterangan}</TableCell>
                     <TableCell>{user.keterangan}</TableCell>
                   </TableRow>
                 ))}

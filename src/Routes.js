@@ -13,7 +13,8 @@ import {
   NotFound as NotFoundView,
   PengajuanSurat,
   Lowongan,
-  MasterData
+  MasterData,
+  Pinjaman
 } from './views';
 
 const Routes = () => {
@@ -61,6 +62,12 @@ const Routes = () => {
         path="/pengajuan-surat"
       />
       <RouteWithLayout
+        component={Pinjaman}
+        exact
+        layout={MainLayout}
+        path="/pinjaman"
+      />
+      <RouteWithLayout
         component={AccountView}
         exact
         layout={MainLayout}
@@ -78,6 +85,7 @@ const Routes = () => {
         layout={MinimalLayout}
         path="/not-found"
       />
+
       
       <Redirect to="/not-found" />
     </Switch>

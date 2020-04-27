@@ -1,37 +1,33 @@
-import React, { useState } from 'react';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import moment from 'moment';
-import PerfectScrollbar from 'react-perfect-scrollbar';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
   Card,
-  CardActions,
-  CardContent,
-  Avatar,
-  Checkbox,
   Table,
+  TableRow,
+  Checkbox,
   TableBody,
   TableCell,
   TableHead,
-  TableRow,
-  Typography,
+  CardContent,
+  CardActions,
   TablePagination
 } from '@material-ui/core';
 
-import { getInitials } from 'helpers';
-
 const useStyles = makeStyles(theme => ({
   root: {
-    width: 520,
+    width: 500,
     marginRight: 50
   },
   content: {
     padding: 0,
-    minWidth: 520
+    minWidth: 500
   },
   inner: {
-    minWidth: 520
+    minWidth: 500
   },
   nameContainer: {
     display: 'flex',
@@ -96,15 +92,6 @@ const UsersTable = props => {
     setRowsPerPage(event.target.value);
   };
 
-  
-  // judul: varchar (200)
-// tanggal_dibuka: date
-// tanggal_ditutup: date
-// keterangan: varchar (200)
-// jumlah: int
-// id_jenis_lowongan: int
-// uuid_user: varchar (200)
-
   return (
     <Card
       {...rest}
@@ -129,7 +116,6 @@ const UsersTable = props => {
                   </TableCell>
                   <TableCell>Nama</TableCell>
                   <TableCell>Keterangan</TableCell>
-                  <TableCell>Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -149,7 +135,6 @@ const UsersTable = props => {
                       />
                     </TableCell>
                     <TableCell>{user.judul}</TableCell>
-                    <TableCell>{user.keterangan}</TableCell>
                     <TableCell>{user.keterangan}</TableCell>
                   </TableRow>
                 ))}

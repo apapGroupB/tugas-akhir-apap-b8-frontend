@@ -4,17 +4,12 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Divider, Drawer } from '@material-ui/core';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import PeopleIcon from '@material-ui/icons/People';
-import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
-import TextFieldsIcon from '@material-ui/icons/TextFields';
-import ImageIcon from '@material-ui/icons/Image';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import SettingsIcon from '@material-ui/icons/Settings';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
 import EmailIcon from '@material-ui/icons/Email';
-import AllInboxIcon from '@material-ui/icons/AllInbox';
 import WorkIcon from '@material-ui/icons/Work';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import StorageIcon from '@material-ui/icons/Storage';
 import ReorderIcon from '@material-ui/icons/Reorder';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
 import { Profile, SidebarNav, UpgradePlan } from './components';
 
@@ -55,12 +50,12 @@ const Sidebar = props => {
     {
       title: 'User',
       href: '/users',
-      icon: <PeopleIcon />
+      icon: <AccountBoxIcon />
     },
     {
-      title: 'MasterData',
+      title: 'Master Data',
       href: '/master-data',
-      icon: <AllInboxIcon />
+      icon: <StorageIcon />
     },
     {
       title: 'Pengajuan Surat',
@@ -71,6 +66,11 @@ const Sidebar = props => {
       title: 'Lowongan',
       href: '/lowongan',
       icon: <WorkIcon />
+    },
+    {
+      title: 'Pinjaman',
+      href: '/pinjaman',
+      icon: <AccountBalanceWalletIcon />
     },
     {
       title: 'Lainnya',

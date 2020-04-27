@@ -1,9 +1,10 @@
 import styled, { css } from "styled-components";
-import { Colors } from "../../styles";
+import { Colors } from "../../../../styles";
 
 export const Modal = styled.div`
-  width: 400px;
-  height: 550px;
+  width: 600px;
+  height: 400px;
+  /* padding: 20px; */
   flex-direction: column;
   justify-content: space-between;
   display: flex;

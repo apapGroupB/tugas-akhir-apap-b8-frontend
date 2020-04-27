@@ -7,3 +7,4 @@ export { default as Settings } from './Settings';
 export { default as PengajuanSurat } from './PengajuanSurat';
 export { default as Lowongan } from './Lowongan';
 export { default as MasterData } from './MasterData';
+export { default as Pinjaman } from './Pinjaman';

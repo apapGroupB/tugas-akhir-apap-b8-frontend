@@ -2,15 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
-import { Button } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
 
 import { SearchInput } from 'components';
+import { Colors } from 'styles';
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    width: 500,
-    marginBottom: 10
-  },
+  root: {},
   row: {
     height: '42px',
     display: 'flex',
@@ -31,8 +29,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UsersToolbar = props => {
-  const { className, toggle, ...rest } = props;
+const PinjamanToolbar = props => {
+  const { 
+    className, 
+    setActionType, 
+    deleteToggle,
+    toggle,
+    ...rest } = props;
+
   const classes = useStyles();
 
   return (
@@ -41,30 +45,30 @@ const UsersToolbar = props => {
       className={clsx(classes.root, className)}
     >
       <div className={classes.row}>
+        <Typography 
+          style={{
+            fontWeight: 'bold', 
+            color: Colors.Purple, 
+            fontSize: 'x-large'
+          }} >Histori Pinjaman</Typography>
         <span className={classes.spacer} />
-        <Button
-          color="inherit"
-          // variant="contained"
-          style={{marginRight: 20}}
-          // onClick={deleteToggle}
-        >
-          Hapus
-        </Button>
         <Button
           color="primary"
           variant="contained"
-          onClick={toggle}
+          onClick={() => {
+            toggle()
+            setActionType('Tambah')
+          }}
         >
-          Tambah Jenis Lowongan
+          Tambah Pinjaman
         </Button>
-        
       </div>
     </div>
   );
 };
 
-UsersToolbar.propTypes = {
+PinjamanToolbar.propTypes = {
   className: PropTypes.string
 };
 
-export default UsersToolbar;
+export default PinjamanToolbar;

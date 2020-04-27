@@ -12,7 +12,7 @@ export const Colors = {
   Bronze: "#A56728",
   Maroon: "#B14C4C",
   Yellow: "#f6ac37",
-  Purple: "#8585EF",
+  Purple: "#3F51B5",
   Orange: "#F7AB00",
   Primary: "#f3f5fe",
   BGLogin: "#eaeaea",

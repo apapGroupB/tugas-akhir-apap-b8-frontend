@@ -4,11 +4,7 @@ import { Button } from '@material-ui/core';
 import Backdrop from '@material-ui/core/Backdrop';
 import Dialog from '@material-ui/core/Dialog';
 import TextField from "@material-ui/core/TextField";
-import { Modal, Title, ColumnContainer, ButtonContainer } from './UpsertUser.style'
-import roles from './roles.json'
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
+import { Modal, Title, ColumnContainer, ButtonContainer } from './InsertJenisSurat.style'
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -20,13 +16,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UpsertUser = props => {
+const InsertJenisSurat = props => {
   const { toggle } = props;
   const classes = useStyles();
   const [dataState, setDataState] = useState({
-    username: "",
-    password: "",
-    id_role: 0
+    nama: "",
+    keterangan: ""
   })
 
   const handleChange = (id, event) => {
@@ -46,15 +41,15 @@ const UpsertUser = props => {
     >
       <Modal>
       <div>
-      <Title>{'Tambah User'}</Title>
+      <Title>{'Tambah Jenis Surat'}</Title>
       <ColumnContainer full>
       <TextField
           // error={errorField.find((dt) => dt === data.id) ? true : false}
-          id="username"
+          id="nama"
           style={{ marginBottom: 15 }}
-          label={'Username'}
-          value={dataState.username}
-          onChange={(event) => handleChange("username", event)}
+          label={'Nama'}
+          value={dataState.nama}
+          onChange={(event) => handleChange("nama", event)}
           // helperText={
           //   errorField.find((dt) => dt === data.id)
           //     ? "Please Fill This Field"
@@ -65,30 +60,17 @@ const UpsertUser = props => {
       <ColumnContainer full>
       <TextField
           // error={errorField.find((dt) => dt === data.id) ? true : false}
-          id="password"
+          id="keterangan"
           style={{ marginBottom: 15 }}
-          label={'Password'}
-          value={dataState.password}
-          onChange={(event) => handleChange("password", event)}
+          label={'Keterangan'}
+          value={dataState.nomor_surat}
+          onChange={(event) => handleChange("keterangan", event)}
           // helperText={
           //   errorField.find((dt) => dt === data.id)
           //     ? "Please Fill This Field"
           //     : ""
           // }
         />
-      </ColumnContainer>
-      <ColumnContainer>
-        <InputLabel id="demo-simple-select-label">Role</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="id_role"
-          value={dataState.id_role}
-          onChange={e => (handleChange("id_role", e))}
-        >
-          {roles.map((data, i) => 
-            <MenuItem key={i} value={data.id}>{data.name}</MenuItem>
-          )}
-        </Select>
       </ColumnContainer>
       </div>
       <ButtonContainer>
@@ -111,4 +93,4 @@ const UpsertUser = props => {
   );
 };
 
-export default UpsertUser;
+export default InsertJenisSurat;

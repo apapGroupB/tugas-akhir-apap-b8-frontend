@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
-import { UsersToolbar, UsersTable } from './components';
-import UpsertUser from './UpsertUser'
+import { PinjamanToolbar, PinjamanTable } from './components';
+import UpsertUser from './InsertPinjaman'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UserList = () => {
+const Pinjaman = () => {
   const classes = useStyles();
 
   const [users] = useState([]);
@@ -33,18 +33,13 @@ const UserList = () => {
 
   return (
     <div className={classes.root}>
-      {showModal && <UpsertUser 
-        dataItem={dataItem}
-        actionType={actionType} 
-        toggle={toggle} />
-      }
-      <UsersToolbar 
+      <PinjamanToolbar 
         setActionType={setActionType} 
         deleteToggle={deleteToggle} 
         toggle={toggle} 
       />
       <div className={classes.content}>
-        <UsersTable 
+        <PinjamanTable 
           users={users} 
           // toggle={toggle}
           // setActionType={setActionType}
@@ -58,4 +53,4 @@ const UserList = () => {
   );
 };
 
-export default UserList;
+export default Pinjaman;

@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import { PengajuanSuratToolbar, PengajuanSuratTable } from './components';
-import mockData from './data';
 import UpsertSurat from './UpsertSurat'
 import useAxios from "axios-hooks";
-import { corsRequest } from '../../utils'
 import { REST } from '../../utils'
 
 const useStyles = makeStyles(theme => ({
@@ -19,8 +17,6 @@ const useStyles = makeStyles(theme => ({
 
 const UserList = () => {
   const classes = useStyles();
-
-  const [users] = useState(mockData);
   const [showModal, setShowModal] = useState(false)
   const [deleteAct, setDeleteAct] = useState(false)
   const [actionType, setActionType] = useState('Tambah')
