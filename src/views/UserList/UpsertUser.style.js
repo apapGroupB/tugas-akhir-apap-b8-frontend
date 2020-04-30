@@ -2,8 +2,8 @@ import styled, { css } from "styled-components";
 import { Colors } from "../../styles";
 
 export const Modal = styled.div`
-  width: 400px;
-  height: 550px;
+  width: 600px;
+  height: 650px;
   flex-direction: column;
   justify-content: space-between;
   display: flex;
@@ -22,10 +22,13 @@ export const Title = styled.div`
 `
 
 export const ColumnContainer = styled.div`
-  padding: 20px;
   display: flex;
-  flex-direction: column;
+  padding-top: 15px;
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-bottom: 15px;
   color: ${Colors.Navy};
+  flex-direction: column;
   width: ${props => props.full ? 100 : 50}%;
 `
 

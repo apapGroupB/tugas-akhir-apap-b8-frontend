@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import { PinjamanToolbar, PinjamanTable } from './components';
-import UpsertUser from './InsertPinjaman'
+import InsertPinjaman from './InsertPinjaman'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -14,6 +14,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Pinjaman = () => {
+  const [showModal, setShowModal] = useState(false)
+  const [deleteAct, setDeleteAct] = useState(false)
+  const [actionType, setActionType] = useState('Tambah')
   const classes = useStyles();
 
   const [users] = useState([]);
@@ -22,17 +25,20 @@ const Pinjaman = () => {
     setShowModal(!showModal)
   }
 
-  const [showModal, setShowModal] = useState(false)
-  const [deleteAct, setDeleteAct] = useState(false)
-  const [actionType, setActionType] = useState('Tambah')
-  const [dataItem, setDataItem] = useState({})
-
   const deleteToggle = () => {
     setDeleteAct(!deleteAct)
   }
 
+  console.log('showModal: ', showModal)
+
   return (
     <div className={classes.root}>
+      {showModal && <InsertPinjaman 
+        toggle={toggle} 
+        // refetch={refetch}
+        // setNotif={setNotif}
+        actionType={actionType}
+      /> }
       <PinjamanToolbar 
         setActionType={setActionType} 
         deleteToggle={deleteToggle} 

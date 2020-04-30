@@ -5,7 +5,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import { PengajuanSuratToolbar, PengajuanSuratTable } from './components';
 import UpsertSurat from './UpsertSurat'
 import useAxios from "axios-hooks";
-import { REST } from '../../utils'
+import { BACKEND } from '../../utils'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -44,7 +44,7 @@ const UserList = () => {
   };
 
   const [{ data: getData, loading, error: getError }, refetch] = useAxios(
-    REST.GET_ALL_PENGAJUAN
+    BACKEND.GET_ALL_PENGAJUAN
   );
 
   return (

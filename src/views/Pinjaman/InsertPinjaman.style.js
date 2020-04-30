@@ -3,7 +3,7 @@ import { Colors } from "../../styles";
 
 export const Modal = styled.div`
   width: 400px;
-  height: 550px;
+  height: 400px;
   flex-direction: column;
   justify-content: space-between;
   display: flex;

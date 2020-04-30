@@ -5,10 +5,15 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Dialog from '@material-ui/core/Dialog';
 import TextField from "@material-ui/core/TextField";
 import { Modal, Title, ColumnContainer, ButtonContainer } from './InsertPinjaman.style'
-import roles from './roles.json'
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
+import moment from 'moment'
+import DateFnsUtils from '@date-io/date-fns';
+import 'date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
+import InputAdornment from '@material-ui/core/InputAdornment';
+
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -20,21 +25,36 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UpsertUser = props => {
+const InsertPinjaman = props => {
   const { toggle } = props;
   const classes = useStyles();
+  const [errorField, setErrorField] = useState(false)
   const [dataState, setDataState] = useState({
-    username: "",
-    password: "",
-    id_role: 0
+    jumlah_pinjaman: "",
+    tanggal_pengajuan: moment()
   })
 
-  const handleChange = (id, event) => {
+  const handleDateChange = date => {
     setDataState({
       ...dataState,
-      [id]: event.target.value
+      tanggal_pengajuan: moment(date).format()
+    });
+  }
+
+  const handleNumberChange = (event) => {
+    setDataState({
+      ...dataState,
+      jumlah_pinjaman: event.target.value.replace(/[^0-9]/g, "")
     });
   };
+
+  const validation = () => {
+    if(dataState.jumlah_pinjaman !== "") {
+      toggle()
+    } else {
+      setErrorField(true)
+    }
+  }
 
   return (
     <Backdrop className={classes.backdrop} open={true}>
@@ -46,49 +66,40 @@ const UpsertUser = props => {
     >
       <Modal>
       <div>
-      <Title>{'Tambah User'}</Title>
+      <Title>{'Ajukan Pinjaman'}</Title>
       <ColumnContainer full>
       <TextField
-          // error={errorField.find((dt) => dt === data.id) ? true : false}
-          id="username"
-          style={{ marginBottom: 15 }}
-          label={'Username'}
-          value={dataState.username}
-          onChange={(event) => handleChange("username", event)}
-          // helperText={
-          //   errorField.find((dt) => dt === data.id)
-          //     ? "Please Fill This Field"
-          //     : ""
-          // }
+          error={errorField}
+          id="jumlah_pinjaman"
+          label={'Jumlah Pinjaman'}
+          value={dataState.jumlah_pinjaman}
+          onChange={handleNumberChange}
+          InputProps={{
+            startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
+          }}
+          helperText={
+            errorField
+              ? "Please Fill This Field"
+              : ""
+          }
         />
       </ColumnContainer>
       <ColumnContainer full>
-      <TextField
-          // error={errorField.find((dt) => dt === data.id) ? true : false}
-          id="password"
-          style={{ marginBottom: 15 }}
-          label={'Password'}
-          value={dataState.password}
-          onChange={(event) => handleChange("password", event)}
-          // helperText={
-          //   errorField.find((dt) => dt === data.id)
-          //     ? "Please Fill This Field"
-          //     : ""
-          // }
-        />
-      </ColumnContainer>
-      <ColumnContainer>
-        <InputLabel id="demo-simple-select-label">Role</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="id_role"
-          value={dataState.id_role}
-          onChange={e => (handleChange("id_role", e))}
-        >
-          {roles.map((data, i) => 
-            <MenuItem key={i} value={data.id}>{data.name}</MenuItem>
-          )}
-        </Select>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <KeyboardDatePicker
+            disableToolbar
+            variant="inline"
+            format="dd-MM-yyyy"
+            margin="normal"
+            id="date-picker-inline"
+            label="Tanggal Pengajuan"
+            value={dataState.tanggal_pengajuan}
+            onChange={handleDateChange}
+            KeyboardButtonProps={{
+              'aria-label': 'change date',
+            }}
+          />
+        </MuiPickersUtilsProvider>
       </ColumnContainer>
       </div>
       <ButtonContainer>
@@ -96,7 +107,7 @@ const UpsertUser = props => {
           color="primary" 
           variant="contained"
           style={{width: 100, marginLeft: 20}} 
-          onClick={toggle}
+          onClick={validation}
         >Save</Button>
         <Button 
           color="primary" 
@@ -104,11 +115,10 @@ const UpsertUser = props => {
           onClick={toggle}
         >Cancel</Button>
       </ButtonContainer>
-        
       </Modal>
       </Dialog>
     </Backdrop>
   );
 };
 
-export default UpsertUser;
+export default InsertPinjaman;

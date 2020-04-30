@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/styles';
 import { LowonganToolbar, LowonganTable } from './components';
 import mockData from './data';
 import UpsertLowongan from './UpsertLowongan'
-import { REST } from '../../utils'
+import { BACKEND } from '../../utils'
 import useAxios from "axios-hooks";
 
 const useStyles = makeStyles(theme => ({
@@ -34,7 +34,7 @@ const UserList = () => {
   }
 
   const [{ data: getData, loading, error: getError }] = useAxios(
-    REST.GET_ALL_LOWONGAN
+    BACKEND.GET_ALL_LOWONGAN
   );
 
   return (

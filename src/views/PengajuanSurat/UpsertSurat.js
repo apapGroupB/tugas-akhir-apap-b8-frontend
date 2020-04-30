@@ -18,7 +18,7 @@ import {
 import statusConfig from './statusConfig.json'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Colors } from '../../styles/color'
-import { REST } from '../../utils'
+import { BACKEND } from '../../utils'
 import useAxios from "axios-hooks";
 import axios from 'axios'
 
@@ -82,7 +82,7 @@ const UpsertSurat = props => {
 
   const validation = () => {
     setPostLoading(true)
-    axios.post(REST.ADD_PENGAJUAN_SURAT, {
+    axios.post(BACKEND.ADD_PENGAJUAN_SURAT, {
       ...dataState,
       tanggal_pengajuan: moment(dataState.tanggal_pengajuan).format('YYYY-MM-DD'),
       tanggal_disetujui: null

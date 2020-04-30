@@ -3,6 +3,9 @@ import { makeStyles } from '@material-ui/styles';
 
 import { UsersToolbar, UsersTable } from './components';
 import UpsertUser from './UpsertUser'
+import { WEBSERVICE } from '../../utils'
+import useAxios from "axios-hooks";
+import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,6 +21,8 @@ const UserList = () => {
 
   const [users] = useState([]);
 
+
+
   const toggle = () => {
     setShowModal(!showModal)
   }
@@ -30,6 +35,13 @@ const UserList = () => {
   const deleteToggle = () => {
     setDeleteAct(!deleteAct)
   }
+
+  const [{ data: getData, loading, error: getError }, refetch] = useAxios(
+    WEBSERVICE.GET_ALL_PEGAWAI
+  );
+
+  // console.log('WEBSERVICE.GET_ALL_PEGAWAI: ', WEBSERVICE.GET_ALL_PEGAWAI)
+  // console.log('getData: ', getData)
 
   return (
     <div className={classes.root}>
@@ -45,13 +57,13 @@ const UserList = () => {
       />
       <div className={classes.content}>
         <UsersTable 
-          users={users} 
+          // users={users} 
           // toggle={toggle}
           // setActionType={setActionType}
           // setDataItem={setDataItem}
           // deleteAct={deleteAct} 
-          // loading={loading}
-          // dataState={loading ? [] : getData } 
+          loading={loading}
+          users={loading || getError ? [] : getData } 
         />
       </div>
     </div>

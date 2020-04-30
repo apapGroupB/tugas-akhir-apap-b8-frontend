@@ -164,11 +164,13 @@ const PengajuanSuratTable = props => {
               </TableHead>
               <TableBody>
                 {loading ? 
-                <TableCell colSpan={9} rowSpan={10} padding="checkbox">
-                  <SpinnerCard>
-                    <CircularProgress />
-                  </SpinnerCard>
-                </TableCell>
+                <TableRow>
+                  <TableCell colSpan={9} rowSpan={10} padding="checkbox">
+                    <SpinnerCard>
+                      <CircularProgress />
+                    </SpinnerCard>
+                  </TableCell>
+                </TableRow>
                   : dataState.slice(0, rowsPerPage).map(user => (
                     <TableRow
                       className={classes.tableRow}

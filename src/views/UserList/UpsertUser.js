@@ -5,10 +5,13 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Dialog from '@material-ui/core/Dialog';
 import TextField from "@material-ui/core/TextField";
 import { Modal, Title, ColumnContainer, ButtonContainer } from './UpsertUser.style'
-import roles from './roles.json'
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
+import moment from 'moment'
+import DateFnsUtils from '@date-io/date-fns';
+import 'date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -20,13 +23,21 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const requiredField = ['username', 'password', 'nama', 'tempat_lahir', 'telepon']
+
 const UpsertUser = props => {
   const { toggle } = props;
   const classes = useStyles();
+  const [errorField, setErrorField] = useState([])
   const [dataState, setDataState] = useState({
     username: "",
-    password: "",
-    id_role: 0
+    id_role: 2,
+    nama: "",
+    tempat_lahir: "",
+    tanggal_lahir: moment(),
+    alamat: "",
+    telepon: "",
+    password: ""
   })
 
   const handleChange = (id, event) => {
@@ -35,6 +46,31 @@ const UpsertUser = props => {
       [id]: event.target.value
     });
   };
+
+  const handleDateChange = (id, date) => {
+    console.log(id, date)
+    setDataState({
+      ...dataState,
+      [id]: moment(date).format()
+    });
+  }
+
+  const handleNumberChange = (event) => {
+    setDataState({
+      ...dataState,
+      telepon: event.target.value.replace(/[^0-9]/g, "")
+    });
+  };
+
+  const validation = () => {
+    const validateData = requiredField.filter(
+      (data) => dataState[data] === ""
+    );
+    setErrorField(validateData);
+    if (validateData.length === 0) {
+      toggle()
+    }
+  }
 
   return (
     <Backdrop className={classes.backdrop} open={true}>
@@ -46,57 +82,128 @@ const UpsertUser = props => {
     >
       <Modal>
       <div>
-      <Title>{'Tambah User'}</Title>
-      <ColumnContainer full>
-      <TextField
-          // error={errorField.find((dt) => dt === data.id) ? true : false}
-          id="username"
-          style={{ marginBottom: 15 }}
-          label={'Username'}
-          value={dataState.username}
-          onChange={(event) => handleChange("username", event)}
-          // helperText={
-          //   errorField.find((dt) => dt === data.id)
-          //     ? "Please Fill This Field"
-          //     : ""
-          // }
-        />
-      </ColumnContainer>
-      <ColumnContainer full>
-      <TextField
-          // error={errorField.find((dt) => dt === data.id) ? true : false}
-          id="password"
-          style={{ marginBottom: 15 }}
-          label={'Password'}
-          value={dataState.password}
-          onChange={(event) => handleChange("password", event)}
-          // helperText={
-          //   errorField.find((dt) => dt === data.id)
-          //     ? "Please Fill This Field"
-          //     : ""
-          // }
-        />
-      </ColumnContainer>
-      <ColumnContainer>
-        <InputLabel id="demo-simple-select-label">Role</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="id_role"
-          value={dataState.id_role}
-          onChange={e => (handleChange("id_role", e))}
-        >
-          {roles.map((data, i) => 
-            <MenuItem key={i} value={data.id}>{data.name}</MenuItem>
-          )}
-        </Select>
-      </ColumnContainer>
+        <Title>{'Tambah User'}</Title>
+        <ColumnContainer full>
+          <TextField
+            error={errorField.find((dt) => dt === "nama") ? true : false}
+            id="nama"
+            label={'Nama'}
+            value={dataState.nama}
+            onChange={(event) => handleChange("nama", event)}
+            helperText={
+              errorField.find((dt) => dt === "nama")
+                ? "Please Fill This Field"
+                : ""
+            }
+          />
+        </ColumnContainer>
+        <div style={{display: 'flex', flexDirection: 'row'}}>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <ColumnContainer>
+              <TextField
+                error={errorField.find((dt) => dt === "tempat_lahir") ? true : false}
+                id="tempat_lahir"
+                style={{ marginTop: 16 }}
+                label={'Tempat Lahir'}
+                value={dataState.tempat_lahir}
+                onChange={(event) => handleChange("tempat_lahir", event)}
+                helperText={
+                  errorField.find((dt) => dt === "tempat_lahir")
+                    ? "Please Fill This Field"
+                    : ""
+                }
+              />
+            </ColumnContainer>
+            <ColumnContainer >
+            <KeyboardDatePicker
+                disableToolbar
+                variant="inline"
+                format="dd-MM-yyyy"
+                margin="normal"
+                id="date-picker-inline"
+                label="Tanggal Lahir"
+                value={dataState.tanggal_lahir}
+                onChange={e => (handleDateChange("tanggal_lahir", e))}
+                KeyboardButtonProps={{
+                  'aria-label': 'change date',
+                }}
+              />
+            </ColumnContainer>
+          </MuiPickersUtilsProvider>
+        </div>
+        <div style={{display: 'flex', flexDirection: 'row'}}>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <ColumnContainer>
+              <TextField
+                  disabled
+                  id="role"
+                  label={'Role'}
+                  value="Admin TU"
+                />
+            </ColumnContainer>
+            <ColumnContainer >
+              <TextField
+                error={errorField.find((dt) => dt === "telepon") ? true : false}
+                id="telepon"
+                label={'No Handphone'}
+                value={dataState.telepon}
+                onChange={handleNumberChange}
+                helperText={
+                  errorField.find((dt) => dt === "telepon")
+                    ? "Please Fill This Field"
+                    : ""
+                }
+              />
+            </ColumnContainer>
+          </MuiPickersUtilsProvider>
+        </div>
+        <ColumnContainer full>
+          <TextField
+            id="alamat"
+            label={'Alamat'}
+            value={dataState.alamat}
+            onChange={(event) => handleChange("alamat", event)}
+          />
+        </ColumnContainer>
+        <div style={{display: 'flex', flexDirection: 'row'}}>
+          <ColumnContainer>
+            <TextField
+              error={errorField.find((dt) => dt === "username") ? true : false}
+              id="username"
+              label={'Username'}
+              value={dataState.username}
+              onChange={(event) => handleChange("username", event)}
+              helperText={
+                errorField.find((dt) => dt === "username")
+                  ? "Please Fill This Field"
+                  : ""
+              }
+            />
+          </ColumnContainer>
+          <ColumnContainer >
+            <TextField
+              type="password"
+              error={errorField.find((dt) => dt === "password") ? true : false}
+              id="password"
+              label={'Password'}
+              value={dataState.password}
+              onChange={(event) => handleChange("password", event)}
+              helperText={
+                errorField.find((dt) => dt === "password")
+                  ? "Please Fill This Field"
+                  : ""
+              }
+            />
+            
+          </ColumnContainer>
+        </div>
       </div>
       <ButtonContainer>
         <Button 
           color="primary" 
           variant="contained"
           style={{width: 100, marginLeft: 20}} 
-          onClick={toggle}
+          onClick={validation}
         >Save</Button>
         <Button 
           color="primary" 

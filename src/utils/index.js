@@ -1,4 +1,5 @@
 import corsRequest from './cors'
-import { REST } from './rest'
+import { BACKEND, WEBSERVICE } from './rest'
+import ROLE from './role.json'
 
-export { corsRequest, REST }
+export { corsRequest, BACKEND, ROLE, WEBSERVICE }

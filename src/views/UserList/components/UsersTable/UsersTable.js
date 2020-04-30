@@ -18,6 +18,8 @@ import {
   Typography,
   TablePagination
 } from '@material-ui/core';
+import { SpinnerCard } from './UsersTable.style'
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { getInitials } from 'helpers';
 
@@ -42,7 +44,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UsersTable = props => {
-  const { className, users, ...rest } = props;
+  const { className, users, loading, ...rest } = props;
 
   const classes = useStyles();
 
@@ -103,62 +105,39 @@ const UsersTable = props => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selectedUsers.length === users.length}
-                      color="primary"
-                      indeterminate={
-                        selectedUsers.length > 0 &&
-                        selectedUsers.length < users.length
-                      }
-                      onChange={handleSelectAll}
-                    />
-                  </TableCell>
-                  <TableCell>Name</TableCell>
+                  <TableCell>NIP</TableCell>
+                  <TableCell>Nama</TableCell>
+                  <TableCell>Username</TableCell>
                   <TableCell>Email</TableCell>
-                  <TableCell>Location</TableCell>
-                  <TableCell>Phone</TableCell>
-                  <TableCell>Registration date</TableCell>
-                  <TableCell>Registration date</TableCell>
-                  <TableCell>Registration date</TableCell>
+                  <TableCell>Tempat Lahir</TableCell>
+                  <TableCell>Tanggal Lahir</TableCell>
+                  <TableCell>Alamat</TableCell>
+                  <TableCell>No. Handphone</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.slice(0, rowsPerPage).map(user => (
+                {loading ? 
+                <TableRow>
+                  <TableCell colSpan={9} rowSpan={10} padding="checkbox">
+                    <SpinnerCard>
+                      <CircularProgress />
+                    </SpinnerCard>
+                  </TableCell> 
+                </TableRow> :
+                 users.slice(0, rowsPerPage).map((user, i) => (
                   <TableRow
                     className={classes.tableRow}
                     hover
-                    key={user.id}
-                    selected={selectedUsers.indexOf(user.id) !== -1}
+                    key={i}
                   >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        checked={selectedUsers.indexOf(user.id) !== -1}
-                        color="primary"
-                        onChange={event => handleSelectOne(event, user.id)}
-                        value="true"
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <div className={classes.nameContainer}>
-                        <Avatar
-                          className={classes.avatar}
-                          src={user.avatarUrl}
-                        >
-                          {getInitials(user.name)}
-                        </Avatar>
-                        <Typography variant="body1">{user.name}</Typography>
-                      </div>
-                    </TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>
-                      {user.address.city}, {user.address.state},{' '}
-                      {user.address.country}
-                    </TableCell>
-                    <TableCell>{user.phone}</TableCell>
-                    <TableCell>
-                      {moment(user.createdAt).format('DD/MM/YYYY')}
-                    </TableCell>
+                    <TableCell>{user.nip}</TableCell>
+                    <TableCell>{user.nama}</TableCell>
+                    <TableCell>{'-'}</TableCell>
+                    <TableCell>{'-'}</TableCell>
+                    <TableCell>{user.tempatLahir}</TableCell>
+                    <TableCell>{user.tanggalLahir}</TableCell>
+                    <TableCell>{user.alamat}</TableCell>
+                    <TableCell>{user.telepon}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
