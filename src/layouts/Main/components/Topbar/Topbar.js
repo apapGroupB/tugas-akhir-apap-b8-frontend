@@ -7,6 +7,7 @@ import { AppBar, Toolbar, Badge, Hidden, IconButton, Typography } from '@materia
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
+import { Logout } from '../../../../components'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -27,16 +28,19 @@ const useStyles = makeStyles(theme => ({
 
 const Topbar = props => {
   const { className, onSidebarOpen, ...rest } = props;
-
+  const [showLogout, setShowLogout] = useState(false)
   const classes = useStyles();
 
-  const [notifications] = useState([]);
+  const toggle = () => {
+    setShowLogout(!showLogout)
+  }
 
   return (
     <AppBar
       {...rest}
       className={clsx(classes.root, className)}
     >
+      {showLogout && <Logout toggle={toggle}/>}
       <Toolbar>
         <RouterLink to="/">
           <Typography
@@ -50,16 +54,8 @@ const Topbar = props => {
         </RouterLink>
         <div className={classes.flexGrow} />
         <Hidden mdDown>
-          <IconButton color="inherit">
-            <Badge
-              badgeContent={notifications.length}
-              color="primary"
-              variant="dot"
-            >
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
           <IconButton
+            onClick={toggle}
             className={classes.signOutButton}
             color="inherit"
           >

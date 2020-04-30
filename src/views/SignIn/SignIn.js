@@ -244,7 +244,7 @@ const SignIn = props => {
                   className={classes.title}
                   variant="h2"
                 >
-                  Sign in
+                  Login
                 </Typography>
                 <TextField
                   className={classes.textField}
@@ -284,7 +284,7 @@ const SignIn = props => {
                   variant="contained"
                   onClick={validation}
                 >
-                  Sign in now
+                  LOGIN
                 </Button>
               </form>
             </div>
