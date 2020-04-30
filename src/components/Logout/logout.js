@@ -36,7 +36,6 @@ const Logout = props => {
   const handleLogout = () => {
     localStorage.removeItem("isLogin")
     window.location.reload()
-    history.push('/')
   }
 
   return (
