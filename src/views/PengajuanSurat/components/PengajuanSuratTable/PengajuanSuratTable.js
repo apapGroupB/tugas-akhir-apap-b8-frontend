@@ -195,7 +195,7 @@ const PengajuanSuratTable = props => {
                           <EditIcon style={{width: 20, height: 20}} />
                         </IconButton>}
                       </TableCell>
-                      <TableCell>{user.nomor_surat}</TableCell>
+                      <TableCell>{user.nomor_surat === '0' ? '-' : user.nomor_surat}</TableCell>
                       <TableCell>{jenisSurat.find(data => data.id === user.id_jenis_surat) ? jenisSurat.find(data => data.id === user.id_jenis_surat).description : '-'  }</TableCell>
                       <TableCell>
                         {statusConfig.find(data => data.id === user.status) ?
@@ -210,7 +210,7 @@ const PengajuanSuratTable = props => {
                         '-'  }</TableCell>
                       <TableCell>{moment(user.tanggal_pengajuan).format('DD/MM/YYYY')}</TableCell>
                       <TableCell>
-                        {moment(user.tanggal_disetujui).format('DD/MM/YYYY')}
+                        {user.tanggal_disetujui === null ? '-' : moment(user.tanggal_disetujui).format('DD/MM/YYYY')}
                       </TableCell>
                       <TableCell>{user.keterangan}</TableCell>
                     </TableRow>
