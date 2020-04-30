@@ -39,14 +39,14 @@ const Topbar = props => {
     >
       <Toolbar>
         <RouterLink to="/">
-        <Typography
-              className={classes.title}
-              // color="#FFF"
-              gutterBottom
-              variant="body2"
-            >
-              SI - TU Group B
-            </Typography>
+          <Typography
+            className={classes.title}
+            // color="#FFF"
+            gutterBottom
+            variant="body2"
+          >
+            SI - TU Group B
+          </Typography>
         </RouterLink>
         <div className={classes.flexGrow} />
         <Hidden mdDown>

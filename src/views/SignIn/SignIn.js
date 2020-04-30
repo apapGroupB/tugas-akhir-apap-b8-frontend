@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link as RouterLink, withRouter } from 'react-router-dom';
+import { Link as RouterLink, withRouter, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
 import { makeStyles } from '@material-ui/styles';
@@ -12,6 +12,7 @@ import {
   Typography
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+
 
 import { Facebook as FacebookIcon, Google as GoogleIcon } from 'icons';
 
@@ -49,13 +50,13 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
     backgroundImage: 'url(/images/auth.jpg)',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center'
   },
   quoteInner: {
+    marginTop: 50,
     textAlign: 'center',
     flexBasis: '600px'
   },
@@ -127,7 +128,7 @@ const useStyles = makeStyles(theme => ({
 
 const SignIn = props => {
   const { history } = props;
-
+  const mainHistory = useHistory()
   const classes = useStyles();
 
   const [formState, setFormState] = useState({
@@ -175,6 +176,12 @@ const SignIn = props => {
     history.push('/');
   };
 
+  const validation = () => {
+    localStorage.setItem('isLogin', true)
+    window.location.reload()
+    mainHistory.push('/dashboard')
+  }
+
   const hasError = field =>
     formState.touched[field] && formState.errors[field] ? true : false;
 
@@ -195,21 +202,27 @@ const SignIn = props => {
                 className={classes.quoteText}
                 variant="h1"
               >
-                Hella narwhal Cosby sweater McSweeney's, salvia kitsch before
-                they sold out High Life.
+                Selamat Datang di SI-TU 
+                Group B
               </Typography>
               <div className={classes.person}>
                 <Typography
                   className={classes.name}
-                  variant="body1"
+                  variant="body2"
                 >
-                  Takamaru Ayako
+                  Muhammad Riza Fauzi [1806269751]
                 </Typography>
                 <Typography
                   className={classes.bio}
                   variant="body2"
                 >
-                  Manager at inVision
+                  Ahmad Baehaqi
+                </Typography>
+                <Typography
+                  className={classes.bio}
+                  variant="body2"
+                >
+                  Ari Rasmana
                 </Typography>
               </div>
             </div>
@@ -222,15 +235,10 @@ const SignIn = props => {
           xs={12}
         >
           <div className={classes.content}>
-            <div className={classes.contentHeader}>
-              <IconButton onClick={handleBack}>
-                <ArrowBackIcon />
-              </IconButton>
-            </div>
             <div className={classes.contentBody}>
               <form
                 className={classes.form}
-                onSubmit={handleSignIn}
+                onSubmit={validation}
               >
                 <Typography
                   className={classes.title}
@@ -274,6 +282,7 @@ const SignIn = props => {
                   size="large"
                   type="submit"
                   variant="contained"
+                  onClick={validation}
                 >
                   Sign in now
                 </Button>

@@ -11,6 +11,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import './assets/scss/index.scss';
 import validators from './common/validators';
 import Routes from './Routes';
+import Auth from './Auth'
 
 const browserHistory = createBrowserHistory();
 
@@ -23,12 +24,17 @@ validate.validators = {
   ...validators
 };
 
+console.log('LOGIN', localStorage.getItem('isLogin'))
+
 export default class App extends Component {
   render() {
     return (
       <ThemeProvider theme={theme}>
         <Router history={browserHistory}>
-          <Routes />
+          {
+            localStorage.getItem('isLogin') === false || 
+            !localStorage.getItem('isLogin') ? <Auth /> : <Routes />
+          }
         </Router>
       </ThemeProvider>
     );

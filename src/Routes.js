@@ -73,21 +73,19 @@ const Routes = () => {
         layout={MainLayout}
         path="/lainnya"
       />
-      <RouteWithLayout
+      {/* <RouteWithLayout
         component={SignInView}
         exact
         layout={MinimalLayout}
         path="/sign-in"
-      />
+      /> */}
       <RouteWithLayout
         component={NotFoundView}
         exact
         layout={MinimalLayout}
         path="/not-found"
       />
-
-      
-      <Redirect to="/not-found" />
+      <Redirect to="/dashboard" />
     </Switch>
   );
 };
