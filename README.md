@@ -2,9 +2,9 @@
 
 ## Anggota Kelompok
 
-- [Muhammad Riza Fauzi Rahman](https://github.com/rizafauzi) - 1806269676
-- [Ahmad Baehaqi](https://github.com/ahmad-baehaqi) - 1806269801
-- [Ari Rasmana K.](https://github.com/arirasmana) - 1806269814
+- [Muhammad Riza Fauzi Rahman](https://github.com/rizafauzi) - 1806269751
+- [Ahmad Baehaqi](https://github.com/ahmad-baehaqi) - 1806269581
+- [Ari Rasmana K.](https://github.com/arirasmana) - 1806269625
 
 ## Kontrak Tahap 1 Tugas Akhir
 
