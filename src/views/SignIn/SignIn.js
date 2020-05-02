@@ -205,7 +205,7 @@ const SignIn = props => {
                 Selamat Datang di SI-TU 
                 Group B
               </Typography>
-              <div className={classes.person}>
+              {/* <div className={classes.person}>
                 <Typography
                   className={classes.name}
                   variant="body2"
@@ -224,7 +224,7 @@ const SignIn = props => {
                 >
                   Ari Rasmana
                 </Typography>
-              </div>
+              </div> */}
             </div>
           </div>
         </Grid>

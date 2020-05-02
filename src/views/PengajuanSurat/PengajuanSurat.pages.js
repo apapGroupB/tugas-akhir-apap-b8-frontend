@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
 import { PengajuanSuratToolbar, PengajuanSuratTable } from './components';
 import UpsertSurat from './UpsertSurat'
 import useAxios from "axios-hooks";
 import { BACKEND } from '../../utils'
+import {SnackBar} from '../../components'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -15,10 +14,6 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(2)
   },
 }));
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 const UserList = () => {
   const classes = useStyles();
@@ -56,31 +51,27 @@ const UserList = () => {
         dataItem={dataItem}
         actionType={actionType} />
       }
-      <Snackbar 
-        open={notif} 
-        autoHideDuration={6000} 
-        onClose={handleClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        >
-        <Alert onClose={handleClose} severity="success">
-          {actionType === 'Tambah' ? 
-          'Pengajuan Surat telah berhasil ditambahkan!' : 
-          'Pengajuan Surat telah berhasil diedit!'
-          }
-        </Alert>
-      </Snackbar>
+      <SnackBar 
+        notif={notif}
+        status={"success"}
+        handleClose={handleClose}
+        description={actionType === 'Tambah' ? 
+        'Pengajuan Surat telah berhasil ditambahkan!' : 
+        'Pengajuan Surat telah berhasil diedit!'
+        } 
+      />
       <PengajuanSuratToolbar 
-        setActionType={setActionType} 
-        deleteToggle={deleteToggle} 
         toggle={toggle} 
+        deleteToggle={deleteToggle} 
+        setActionType={setActionType} 
       />
       <div className={classes.content}>
         <PengajuanSuratTable 
           toggle={toggle}
-          setActionType={setActionType}
-          setDataItem={setDataItem}
-          deleteAct={deleteAct} 
           loading={loading}
+          deleteAct={deleteAct} 
+          setDataItem={setDataItem}
+          setActionType={setActionType}
           dataState={loading ? [] : getData } 
         />
       </div>

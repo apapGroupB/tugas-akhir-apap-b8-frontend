@@ -92,22 +92,18 @@ const PengajuanSuratTable = props => {
 
   const handleSelectAll = event => {
     const { dataState } = props;
-
     let selectedUsers;
-
     if (event.target.checked) {
       selectedUsers = dataState.map(user => user.id);
     } else {
       selectedUsers = [];
     }
-
     setSelectedUsers(selectedUsers);
   };
 
   const handleSelectOne = (event, id) => {
     const selectedIndex = selectedUsers.indexOf(id);
     let newSelectedUsers = [];
-
     if (selectedIndex === -1) {
       newSelectedUsers = newSelectedUsers.concat(selectedUsers, id);
     } else if (selectedIndex === 0) {
@@ -120,7 +116,6 @@ const PengajuanSuratTable = props => {
         selectedUsers.slice(selectedIndex + 1)
       );
     }
-
     setSelectedUsers(newSelectedUsers);
   };
 

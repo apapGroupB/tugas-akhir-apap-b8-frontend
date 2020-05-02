@@ -1,17 +1,21 @@
+import moment from 'moment'
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
-import Backdrop from '@material-ui/core/Backdrop';
 import Dialog from '@material-ui/core/Dialog';
+import { makeStyles } from '@material-ui/styles';
+import Backdrop from '@material-ui/core/Backdrop';
 import TextField from "@material-ui/core/TextField";
 import { Modal, Title, ColumnContainer, ButtonContainer } from './UpsertUser.style'
-import moment from 'moment'
 import DateFnsUtils from '@date-io/date-fns';
 import 'date-fns';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
+import axios from 'axios'
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+import { BACKEND } from '../../utils'
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -26,9 +30,10 @@ const useStyles = makeStyles(theme => ({
 const requiredField = ['username', 'password', 'nama', 'tempat_lahir', 'telepon']
 
 const UpsertUser = props => {
-  const { toggle } = props;
+  const { toggle, refetch, setNotif  } = props;
   const classes = useStyles();
   const [errorField, setErrorField] = useState([])
+  const [postLoading, setPostLoading] = useState(false)
   const [dataState, setDataState] = useState({
     username: "",
     id_role: 2,
@@ -68,7 +73,13 @@ const UpsertUser = props => {
     );
     setErrorField(validateData);
     if (validateData.length === 0) {
-      toggle()
+      setPostLoading(true)
+      axios.post(BACKEND.ADD_USER, dataState).then(res => {
+        setNotif(true)
+        toggle()
+        refetch()
+        setPostLoading(false)
+      })
     }
   }
 
@@ -200,18 +211,21 @@ const UpsertUser = props => {
       </div>
       <ButtonContainer>
         <Button 
+          disabled={postLoading}
           color="primary" 
           variant="contained"
           style={{width: 100, marginLeft: 20}} 
           onClick={validation}
-        >Save</Button>
+        >
+          {postLoading ? <CircularProgress color="inherit" size={20}/> : 'Save'}
+        </Button>
         <Button 
+          disabled={postLoading}
           color="primary" 
           style={{width: 100}} 
           onClick={toggle}
         >Cancel</Button>
       </ButtonContainer>
-        
       </Modal>
       </Dialog>
     </Backdrop>
