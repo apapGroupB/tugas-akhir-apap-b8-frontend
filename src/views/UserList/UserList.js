@@ -73,7 +73,7 @@ const UserList = () => {
         }
       />
       <UsersToolbar 
-        toggle={toggle} 
+        toggle={toggle}
         deleteToggle={deleteToggle} 
         setActionType={setActionType} 
       />
@@ -85,7 +85,7 @@ const UserList = () => {
           // setDataItem={setDataItem}
           // deleteAct={deleteAct} 
           loading={loading}
-          users={loading || getError ? [] : getData } 
+          users={loading || getError ? [] : getData.result } 
         />
       </div>
     </div>

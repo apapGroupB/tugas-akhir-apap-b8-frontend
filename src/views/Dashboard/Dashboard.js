@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Grid, Typography } from '@material-ui/core';
+import { withCookies } from 'react-cookie';
 
 import {
   Budget,
@@ -18,8 +19,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Dashboard = () => {
+const Dashboard = (props) => {
   const classes = useStyles();
+  console.log('cookies: ', props.cookies)
+
 
   return (
     <div className={classes.root}>
@@ -77,4 +80,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default withCookies(Dashboard);

@@ -12,6 +12,10 @@ import {
   Typography
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { useCookies } from 'react-cookie';
+import { BACKEND } from '../../utils'
+import axios from 'axios'
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 import { Facebook as FacebookIcon, Google as GoogleIcon } from 'icons';
@@ -128,62 +132,73 @@ const useStyles = makeStyles(theme => ({
 
 const SignIn = props => {
   const { history } = props;
-  const mainHistory = useHistory()
   const classes = useStyles();
-
-  const [formState, setFormState] = useState({
+  const mainHistory = useHistory()
+  const [postLoading, setPostLoading] = useState(false)
+  
+  const [user, setUser] = useCookies(['user']);
+  
+  const [dataState, setDataState] = useState({
+    username: '',
+    password: ''
+  })
+  const [error, setError] = useState({
     isValid: false,
-    values: {},
-    touched: {},
-    errors: {}
-  });
+    username: false,
+    password: false,
+    message: ''
+  })
 
-  useEffect(() => {
-    const errors = validate(formState.values, schema);
 
-    setFormState(formState => ({
-      ...formState,
-      isValid: errors ? false : true,
-      errors: errors || {}
-    }));
-  }, [formState.values]);
+  
 
-  const handleBack = () => {
-    history.goBack();
-  };
 
-  const handleChange = event => {
-    event.persist();
 
-    setFormState(formState => ({
-      ...formState,
-      values: {
-        ...formState.values,
-        [event.target.name]:
-          event.target.type === 'checkbox'
-            ? event.target.checked
-            : event.target.value
-      },
-      touched: {
-        ...formState.touched,
-        [event.target.name]: true
-      }
-    }));
-  };
+  // useEffect(() => {
+  //   const errors = validate(formState.values, schema);
 
-  const handleSignIn = event => {
-    event.preventDefault();
-    history.push('/');
+  //   setFormState(formState => ({
+  //     ...formState,
+  //     isValid: errors ? false : true,
+  //     errors: errors || {}
+  //   }));
+  // }, [formState.values]);
+
+
+  const handleChange = (field, event) => {
+    setDataState({
+      ...dataState,
+      [field]: event.target.value
+    })
+    setError({
+      ...error,
+      username: false,
+      password: false,
+      isValid: error.password !== '' && error.username !== '' ? true : false
+    })
   };
 
   const validation = () => {
-    localStorage.setItem('isLogin', true)
-    window.location.reload()
-    mainHistory.push('/dashboard')
+    setPostLoading(true)
+    axios.post(BACKEND.AUTHENTICATE, {
+      username: dataState.username,
+      password: dataState.password
+    }).then(res => {
+      setPostLoading(false)
+      setUser('user', res.data, { path: '/' })
+      window.location.reload()
+      mainHistory.push('/dashboard')
+    }).catch(err => {
+      setPostLoading(false)
+      console.log('ERROR LUR: ', err)
+      setError({
+        username: true,
+        password: true,
+        message: 'Username or Password is not correct',
+        isValid: false
+      })
+    })
   }
-
-  const hasError = field =>
-    formState.touched[field] && formState.errors[field] ? true : false;
 
   return (
     <div className={classes.root}>
@@ -238,7 +253,7 @@ const SignIn = props => {
             <div className={classes.contentBody}>
               <form
                 className={classes.form}
-                onSubmit={validation}
+                // onSubmit={validation}
               >
                 <Typography
                   className={classes.title}
@@ -248,43 +263,39 @@ const SignIn = props => {
                 </Typography>
                 <TextField
                   className={classes.textField}
-                  error={hasError('email')}
+                  error={error.username}
                   fullWidth
-                  helperText={
-                    hasError('email') ? formState.errors.email[0] : null
-                  }
-                  label="Email address"
-                  name="email"
-                  onChange={handleChange}
+                  label="Username"
+                  name="username"
+                  onChange={e => handleChange('username', e)}
                   type="text"
-                  value={formState.values.email || ''}
+                  value={dataState.username|| ''}
                   variant="outlined"
                 />
                 <TextField
                   className={classes.textField}
-                  error={hasError('password')}
+                  error={error.password}
                   fullWidth
                   helperText={
-                    hasError('password') ? formState.errors.password[0] : null
+                    error.message !== '' && !error.isValid ? error.message : ''
                   }
                   label="Password"
                   name="password"
-                  onChange={handleChange}
+                  onChange={e => handleChange('password', e)}
                   type="password"
-                  value={formState.values.password || ''}
+                  value={dataState.password || ''}
                   variant="outlined"
                 />
                 <Button
                   className={classes.signInButton}
                   color="primary"
-                  disabled={!formState.isValid}
+                  disabled={!error.isValid || postLoading}
                   fullWidth
                   size="large"
-                  type="submit"
                   variant="contained"
                   onClick={validation}
                 >
-                  LOGIN
+                  {postLoading ? <CircularProgress color="inherit" size={20}/> : 'LOGIN'}
                 </Button>
               </form>
             </div>

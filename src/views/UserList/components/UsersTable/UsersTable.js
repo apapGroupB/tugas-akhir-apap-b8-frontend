@@ -131,8 +131,8 @@ const UsersTable = props => {
                   >
                     <TableCell>{user.nama}</TableCell>
                     <TableCell>{user.username}</TableCell>
-                    <TableCell>{user.tempat_lahir}</TableCell>
-                    <TableCell>{user.tanggal_lahir}</TableCell>
+                    <TableCell>{user.tempatLahir}</TableCell>
+                    <TableCell>{user.tanggalLahir}</TableCell>
                     <TableCell>{user.alamat}</TableCell>
                     <TableCell>{user.telepon}</TableCell>
                     <TableCell>{`${user.nip.substring(0, 19)}...`}</TableCell>

@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { PengajuanSuratToolbar, PengajuanSuratTable } from './components';
-import UpsertSurat from './UpsertSurat'
 import useAxios from "axios-hooks";
 import { BACKEND } from '../../utils'
+import UpsertSurat from './UpsertSurat'
+import React, { useState } from 'react';
 import {SnackBar} from '../../components'
+import { withCookies } from 'react-cookie';
+import { makeStyles } from '@material-ui/styles';
+import { getAxios, getToken } from '../../utils'
+
+import { PengajuanSuratToolbar, PengajuanSuratTable } from './components';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -15,20 +18,15 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const UserList = () => {
+const UserList = (props) => {
   const classes = useStyles();
   const [showModal, setShowModal] = useState(false)
-  const [deleteAct, setDeleteAct] = useState(false)
   const [actionType, setActionType] = useState('Tambah')
   const [dataItem, setDataItem] = useState({})
   const [notif, setNotif] = useState(false)
 
   const toggle = () => {
     setShowModal(!showModal)
-  }
-
-  const deleteToggle = () => {
-    setDeleteAct(!deleteAct)
   }
 
   const handleClose = (event, reason) => {
@@ -39,7 +37,7 @@ const UserList = () => {
   };
 
   const [{ data: getData, loading, error: getError }, refetch] = useAxios(
-    BACKEND.GET_ALL_PENGAJUAN
+    getAxios(BACKEND.GET_ALL_PENGAJUAN, props.allCookies.user.jwttoken)
   );
 
   return (
@@ -62,21 +60,19 @@ const UserList = () => {
       />
       <PengajuanSuratToolbar 
         toggle={toggle} 
-        deleteToggle={deleteToggle} 
         setActionType={setActionType} 
       />
       <div className={classes.content}>
-        <PengajuanSuratTable 
+        <PengajuanSuratTable
           toggle={toggle}
           loading={loading}
-          deleteAct={deleteAct} 
           setDataItem={setDataItem}
           setActionType={setActionType}
-          dataState={loading ? [] : getData } 
+          dataState={loading || getError ? [] : getData }
         />
       </div>
     </div>
   );
 };
 
-export default UserList;
+export default withCookies(UserList);

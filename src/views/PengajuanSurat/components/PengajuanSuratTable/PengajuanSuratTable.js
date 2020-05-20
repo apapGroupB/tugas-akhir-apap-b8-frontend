@@ -18,14 +18,16 @@ import {
   Typography,
   TablePagination
 } from '@material-ui/core';
+import { withCookies } from 'react-cookie';
 import { SpinnerCard } from './PengajuanSuratTable.style'
 import Fab from '@material-ui/core/Fab';
 import EditIcon from '@material-ui/icons/Edit';
 import Button from '@material-ui/core/Button';
+import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import statusConfig from '../../statusConfig.json'
-
+import DeleteSurat from '../../DeleteSurat'
 import { StatusBullet } from 'components';
 
 import { getInitials } from 'helpers';
@@ -78,46 +80,16 @@ const PengajuanSuratTable = props => {
   const { 
     className, 
     dataState, 
-    deleteToggle, 
-    deleteAct, 
     toggle,
     setActionType,
     setDataItem, 
     loading, ...rest } = props;
   const classes = useStyles();
 
-  const [selectedUsers, setSelectedUsers] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
+  const [deleteData, setDeleteData] = useState(0)
 
-  const handleSelectAll = event => {
-    const { dataState } = props;
-    let selectedUsers;
-    if (event.target.checked) {
-      selectedUsers = dataState.map(user => user.id);
-    } else {
-      selectedUsers = [];
-    }
-    setSelectedUsers(selectedUsers);
-  };
-
-  const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedUsers.indexOf(id);
-    let newSelectedUsers = [];
-    if (selectedIndex === -1) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers, id);
-    } else if (selectedIndex === 0) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers.slice(1));
-    } else if (selectedIndex === selectedUsers.length - 1) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelectedUsers = newSelectedUsers.concat(
-        selectedUsers.slice(0, selectedIndex),
-        selectedUsers.slice(selectedIndex + 1)
-      );
-    }
-    setSelectedUsers(newSelectedUsers);
-  };
 
   const handlePageChange = (event, page) => {
     setPage(page);
@@ -132,29 +104,20 @@ const PengajuanSuratTable = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
+      { deleteData !== 0 && <DeleteSurat setDeleteData={setDeleteData} />}
       <CardContent className={classes.content}>
         <PerfectScrollbar>
           <div className={classes.inner}>
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell padding="checkbox">
-                    {deleteAct && <Checkbox
-                      checked={selectedUsers.length === dataState.length}
-                      color="primary"
-                      indeterminate={
-                        selectedUsers.length > 0 &&
-                        selectedUsers.length < dataState.length
-                      }
-                      onChange={handleSelectAll}
-                    />}
-                  </TableCell>
                   <TableCell>Nomor</TableCell>
                   <TableCell>Jenis Surat</TableCell>
                   <TableCell>Status</TableCell>
                   <TableCell>Tgl Pengajuan</TableCell>
                   <TableCell>Tgl Disetujui</TableCell>
                   <TableCell>Keterangan</TableCell>
+                  <TableCell>Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -171,27 +134,7 @@ const PengajuanSuratTable = props => {
                       className={classes.tableRow}
                       hover
                       key={user.id}
-                      selected={selectedUsers.indexOf(user.id) !== -1}
                     >
-                      <TableCell padding="checkbox">
-                        {deleteAct ? 
-                        <Checkbox
-                          checked={selectedUsers.indexOf(user.id) !== -1}
-                          color="primary"
-                          onChange={event => handleSelectOne(event, user.id)}
-                          value="true"
-                        /> : 
-                        <IconButton  
-                          color="primary" 
-                          onClick={() => {
-                            setActionType('Edit')
-                            setDataItem(user)
-                            toggle()
-                          }}
-                          component="span">
-                          <EditIcon style={{width: 20, height: 20}} />
-                        </IconButton>}
-                      </TableCell>
                       <TableCell>{user.nomor_surat === '0' ? '-' : user.nomor_surat}</TableCell>
                       <TableCell>{jenisSurat.find(data => data.id === user.id_jenis_surat) ? jenisSurat.find(data => data.id === user.id_jenis_surat).description : '-'  }</TableCell>
                       <TableCell>
@@ -210,6 +153,44 @@ const PengajuanSuratTable = props => {
                         {user.tanggal_disetujui === null ? '-' : moment(user.tanggal_disetujui).format('DD/MM/YYYY')}
                       </TableCell>
                       <TableCell>{user.keterangan}</TableCell>
+                      <TableCell>
+                        {[1, 2].includes(props.allCookies.user.id_role) &&
+                          user.status === 0 ?
+                        <IconButton 
+                          color="primary" 
+                          onClick={() => {
+                            setActionType('Edit')
+                            setDataItem(user)
+                            toggle()
+                          }}
+                          >
+                          <EditIcon style={{width: 20, height: 20}} />
+                          </IconButton> :
+                          <IconButton 
+                            color="primary" 
+                            disabled
+                          >
+                          <EditIcon style={{width: 20, height: 20}} />
+                          </IconButton>}
+                        {
+                          user.uuid_user === props.allCookies.user.uuid ||
+                            (props.allCookies.user.id_role === 2
+                              && user.status === 0
+                            ) ?
+                        <IconButton 
+                          style={{ color: '#c62828' }}
+                          onClick={() => {
+                            setDeleteData(user.id)
+                            setDataItem(user)
+                            toggle()
+                          }}
+                          component="span">
+                          <DeleteIcon style={{width: 20, height: 20}} />
+                        </IconButton> :
+                        <IconButton  disabled>
+                          <DeleteIcon style={{width: 20, height: 20}} />
+                        </IconButton>}
+                      </TableCell>
                     </TableRow>
                   ))}
               </TableBody>
@@ -237,4 +218,4 @@ PengajuanSuratTable.propTypes = {
   dataState: PropTypes.array.isRequired
 };
 
-export default PengajuanSuratTable;
+export default withCookies(PengajuanSuratTable);

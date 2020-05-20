@@ -1,9 +1,11 @@
-import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { withCookies } from 'react-cookie';
 import { makeStyles } from '@material-ui/styles';
+import { Link as RouterLink } from 'react-router-dom';
 import { Avatar, Typography } from '@material-ui/core';
+import { getRole } from '../../../../../../utils'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -22,16 +24,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Profile = props => {
-  const { className, ...rest } = props;
+  const { className, allCookies, ...rest } = props;
 
   const classes = useStyles();
 
-  const user = {
-    name: 'User SI-TU Group B',
-    avatar: '/images/avatars/avatar_11.png',
-    bio: 'Admin'
-  };
-
+  console.log('allCookies: ', allCookies)
   return (
     <div
       {...rest}
@@ -41,16 +38,18 @@ const Profile = props => {
         alt="Person"
         className={classes.avatar}
         component={RouterLink}
-        src={user.avatar}
+        src={'/images/avatars/avatar_11.png'}
         to="/account"
       />
       <Typography
         className={classes.name}
         variant="h4"
       >
-        {user.name}
+        {allCookies.user.name}
       </Typography>
-      <Typography variant="body2">{user.bio}</Typography>
+      <Typography variant="body2">
+        {getRole(allCookies.user.id_role).name}
+      </Typography>
     </div>
   );
 };
@@ -59,4 +58,4 @@ Profile.propTypes = {
   className: PropTypes.string
 };
 
-export default Profile;
+export default withCookies(Profile);

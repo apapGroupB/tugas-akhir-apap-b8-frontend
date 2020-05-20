@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Button, Typography } from '@material-ui/core';
 import Backdrop from '@material-ui/core/Backdrop';
 import Dialog from '@material-ui/core/Dialog';
+import { useCookies, withCookies } from 'react-cookie';
 import TextField from "@material-ui/core/TextField";
 import { Modal, Title, Subtitle, ColumnContainer, ButtonContainer } from './logout.style'
 
@@ -18,13 +19,16 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Logout = props => {
+  console.log(props)
   const history = useHistory()
   const { toggle } = props;
   const classes = useStyles();
+  const [user, setUser] = useCookies(['user']);
   const [dataState, setDataState] = useState({
     nama: "",
     keterangan: ""
   })
+
 
   const handleChange = (id, event) => {
     setDataState({
@@ -34,8 +38,9 @@ const Logout = props => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("isLogin")
+    setUser('user', {}, { path: '/' })
     window.location.reload()
+    history.push('/sign-in')
   }
 
   return (
@@ -69,4 +74,4 @@ const Logout = props => {
   );
 };
 
-export default Logout;
+export default withCookies(Logout);

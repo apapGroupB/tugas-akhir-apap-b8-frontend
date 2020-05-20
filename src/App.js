@@ -12,6 +12,7 @@ import './assets/scss/index.scss';
 import validators from './common/validators';
 import Routes from './Routes';
 import Auth from './Auth'
+import { CookiesProvider, withCookies } from 'react-cookie';
 
 const browserHistory = createBrowserHistory();
 
@@ -24,19 +25,22 @@ validate.validators = {
   ...validators
 };
 
-console.log('LOGIN', localStorage.getItem('isLogin'))
 
-export default class App extends Component {
+class App extends Component {
+  
   render() {
+    console.log('this.props.cookies.jwttoken: ', this.props.allCookies)
     return (
       <ThemeProvider theme={theme}>
-        <Router history={browserHistory}>
-          {
-            localStorage.getItem('isLogin') === false || 
-            !localStorage.getItem('isLogin') ? <Auth /> : <Routes />
-          }
-        </Router>
+        <CookiesProvider>
+          <Router history={browserHistory}>
+            { this.props.allCookies.user.jwttoken ? <Routes /> : <Auth />
+            }
+          </Router>
+        </CookiesProvider>
       </ThemeProvider>
     );
   }
 }
+
+export default withCookies(App)

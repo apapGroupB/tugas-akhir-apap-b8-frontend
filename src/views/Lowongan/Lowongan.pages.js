@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/styles';
-
-import { LowonganToolbar, LowonganTable } from './components';
 import mockData from './data';
-import UpsertLowongan from './UpsertLowongan'
-import { BACKEND } from '../../utils'
 import useAxios from "axios-hooks";
+import React, { useState } from 'react';
+import { withCookies } from 'react-cookie';
+import UpsertLowongan from './UpsertLowongan'
+import { BACKEND, getAxios } from '../../utils'
+import { makeStyles } from '@material-ui/styles';
+import { LowonganToolbar, LowonganTable } from './components';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UserList = () => {
+const UserList = (props) => {
   const classes = useStyles();
 
   const [users] = useState(mockData);
@@ -34,7 +34,7 @@ const UserList = () => {
   }
 
   const [{ data: getData, loading, error: getError }] = useAxios(
-    BACKEND.GET_ALL_LOWONGAN
+    getAxios(BACKEND.GET_ALL_LOWONGAN, props.allCookies.token)
   );
 
   return (
@@ -64,4 +64,4 @@ const UserList = () => {
   );
 };
 
-export default UserList;
+export default withCookies(UserList);
