@@ -26,9 +26,10 @@ import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import statusConfig from '../../statusConfig.json'
+import statusConfig from '../../statusConfig.js'
 import DeleteSurat from '../../DeleteSurat'
 import { StatusBullet } from 'components';
+import _ from 'lodash'
 
 import { getInitials } from 'helpers';
 import { Colors } from 'styles';
@@ -81,37 +82,30 @@ const PengajuanSuratTable = props => {
     className, 
     dataState, 
     toggle,
-    setActionType,
-    setDataItem, 
+    access,
     loading, ...rest } = props;
   const classes = useStyles();
 
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
-  const [deleteData, setDeleteData] = useState(0)
-
 
   const handlePageChange = (event, page) => {
     setPage(page);
   };
-
-  const handleRowsPerPageChange = event => {
-    setRowsPerPage(event.target.value);
-  };
-
+  
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
-      { deleteData !== 0 && <DeleteSurat setDeleteData={setDeleteData} />}
       <CardContent className={classes.content}>
         <PerfectScrollbar>
           <div className={classes.inner}>
-            <Table>
+            <Table size="small">
               <TableHead>
                 <TableRow>
-                  <TableCell>Nomor</TableCell>
+                  <TableCell>No</TableCell>
+                  <TableCell>No. Surat</TableCell>
                   <TableCell>Jenis Surat</TableCell>
                   <TableCell>Status</TableCell>
                   <TableCell>Tgl Pengajuan</TableCell>
@@ -129,23 +123,24 @@ const PengajuanSuratTable = props => {
                     </SpinnerCard>
                   </TableCell>
                 </TableRow>
-                  : dataState.slice(0, rowsPerPage).map(user => (
+                  : _.orderBy(dataState, ['id'], ['desc']).slice((page) * rowsPerPage, (page + 1) * rowsPerPage).map((user, index) => (
                     <TableRow
                       className={classes.tableRow}
                       hover
                       key={user.id}
                     >
+                      <TableCell>{(page*10)+(index + 1)}</TableCell>
                       <TableCell>{user.nomor_surat === '0' ? '-' : user.nomor_surat}</TableCell>
                       <TableCell>{jenisSurat.find(data => data.id === user.id_jenis_surat) ? jenisSurat.find(data => data.id === user.id_jenis_surat).description : '-'  }</TableCell>
                       <TableCell>
-                        {statusConfig.find(data => data.id === user.status) ?
+                        {statusConfig.defaultStatus.find(data => data.id === user.status) ?
                         <div  className={classes.statusContainer}>
                           <StatusBullet
                             className={classes.status}
-                            color={statusConfig[user.status].color}
+                            color={statusConfig.defaultStatus[user.status].color}
                             size="sm"
                           />
-                          {statusConfig[user.status].name}
+                          {statusConfig.defaultStatus[user.status].name}
                         </div> : 
                         '-'  }</TableCell>
                       <TableCell>{moment(user.tanggal_pengajuan).format('DD/MM/YYYY')}</TableCell>
@@ -154,14 +149,15 @@ const PengajuanSuratTable = props => {
                       </TableCell>
                       <TableCell>{user.keterangan}</TableCell>
                       <TableCell>
-                        {[1, 2].includes(props.allCookies.user.id_role) &&
-                          user.status === 0 ?
+                        { (props.allCookies.user.id_role === 1 &&
+                          user.status) === 0 ||
+                          (props.allCookies.user.id_role === 2 &&
+                          user.status === 2)
+                           ?
                         <IconButton 
                           color="primary" 
                           onClick={() => {
-                            setActionType('Edit')
-                            setDataItem(user)
-                            toggle()
+                            toggle('Edit', user)
                           }}
                           >
                           <EditIcon style={{width: 20, height: 20}} />
@@ -173,16 +169,14 @@ const PengajuanSuratTable = props => {
                           <EditIcon style={{width: 20, height: 20}} />
                           </IconButton>}
                         {
-                          user.uuid_user === props.allCookies.user.uuid ||
-                            (props.allCookies.user.id_role === 2
-                              && user.status === 0
-                            ) ?
+                          (user.uuid_user === props.allCookies.user.uuid ||
+                            access.delete.includes(props.allCookies.user.id_role)) &&
+                            user.status === 0
+                           ?
                         <IconButton 
                           style={{ color: '#c62828' }}
                           onClick={() => {
-                            setDeleteData(user.id)
-                            setDataItem(user)
-                            toggle()
+                            toggle('Hapus', user)
                           }}
                           component="span">
                           <DeleteIcon style={{width: 20, height: 20}} />
@@ -203,10 +197,9 @@ const PengajuanSuratTable = props => {
           component="div"
           count={dataState.length}
           onChangePage={handlePageChange}
-          onChangeRowsPerPage={handleRowsPerPageChange}
           page={page}
           rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[10]}
         />
       </CardActions>
     </Card>

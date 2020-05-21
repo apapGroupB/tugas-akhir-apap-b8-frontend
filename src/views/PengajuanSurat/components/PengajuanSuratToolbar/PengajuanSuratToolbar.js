@@ -32,12 +32,11 @@ const useStyles = makeStyles(theme => ({
 
 const UsersToolbar = (props) => {
   const { 
+    access,
     className, 
-    setActionType, 
     toggle, 
     ...rest } = props;
   const classes = useStyles();
-
   return (
     <div
       {...rest}
@@ -46,11 +45,11 @@ const UsersToolbar = (props) => {
       <div className={classes.row}>
         <span className={classes.spacer} />
         <Button
+          disabled={access.create.includes(props.allCookies.user.id_role) ? false : true}
           color="primary"
           variant="contained"
           onClick={() => {
-            toggle()
-            setActionType('Tambah')
+            toggle('Tambah')
           }}
         >
           Tambah Pengajuan Surat

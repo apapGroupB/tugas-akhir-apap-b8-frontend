@@ -53,7 +53,6 @@ const UpsertUser = props => {
   };
 
   const handleDateChange = (id, date) => {
-    console.log(id, date)
     setDataState({
       ...dataState,
       [id]: moment(date).format()

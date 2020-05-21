@@ -22,8 +22,6 @@ const useStyles = makeStyles(theme => ({
 
 const UserList = () => {
   const classes = useStyles();
-  
-
   const [showModal, setShowModal] = useState(false)
   const [deleteAct, setDeleteAct] = useState(false)
   const [actionType, setActionType] = useState('Tambah')
@@ -47,7 +45,6 @@ const UserList = () => {
 
   const [{ data: getData, loading, error: getError }, refetch] = useAxios(
     WEBSERVICE.GET_ALL_USER
-    // BACKEND.GET_ALL_USER
   );
 
   console.log(WEBSERVICE.GET_ALL_USER)

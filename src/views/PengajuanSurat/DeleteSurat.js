@@ -3,19 +3,7 @@ import { makeStyles, useTheme } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
 import Backdrop from '@material-ui/core/Backdrop';
 import Dialog from '@material-ui/core/Dialog';
-import { Modal, Title, ColumnContainer, ButtonContainer, SpinnerCard } from './UpsertSurat.style'
-import TextField from "@material-ui/core/TextField";
-import moment from 'moment'
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import DateFnsUtils from '@date-io/date-fns';
-import 'date-fns';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
-import statusConfig from './statusConfig.json'
+import { DeleteModal, Title, ColumnContainer, ButtonContainer, Subtitle } from './UpsertSurat.style'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Colors } from '../../styles/color'
 import { BACKEND } from '../../utils'
@@ -41,34 +29,35 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UpsertSurat = props => {
-  const { toggle, actionType, dataItem, refetch, setNotif } = props;
+
+
+const DeleteSurat = props => {
+  const { toggle, dataItem, refetch, setNotif } = props;
   const classes = useStyles();
   const [postLoading, setPostLoading] = useState(false)
-  const [dataState, setDataState] = useState(
-    actionType === 'Edit' ?
-    dataItem :
-    {
-    nomor_surat: "",
-    id_jenis_surat: 1,
-    status: 0,
-    tanggal_pengajuan: moment().format('YYYY-MM-DD'),
-    tanggal_disetujui: null,
-    keterangan: "",
-    uuid_user: ""
-      })
+
+  const closeModal = (status) => {
+    setNotif({
+      showNotif: true,
+      status: status,
+      title: "hapus"
+    })
+    toggle('none')
+    refetch()
+    setPostLoading(false)
+  }
 
   const validation = () => {
     setPostLoading(true)
-    axios.post(BACKEND.ADD_PENGAJUAN_SURAT, {
-      ...dataState,
-      tanggal_pengajuan: moment(dataState.tanggal_pengajuan).format('YYYY-MM-DD'),
-      tanggal_disetujui: null
+    axios.get(`${BACKEND.DELETE_PENGAJUAN_SURAT}/${dataItem.id}`, {
+      headers: {
+        'Authorization': `Bearer ${props.allCookies.user.jwttoken}`,
+        'Content-Type': 'application/json'
+      }
     }).then(res => {
-      setNotif(true)
-      toggle()
-      refetch()
-      setPostLoading(false)
+      closeModal("success")
+    }).catch(res => {
+      closeModal("error")
     })
   }
 
@@ -80,11 +69,13 @@ const UpsertSurat = props => {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <Modal>
+      <DeleteModal>
       <div>
         <Title>{'Hapus Pengajuan Surat'}</Title>
         <ColumnContainer full>
-        Apakah anda ingin menghapus pengajuan surat ini?
+          <Subtitle>
+            Apakah anda ingin menghapus pengajuan surat ini?
+          </Subtitle>
         </ColumnContainer>
       </div>
       <ButtonContainer>
@@ -101,14 +92,13 @@ const UpsertSurat = props => {
           disabled={postLoading}
           color="primary" 
           style={{width: 100}} 
-          onClick={toggle}
+          onClick={() => toggle('none')}
         >Tidak</Button>
       </ButtonContainer>
-        
-      </Modal>
+      </DeleteModal>
       </Dialog>
     </Backdrop>
   );
 };
 
-export default withCookies(UpsertSurat);
+export default withCookies(DeleteSurat);

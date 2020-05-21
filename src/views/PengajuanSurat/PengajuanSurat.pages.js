@@ -1,6 +1,7 @@
 import useAxios from "axios-hooks";
 import { BACKEND } from '../../utils'
 import UpsertSurat from './UpsertSurat'
+import DeleteSurat from './DeleteSurat'
 import React, { useState } from 'react';
 import {SnackBar} from '../../components'
 import { withCookies } from 'react-cookie';
@@ -20,20 +21,33 @@ const useStyles = makeStyles(theme => ({
 
 const UserList = (props) => {
   const classes = useStyles();
-  const [showModal, setShowModal] = useState(false)
-  const [actionType, setActionType] = useState('Tambah')
+  const [actionType, setActionType] = useState('none')
   const [dataItem, setDataItem] = useState({})
-  const [notif, setNotif] = useState(false)
+  const [notif, setNotif] = useState({
+    showNotif: false,
+    status: "success",
+    title: "tambah"
+  })
+  const [access, setUserRole] = useState({
+    update: [1, 2],
+    delete: [2],
+    create: [2, 3, 4]
+  })
 
-  const toggle = () => {
-    setShowModal(!showModal)
+  const toggle = (mode, user) => {
+    setActionType(mode)
+    setDataItem(user)
   }
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-    setNotif(false);
+    setNotif({
+      showNotif: false,
+      status: "success",
+      title: "tambah"
+    });
   };
 
   const [{ data: getData, loading, error: getError }, refetch] = useAxios(
@@ -42,32 +56,37 @@ const UserList = (props) => {
 
   return (
     <div className={classes.root}>
-      {showModal && <UpsertSurat 
+      {(actionType === 'Edit' || actionType === 'Tambah') && <UpsertSurat 
+        access={access}
         toggle={toggle} 
         refetch={refetch}
         setNotif={setNotif}
         dataItem={dataItem}
-        actionType={actionType} />
+        actionType={actionType}/>
       }
+      {actionType === 'Hapus' && <DeleteSurat
+        dataItem={dataItem}
+        toggle={toggle}
+        refetch={refetch}
+        setNotif={setNotif}
+      />}
       <SnackBar 
-        notif={notif}
-        status={"success"}
+        notif={notif.showNotif}
+        status={notif.status}
         handleClose={handleClose}
-        description={actionType === 'Tambah' ? 
-        'Pengajuan Surat telah berhasil ditambahkan!' : 
-        'Pengajuan Surat telah berhasil diedit!'
+        description={
+          `Pengajuan Surat telah berhasil di${notif.title} !`
         } 
       />
       <PengajuanSuratToolbar 
         toggle={toggle} 
-        setActionType={setActionType} 
+        access={access}
       />
       <div className={classes.content}>
         <PengajuanSuratTable
           toggle={toggle}
           loading={loading}
-          setDataItem={setDataItem}
-          setActionType={setActionType}
+          access={access}
           dataState={loading || getError ? [] : getData }
         />
       </div>

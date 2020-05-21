@@ -19,7 +19,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Logout = props => {
-  console.log(props)
   const history = useHistory()
   const { toggle } = props;
   const classes = useStyles();

@@ -27,8 +27,6 @@ const Profile = props => {
   const { className, allCookies, ...rest } = props;
 
   const classes = useStyles();
-
-  console.log('allCookies: ', allCookies)
   return (
     <div
       {...rest}
