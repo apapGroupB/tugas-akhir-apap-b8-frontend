@@ -1,10 +1,10 @@
+import clsx from 'clsx';
 import React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
-import { SearchInput } from 'components';
+import { withCookies } from 'react-cookie';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -28,15 +28,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UsersToolbar = props => {
+const LowonganToolbar = props => {
   const { 
-    className, 
-    deleteToggle, 
-    setActionType, 
     toggle, 
+    allCookies,
+    className,
     ...rest } = props;
   const classes = useStyles();
-
   return (
     <div
       {...rest}
@@ -45,19 +43,11 @@ const UsersToolbar = props => {
       <div className={classes.row}>
         <span className={classes.spacer} />
         <Button
-          color="inherit"
-          // variant="contained"
-          style={{marginRight: 20}}
-          onClick={deleteToggle}
-        >
-          Hapus Lowongan
-        </Button>
-        <Button
           color="primary"
           variant="contained"
+          disabled={allCookies.user.id_role === 2 ? false : true}
           onClick={() => {
-            toggle()
-            setActionType('Tambah')
+            toggle('Tambah')
           }}
         >
           Tambah Lowongan
@@ -68,8 +58,4 @@ const UsersToolbar = props => {
   );
 };
 
-UsersToolbar.propTypes = {
-  className: PropTypes.string
-};
-
-export default UsersToolbar;
+export default withCookies(LowonganToolbar);

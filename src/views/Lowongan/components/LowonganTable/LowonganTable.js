@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import moment from 'moment';
-import PerfectScrollbar from 'react-perfect-scrollbar';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
   Card,
   CardActions,
@@ -18,14 +18,14 @@ import {
   Typography,
   TablePagination
 } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
+import _ from 'lodash'
+import { withCookies } from 'react-cookie';
 import Button from '@material-ui/core/Button';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { SpinnerCard } from './LowonganTable.style'
 import IconButton from '@material-ui/core/IconButton';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
-
-import { getInitials } from 'helpers';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UsersTable = props => {
+const LowonganTable = props => {
   const { 
     className, 
     dataState, 
@@ -74,43 +74,8 @@ const UsersTable = props => {
     description: "Kontrak"
   }];
 
-  const [selectedLowongan, setSelectedLowongan] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
-
-  const handleSelectAll = event => {
-    const { dataState } = props;
-
-    let selectedLowongan;
-
-    if (event.target.checked) {
-      selectedLowongan = dataState.map(user => user.id);
-    } else {
-      selectedLowongan = [];
-    }
-
-    setSelectedLowongan(selectedLowongan);
-  };
-
-  const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedLowongan.indexOf(id);
-    let newLowongan = [];
-
-    if (selectedIndex === -1) {
-      newLowongan = newLowongan.concat(selectedLowongan, id);
-    } else if (selectedIndex === 0) {
-      newLowongan = newLowongan.concat(selectedLowongan.slice(1));
-    } else if (selectedIndex === selectedLowongan.length - 1) {
-      newLowongan = newLowongan.concat(selectedLowongan.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newLowongan = newLowongan.concat(
-        selectedLowongan.slice(0, selectedIndex),
-        selectedLowongan.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelectedLowongan(newLowongan);
-  };
 
   const handlePageChange = (event, page) => {
     setPage(page);
@@ -120,15 +85,6 @@ const UsersTable = props => {
     setRowsPerPage(event.target.value);
   };
 
-  
-  // judul: varchar (200)
-// tanggal_dibuka: date
-// tanggal_ditutup: date
-// keterangan: varchar (200)
-// jumlah: int
-// id_jenis_lowongan: int
-// uuid_user: varchar (200)
-
   return (
     <Card
       {...rest}
@@ -137,26 +93,17 @@ const UsersTable = props => {
       <CardContent className={classes.content}>
         <PerfectScrollbar>
           <div className={classes.inner}>
-            <Table>
+            <Table size="small">
               <TableHead>
                 <TableRow>
-                  <TableCell padding="checkbox">
-                    {deleteAct && <Checkbox
-                      checked={selectedLowongan.length === dataState.length}
-                      color="primary"
-                      indeterminate={
-                        selectedLowongan.length > 0 &&
-                        selectedLowongan.length < dataState.length
-                      }
-                      onChange={handleSelectAll}
-                    />}
-                  </TableCell>
+                  <TableCell>No</TableCell>
                   <TableCell>Judul</TableCell>
                   <TableCell>Jenis Lowongan</TableCell>
                   <TableCell>Jumlah</TableCell>
                   <TableCell>Tgl Dibuka</TableCell>
                   <TableCell>Tgl Ditutup</TableCell>
                   <TableCell>Keterangan</TableCell>
+                  <TableCell>Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -169,45 +116,55 @@ const UsersTable = props => {
                 </TableCell>
               </TableRow>
                  :
-                dataState.slice(0, rowsPerPage).map(user => (
+                _.orderBy(dataState, ['id'], ['desc']).slice(0, rowsPerPage).map((user, index) => (
                   <TableRow
                     className={classes.tableRow}
                     hover
                     key={user.id}
-                    selected={selectedLowongan.indexOf(user.id) !== -1}
                   >
-                    <TableCell padding="checkbox">
-                      {deleteAct ?  
-                      <Checkbox
-                        checked={selectedLowongan.indexOf(user.id) !== -1}
-                        color="primary"
-                        onChange={event => handleSelectOne(event, user.id)}
-                        value="true"
-                      /> : 
-                      <IconButton 
-                        color="primary" 
-                        component="span"
-                        onClick={() => {
-                          setActionType('Edit')
-                          setDataItem(user)
-                          toggle()
-                        }}
-                      >
-                        <EditIcon style={{width: 20, height: 20}} />
-                      </IconButton>
-                      }
-                    </TableCell>
+                    <TableCell>{(page*10)+(index + 1)}</TableCell>
                     <TableCell>{user.judul}</TableCell>
                     <TableCell>{
                     jenis.find(e => e.id === user.id_jenis_lowongan) ?
-                    jenis.find(e => e.id === user.id_jenis_lowongan).description : 
-                    "None"}</TableCell>
+                    jenis.find(e => e.id === user.id_jenis_lowongan).description : "None"}
+                    </TableCell>
                     <TableCell>{user.jumlah}</TableCell>
                     <TableCell>{moment(user.tanggal_dibuka).format('DD/MM/YYYY')}</TableCell>
                     <TableCell>
                       {moment(user.tanggal_ditutup).format('DD/MM/YYYY')}
                     </TableCell>
                     <TableCell>{user.keterangan}</TableCell>
+                    <TableCell>
+                      {props.allCookies.user.id_role === 2 &&
+                        moment().format() < moment(user.tanggal_dibuka).format() ?
+                        <IconButton 
+                          color="primary" 
+                          onClick={() => {
+                            toggle('Edit', user)
+                          }}
+                          >
+                          <EditIcon style={{width: 20, height: 20}} />
+                          </IconButton> :
+                          <IconButton 
+                            color="primary" 
+                            disabled
+                          >
+                          <EditIcon style={{width: 20, height: 20}} />
+                          </IconButton>}
+                        {props.allCookies.user.id_role === 2  &&
+                        moment().format() < moment(user.tanggal_dibuka).format() ?
+                        <IconButton 
+                          style={{ color: '#c62828' }}
+                          onClick={() => {
+                            toggle('Hapus', user)
+                          }}
+                          component="span">
+                          <DeleteIcon style={{width: 20, height: 20}} />
+                        </IconButton> :
+                        <IconButton  disabled>
+                          <DeleteIcon style={{width: 20, height: 20}} />
+                        </IconButton>}
+                      </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -230,9 +187,9 @@ const UsersTable = props => {
   );
 };
 
-UsersTable.propTypes = {
+LowonganTable.propTypes = {
   className: PropTypes.string,
   dataState: PropTypes.array.isRequired
 };
 
-export default UsersTable;
+export default withCookies(LowonganTable);

@@ -34,8 +34,10 @@ class App extends Component {
       <ThemeProvider theme={theme}>
         <CookiesProvider>
           <Router history={browserHistory}>
-            { this.props.allCookies.user.jwttoken ? <Routes /> : <Auth />
-            }
+            {!this.props.allCookies.user ? <Auth /> :
+              this.props.allCookies.user.jwttoken ?
+              < Routes /> :
+              <Auth />}
           </Router>
         </CookiesProvider>
       </ThemeProvider>

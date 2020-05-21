@@ -13,6 +13,15 @@ export const Modal = styled.div`
   border-radius: 20px;
 `
 
+export const DeleteModal = styled.div`
+  width: 400px;
+  height: 250px;
+  flex-direction: column;
+  justify-content: space-between;
+  display: flex;
+  border-radius: 20px;
+`
+
 export const Title = styled.div`
   font-family: 'Roboto';
   font-weight: bold;
@@ -21,6 +30,14 @@ export const Title = styled.div`
   color: ${Colors.Navy};
   border-bottom: 1px solid ${Colors.Grey};
   margin-bottom: 20px;
+  width: auto;
+`
+
+export const Subtitle = styled.label`
+  font-family: 'Roboto';
+  font-size: 14px;
+  padding: 15px;
+  color: ${Colors.Navy};
   width: auto;
 `
 

@@ -4,8 +4,6 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
 
-import { SearchInput } from 'components';
-import { Colors } from 'styles';
 import { withCookies } from 'react-cookie';
 
 const useStyles = makeStyles(theme => ({
@@ -60,8 +58,8 @@ const UsersToolbar = (props) => {
   );
 };
 
-UsersToolbar.propTypes = {
-  className: PropTypes.string
-};
+// UsersToolbar.propTypes = {
+//   className: PropTypes.string
+// };
 
 export default withCookies(UsersToolbar);

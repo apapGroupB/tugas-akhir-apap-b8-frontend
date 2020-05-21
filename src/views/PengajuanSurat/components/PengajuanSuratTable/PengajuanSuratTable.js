@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import moment from 'moment';
-import PerfectScrollbar from 'react-perfect-scrollbar';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
   Card,
   CardActions,
@@ -19,20 +19,14 @@ import {
   TablePagination
 } from '@material-ui/core';
 import { withCookies } from 'react-cookie';
-import { SpinnerCard } from './PengajuanSuratTable.style'
-import Fab from '@material-ui/core/Fab';
 import EditIcon from '@material-ui/icons/Edit';
-import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import statusConfig from '../../statusConfig.js'
-import DeleteSurat from '../../DeleteSurat'
 import { StatusBullet } from 'components';
+import { SpinnerCard } from './PengajuanSuratTable.style'
+import CircularProgress from '@material-ui/core/CircularProgress';
 import _ from 'lodash'
-
-import { getInitials } from 'helpers';
-import { Colors } from 'styles';
 
 const useStyles = makeStyles(theme => ({
   root: {},
