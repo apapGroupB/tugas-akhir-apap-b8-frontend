@@ -58,8 +58,4 @@ const UsersToolbar = (props) => {
   );
 };
 
-// UsersToolbar.propTypes = {
-//   className: PropTypes.string
-// };
-
 export default withCookies(UsersToolbar);

@@ -1,6 +1,6 @@
 import moment from 'moment'
 import React, { useState } from 'react';
-import { Button } from '@material-ui/core';
+import { Button, FormHelperText } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import { makeStyles } from '@material-ui/styles';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -13,9 +13,15 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 import axios from 'axios'
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import getRole from '../../utils/get-role'
+import { withCookies } from 'react-cookie';
 
 import { BACKEND } from '../../utils'
+import { Colors } from 'styles';
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -27,16 +33,17 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const requiredField = ['username', 'password', 'nama', 'tempat_lahir', 'telepon']
+const requiredField = ['username', 'password', 'nama', 'tempat_lahir', 'telepon', 'id_role']
 
 const UpsertUser = props => {
-  const { toggle, refetch, setNotif  } = props;
+  const { toggle, refetch, setNotif, dataItem, actionType  } = props;
   const classes = useStyles();
   const [errorField, setErrorField] = useState([])
   const [postLoading, setPostLoading] = useState(false)
-  const [dataState, setDataState] = useState({
+  const [dataState, setDataState] = useState(actionType === 'Edit' ?
+    dataItem : {
     username: "",
-    id_role: 2,
+    id_role: 0,
     nama: "",
     tempat_lahir: "",
     tanggal_lahir: moment(),
@@ -66,19 +73,46 @@ const UpsertUser = props => {
     });
   };
 
+  const closeModal = (status, mode) => {
+    setNotif({
+      showNotif: true,
+      status: status,
+      title: mode
+    })
+    toggle('none')
+    refetch()
+    setPostLoading(false)
+  }
+
   const validation = () => {
     const validateData = requiredField.filter(
-      (data) => dataState[data] === ""
+      (data) => dataState[data] === "" || dataState[data] === 0
     );
     setErrorField(validateData);
     if (validateData.length === 0) {
       setPostLoading(true)
-      axios.post(BACKEND.ADD_USER, dataState).then(res => {
-        setNotif(true)
-        toggle()
-        refetch()
-        setPostLoading(false)
-      })
+      if (actionType === 'Tambah') {
+        axios.post(BACKEND.ADD_USER, dataState)
+          .then(res => {
+            closeModal("success", "tambah")
+          }).catch(err => {
+            closeModal("error", "tambah")
+          })
+      } else {
+        setPostLoading(true)
+        axios.post(`${BACKEND.EDIT_USER}/${dataState.uuid}`, dataState, {
+            headers: {
+              'Authorization': `Bearer ${props.allCookies.user.jwttoken}`,
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(res => {
+            closeModal("success", "edit")
+          })
+          .catch(err => {
+            closeModal("error", "edit")
+          })
+      }
     }
   }
 
@@ -102,7 +136,7 @@ const UpsertUser = props => {
             onChange={(event) => handleChange("nama", event)}
             helperText={
               errorField.find((dt) => dt === "nama")
-                ? "Please Fill This Field"
+                ? "Harap isi kolom ini"
                 : ""
             }
           />
@@ -119,7 +153,7 @@ const UpsertUser = props => {
                 onChange={(event) => handleChange("tempat_lahir", event)}
                 helperText={
                   errorField.find((dt) => dt === "tempat_lahir")
-                    ? "Please Fill This Field"
+                    ? "Harap isi kolom ini"
                     : ""
                 }
               />
@@ -144,12 +178,19 @@ const UpsertUser = props => {
         <div style={{display: 'flex', flexDirection: 'row'}}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <ColumnContainer>
-              <TextField
-                  disabled
-                  id="role"
-                  label={'Role'}
-                  value="Admin TU"
-                />
+              <InputLabel id="demo-simple-select-label">Role</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                error={errorField.find((dt) => dt === "id_role") ? true : false}
+                id="id_role"
+                value={dataState.id_role}
+                onChange={e => (handleChange("id_role", e))}
+                  >
+                <MenuItem value={0}>None</MenuItem>
+                {getRole.map((data, i) => 
+                  <MenuItem key={i} value={data.id}>{data.name}</MenuItem>)}
+              </Select>
+              <FormHelperText style={{color: Colors.Red}} >{errorField.find((dt) => dt === "id_role")  ? 'Harap pilih Role' : ''}</FormHelperText>
             </ColumnContainer>
             <ColumnContainer >
               <TextField
@@ -160,7 +201,7 @@ const UpsertUser = props => {
                 onChange={handleNumberChange}
                 helperText={
                   errorField.find((dt) => dt === "telepon")
-                    ? "Please Fill This Field"
+                    ? "Harap isi kolom ini"
                     : ""
                 }
               />
@@ -175,7 +216,7 @@ const UpsertUser = props => {
             onChange={(event) => handleChange("alamat", event)}
           />
         </ColumnContainer>
-        <div style={{display: 'flex', flexDirection: 'row'}}>
+        { actionType === 'Tambah' && <div style={{display: 'flex', flexDirection: 'row'}}>
           <ColumnContainer>
             <TextField
               error={errorField.find((dt) => dt === "username") ? true : false}
@@ -185,7 +226,7 @@ const UpsertUser = props => {
               onChange={(event) => handleChange("username", event)}
               helperText={
                 errorField.find((dt) => dt === "username")
-                  ? "Please Fill This Field"
+                  ? "Harap isi kolom ini"
                   : ""
               }
             />
@@ -200,13 +241,13 @@ const UpsertUser = props => {
               onChange={(event) => handleChange("password", event)}
               helperText={
                 errorField.find((dt) => dt === "password")
-                  ? "Please Fill This Field"
+                  ? "Harap isi kolom ini"
                   : ""
               }
             />
             
           </ColumnContainer>
-        </div>
+        </div>}
       </div>
       <ButtonContainer>
         <Button 
@@ -222,7 +263,7 @@ const UpsertUser = props => {
           disabled={postLoading}
           color="primary" 
           style={{width: 100}} 
-          onClick={toggle}
+          onClick={() => toggle('none')}
         >Cancel</Button>
       </ButtonContainer>
       </Modal>
@@ -231,4 +272,4 @@ const UpsertUser = props => {
   );
 };
 
-export default UpsertUser;
+export default withCookies(UpsertUser);

@@ -18,6 +18,10 @@ import {
   Typography,
   TablePagination
 } from '@material-ui/core';
+import { withCookies } from 'react-cookie';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
 import { SpinnerCard } from './UsersTable.style'
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -44,55 +48,24 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UsersTable = props => {
-  const { className, users, loading, ...rest } = props;
+  const { className, users, toggle, loading, ...rest } = props;
 
   const classes = useStyles();
 
-  const [selectedUsers, setSelectedUsers] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
-
-  const handleSelectAll = event => {
-    const { users } = props;
-
-    let selectedUsers;
-
-    if (event.target.checked) {
-      selectedUsers = users.map(user => user.id);
-    } else {
-      selectedUsers = [];
-    }
-
-    setSelectedUsers(selectedUsers);
-  };
-
-  const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedUsers.indexOf(id);
-    let newSelectedUsers = [];
-
-    if (selectedIndex === -1) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers, id);
-    } else if (selectedIndex === 0) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers.slice(1));
-    } else if (selectedIndex === selectedUsers.length - 1) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelectedUsers = newSelectedUsers.concat(
-        selectedUsers.slice(0, selectedIndex),
-        selectedUsers.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelectedUsers(newSelectedUsers);
-  };
 
   const handlePageChange = (event, page) => {
     setPage(page);
   };
 
-  const handleRowsPerPageChange = event => {
-    setRowsPerPage(event.target.value);
+  const onChangeRowsPerPage = event => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
   };
+
+  // const calculatePage = page * rowsPerPage + rowsPerPage < dataState.length ? page * rowsPerPage : 
+  // page * rowsPerPage + rowsPerPage < dataState.length ? page * rowsPerPage + rowsPerPage : dataState.length
 
   return (
     <Card
@@ -102,16 +75,17 @@ const UsersTable = props => {
       <CardContent className={classes.content}>
         <PerfectScrollbar>
           <div className={classes.inner}>
-            <Table>
+            <Table size="small">
               <TableHead>
                 <TableRow>
+                  <TableCell>No</TableCell>
                   <TableCell>Nama</TableCell>
-                  <TableCell>Username</TableCell>
                   <TableCell>Tempat Lahir</TableCell>
                   <TableCell>Tanggal Lahir</TableCell>
                   <TableCell>Alamat</TableCell>
                   <TableCell>No. Handphone</TableCell>
                   <TableCell>NIP</TableCell>
+                  <TableCell>Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -123,19 +97,62 @@ const UsersTable = props => {
                     </SpinnerCard>
                   </TableCell> 
                 </TableRow> :
-                 users.slice(0, rowsPerPage).map((user, i) => (
+                 users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user, index) => (
                   <TableRow
                     className={classes.tableRow}
                     hover
-                    key={i}
-                  >
+                    key={index}
+                   >
+                     <TableCell>{user.nama ? (page*10)+(index + 1) : ''}</TableCell>
                     <TableCell>{user.nama}</TableCell>
-                    <TableCell>{user.username}</TableCell>
-                    <TableCell>{user.tempatLahir}</TableCell>
-                    <TableCell>{user.tanggalLahir}</TableCell>
+                    <TableCell>{user.tempat_lahir}</TableCell>
+                    <TableCell>{user.tanggal_lahir}</TableCell>
                     <TableCell>{user.alamat}</TableCell>
                     <TableCell>{user.telepon}</TableCell>
-                    <TableCell>{`${user.nip.substring(0, 19)}...`}</TableCell>
+                     <TableCell>{`${user.nip ? user.nip.substring(0, 19)+'...' : ''}`}</TableCell>
+                     <TableCell> {
+                       user.nama ? 
+                         <div>
+                           {props.allCookies.user.id_role === 2 && user.id ?
+                        <IconButton 
+                          color="primary" 
+                          onClick={() => {
+                            toggle('Edit', user)
+                          }}
+                          >
+                          <EditIcon style={{width: 20, height: 20}} />
+                          </IconButton> :
+                          <IconButton 
+                            color="primary" 
+                            disabled
+                          >
+                          <EditIcon style={{width: 20, height: 20}} />
+                          </IconButton>}
+                        { (props.allCookies.user.id_role === 2 && user.id) && user.uuid !==  props.allCookies.user.uuid ?
+                        <IconButton 
+                          style={{ color: '#c62828' }}
+                          onClick={() => {
+                            toggle('Hapus', user)
+                          }}
+                          component="span">
+                          <DeleteIcon style={{width: 20, height: 20}} />
+                        </IconButton> :
+                        <IconButton  disabled>
+                          <DeleteIcon style={{width: 20, height: 20}} />
+                        </IconButton>}
+                         </div> :
+                         <IconButton 
+                           disabled
+                            style={{ color: '#FFFFFF' }}
+                            onClick={() => {
+                              toggle('Hapus', user)
+                            }}
+                            component="span">
+                          <DeleteIcon style={{width: 20, height: 20}} />
+                        </IconButton>
+                     }
+                        
+                      </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -148,10 +165,10 @@ const UsersTable = props => {
           component="div"
           count={users.length}
           onChangePage={handlePageChange}
-          onChangeRowsPerPage={handleRowsPerPageChange}
+          onChangeRowsPerPage={onChangeRowsPerPage}
           page={page}
           rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[10]}
         />
       </CardActions>
     </Card>
@@ -163,4 +180,4 @@ UsersTable.propTypes = {
   users: PropTypes.array.isRequired
 };
 
-export default UsersTable;
+export default withCookies(UsersTable);

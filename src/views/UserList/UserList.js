@@ -3,10 +3,14 @@ import { makeStyles } from '@material-ui/styles';
 
 import { UsersToolbar, UsersTable } from './components';
 import UpsertUser from './UpsertUser'
+import { getAxios } from '../../utils'
 import { WEBSERVICE, BACKEND } from '../../utils'
 import useAxios from "axios-hooks";
+import { withCookies } from 'react-cookie';
 import axios from 'axios';
 import { SnackBar } from '../../components'
+import _ from 'lodash'
+import DeleteUser from './DeleteUser'
 
 
 const useStyles = makeStyles(theme => ({
@@ -20,20 +24,19 @@ const useStyles = makeStyles(theme => ({
 
 
 
-const UserList = () => {
+const UserList = (props) => {
   const classes = useStyles();
-  const [showModal, setShowModal] = useState(false)
-  const [deleteAct, setDeleteAct] = useState(false)
-  const [actionType, setActionType] = useState('Tambah')
+  const [actionType, setActionType] = useState('none')
   const [dataItem, setDataItem] = useState({})
-  const [notif, setNotif] = useState(false)
+  const [notif, setNotif] = useState({
+    showNotif: false,
+    status: "success",
+    title: "tambah"
+  })
 
-  const toggle = () => {
-    setShowModal(!showModal)
-  }
-
-  const deleteToggle = () => {
-    setDeleteAct(!deleteAct)
+  const toggle = (mode, user) => {
+    setActionType(mode)
+    setDataItem(user)
   }
 
   const handleClose = (event, reason) => {
@@ -43,50 +46,68 @@ const UserList = () => {
     setNotif(false);
   };
 
-  const [{ data: getData, loading, error: getError }, refetch] = useAxios(
-    WEBSERVICE.GET_ALL_USER
+  const [{ data: getData, loading, error: getError }] = useAxios(
+    WEBSERVICE.GET_USER_SIVITAS
   );
 
-  console.log(WEBSERVICE.GET_ALL_USER)
-  console.log('getData: ', getData)
-
+  const [{ data: getDataUser, loading: userLoading, error: userError }, refetch] = useAxios(
+    getAxios(BACKEND.GET_ALL_USER, props.allCookies.user.jwttoken)
+  );
+  const uniqueUUid = (sivitasUser, tuUser) => {
+    if (sivitasUser && tuUser) {
+      const newSivitas = sivitasUser.result.map((data, index) => 
+        Object.assign({}, {
+          ...data,
+          uuid: data.idUser,
+          tempat_lahir: data.tempatLahir,
+          tanggal_lahir: data.tanggalLahir
+        })
+      ).filter(dt => !tuUser.map(dt => dt.uuid).includes(dt.idUser))
+        .concat(_.orderBy(tuUser, ['id'], ['desc']))
+      
+      const newRow = Array(newSivitas.length % 10 !== 0 ? 10 - newSivitas.length % 10 : 0).fill({});
+      return newSivitas.concat(newRow)
+    } else {
+      return []
+    }
+  }
 
   return (
     <div className={classes.root}>
-      {showModal && <UpsertUser 
+      {(actionType === 'Edit' || actionType === 'Tambah') && <UpsertUser 
         toggle={toggle}
         refetch={refetch}
         dataItem={dataItem}
         setNotif={setNotif}
         actionType={actionType} />
       }
+      {actionType === 'Hapus' && <DeleteUser
+        toggle={toggle}
+        refetch={refetch}
+        dataItem={dataItem}
+        setNotif={setNotif}
+      />}
       <SnackBar 
-        notif={notif}
-        status={"success"}
+        notif={notif.showNotif}
+        status={notif.status}
         handleClose={handleClose} 
-        description={actionType === 'Tambah' ? 
-        'User telah berhasil ditambahkan!' : 
-        'User telah berhasil diedit!'
+        description={notif.status === "success" ?
+          `Pengajuan Surat telah berhasil di${notif.title} !` :
+          `[Error] Something Wrong!`
         }
       />
       <UsersToolbar 
         toggle={toggle}
-        deleteToggle={deleteToggle} 
-        setActionType={setActionType} 
       />
       <div className={classes.content}>
         <UsersTable 
-          // users={users} 
-          // toggle={toggle}
-          // setActionType={setActionType}
-          // setDataItem={setDataItem}
-          // deleteAct={deleteAct} 
-          loading={loading}
-          users={loading || getError ? [] : getData.result } 
+          toggle={toggle}
+          loading={loading || userLoading}
+          users={(loading && userLoading) ? [] : uniqueUUid(getData, getDataUser)} 
         />
       </div>
     </div>
   );
 };
 
-export default UserList;
+export default withCookies(UserList);

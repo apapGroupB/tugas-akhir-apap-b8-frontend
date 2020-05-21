@@ -74,8 +74,9 @@ const UserList = (props) => {
         notif={notif.showNotif}
         status={notif.status}
         handleClose={handleClose}
-        description={
-          `Pengajuan Surat telah berhasil di${notif.title} !`
+        description={notif.status === "success" ?
+          `Pengajuan Surat telah berhasil di${notif.title} !` :
+          `[Error] Something Wrong!`
         } 
       />
       <PengajuanSuratToolbar 

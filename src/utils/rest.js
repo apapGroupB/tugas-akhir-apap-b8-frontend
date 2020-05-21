@@ -3,6 +3,7 @@ const SIVITAS_URL = 'http://si-sivitas.herokuapp.com/api'
 
 const BACKEND = {
   ADD_USER: SITE_URL + '/user/add',
+  EDIT_USER:  SITE_URL + '/user/update',
   ADD_LOWONGAN: SITE_URL + '/lowongan/add',
   EDIT_LOWONGAN: SITE_URL + '/lowongan/update',
   DELETE_LOWONGAN: SITE_URL + '/lowongan/delete',
@@ -14,10 +15,12 @@ const BACKEND = {
   DELETE_PENGAJUAN_SURAT: SITE_URL + '/pengajuan-surat/delete',
   GET_ALL_PENGAJUAN: SITE_URL + '/pengajuan-surat/viewall',
   GET_JENIS_LOWONGAN: SITE_URL + '/lowongan/jenis/viewall',
+  GET_ALL_USER: SITE_URL + '/user/viewall',
+  DELETE_USER: SITE_URL + '/user/delete',
 }
 
 const WEBSERVICE = {
-  GET_ALL_USER: SIVITAS_URL + '/employees'
+  GET_USER_SIVITAS: SIVITAS_URL + '/employees'
 }
 
 export {

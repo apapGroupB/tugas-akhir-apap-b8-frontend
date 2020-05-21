@@ -21,6 +21,23 @@ export const Title = styled.div`
   width: auto;
 `
 
+export const DeleteModal = styled.div`
+  width: 400px;
+  height: 250px;
+  flex-direction: column;
+  justify-content: space-between;
+  display: flex;
+  border-radius: 20px;
+`
+
+export const Subtitle = styled.label`
+  font-family: 'Roboto';
+  font-size: 14px;
+  padding: 15px;
+  color: ${Colors.Navy};
+  width: auto;
+`
+
 export const ColumnContainer = styled.div`
   display: flex;
   padding-top: 15px;

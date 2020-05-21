@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
 
 import { SearchInput } from 'components';
+import { withCookies } from 'react-cookie';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -31,8 +32,7 @@ const useStyles = makeStyles(theme => ({
 const UsersToolbar = props => {
   const { 
     className, 
-    setActionType, 
-    deleteToggle,
+    allCookies,
     toggle,
     ...rest } = props;
 
@@ -50,18 +50,11 @@ const UsersToolbar = props => {
         />
         <span className={classes.spacer} />
         <Button
-          color="inherit"
-          style={{marginRight: 20}}
-          onClick={deleteToggle}
-        >
-          Hapus
-        </Button>
-        <Button
           color="primary"
+          disabled={allCookies.user.id_role === 2 ? false : true}
           variant="contained"
           onClick={() => {
-            toggle()
-            setActionType('Tambah')
+            toggle('Tambah')
           }}
         >
           Tambah user
@@ -75,4 +68,4 @@ UsersToolbar.propTypes = {
   className: PropTypes.string
 };
 
-export default UsersToolbar;
+export default withCookies(UsersToolbar);

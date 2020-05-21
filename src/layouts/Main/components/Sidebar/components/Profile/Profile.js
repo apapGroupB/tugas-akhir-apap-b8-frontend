@@ -46,7 +46,7 @@ const Profile = props => {
         {allCookies.user.name}
       </Typography>
       <Typography variant="body2">
-        {getRole(allCookies.user.id_role).name}
+        {getRole.find(dt => dt.id === allCookies.user.id_role).name}
       </Typography>
     </div>
   );
