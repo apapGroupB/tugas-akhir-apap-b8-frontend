@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import { UsersToolbar, UsersTable } from './components';
@@ -24,7 +24,12 @@ const useStyles = makeStyles(theme => ({
 
 
 
+
+
 const UserList = (props) => {
+  const requestGuru = axios.get(WEBSERVICE.GET_GURU_SIVITAS);
+  const requestSiswa = axios.get(WEBSERVICE.GET_SISWA_SIVITAS);
+  const requestPegawai = axios.get(WEBSERVICE.GET_PEGAWAI_SIVITAS);
   const classes = useStyles();
   const [actionType, setActionType] = useState('none')
   const [dataItem, setDataItem] = useState({})
@@ -33,6 +38,40 @@ const UserList = (props) => {
     status: "success",
     title: "tambah"
   })
+  const [sivitasData, setSivitasData] = useState({
+    sivitasUser: [],
+    loading: true
+  })
+
+  const [{ data: getDataUser, loading, error: userError }, refetch] = useAxios(
+    getAxios(BACKEND.GET_ALL_USER, props.allCookies.user.jwttoken)
+  );
+
+  const mappingSivitas = (datas) => {
+    return datas.map((data) => 
+      Object.assign({}, {
+        ...data,
+        uuid: data.idUser,
+        tempat_lahir: data.tempatLahir,
+        tanggal_lahir: data.tanggalLahir,
+        nip: data.nig ? data.nig : data.nis ? data.nis : data.nip
+      })
+    )
+  }
+
+  useEffect(() => {
+    axios.all([requestGuru, requestSiswa, requestPegawai]).then(axios.spread((...res) => {
+    setSivitasData({
+      sivitasUser: mappingSivitas(
+        res[0].data.result
+        .concat(res[1].data.result)
+        .concat(res[2].data.result)),
+      loading: false
+    })
+  })).catch(errors => {
+      console.log(errors)
+    })
+  }, [])
 
   const toggle = (mode, user) => {
     setActionType(mode)
@@ -46,31 +85,18 @@ const UserList = (props) => {
     setNotif(false);
   };
 
-  const [{ data: getData, loading, error: getError }] = useAxios(
-    WEBSERVICE.GET_USER_SIVITAS
-  );
-
-  const [{ data: getDataUser, loading: userLoading, error: userError }, refetch] = useAxios(
-    getAxios(BACKEND.GET_ALL_USER, props.allCookies.user.jwttoken)
-  );
-  const uniqueUUid = (sivitasUser, tuUser) => {
-    if (sivitasUser && tuUser) {
-      const newSivitas = sivitasUser.result.map((data, index) => 
-        Object.assign({}, {
-          ...data,
-          uuid: data.idUser,
-          tempat_lahir: data.tempatLahir,
-          tanggal_lahir: data.tanggalLahir
-        })
-      ).filter(dt => !tuUser.map(dt => dt.uuid).includes(dt.idUser))
+  const uniqueUUid = (sivitasData, tuUser) => {
+    if (sivitasData.sivitasUser && tuUser) {
+      const allUser = sivitasData.sivitasUser.filter(dt => !tuUser.map(dt => dt.uuid).includes(dt.idUser))
         .concat(_.orderBy(tuUser, ['id'], ['desc']))
-      
-      const newRow = Array(newSivitas.length % 10 !== 0 ? 10 - newSivitas.length % 10 : 0).fill({});
-      return newSivitas.concat(newRow)
+      const newRow = Array(allUser.length % 10 !== 0 ? 10 - allUser.length % 10 : 0).fill({});
+      return allUser.concat(newRow)
     } else {
       return []
     }
   }
+
+  
 
   return (
     <div className={classes.root}>
@@ -102,8 +128,8 @@ const UserList = (props) => {
       <div className={classes.content}>
         <UsersTable 
           toggle={toggle}
-          loading={loading || userLoading}
-          users={(loading && userLoading) ? [] : uniqueUUid(getData, getDataUser)} 
+          loading={loading || sivitasData.loading}
+          users={(loading && sivitasData.loading ) ? [] : uniqueUUid(sivitasData, getDataUser)} 
         />
       </div>
     </div>

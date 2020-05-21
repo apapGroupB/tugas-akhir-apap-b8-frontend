@@ -20,7 +20,9 @@ const BACKEND = {
 }
 
 const WEBSERVICE = {
-  GET_USER_SIVITAS: SIVITAS_URL + '/employees'
+  GET_PEGAWAI_SIVITAS: SIVITAS_URL + '/employees',
+  GET_SISWA_SIVITAS: SIVITAS_URL + '/students',
+  GET_GURU_SIVITAS: SIVITAS_URL + '/teachers'
 }
 
 export {
