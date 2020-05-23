@@ -90,7 +90,7 @@ const UserList = (props) => {
         .concat(_.orderBy(tuUser, ['id'], ['desc']))
       const userFiltered = allUser.filter(data => _.includes(data.nama.toLowerCase(), searchText.toLowerCase()))
       const newRow = Array(userFiltered.length % 10 !== 0 ? 10 - userFiltered.length % 10 : 0).fill({});
-      return userFiltered.concat(newRow)
+      return userFiltered
     } else {
       return []
     }
@@ -130,7 +130,7 @@ const UserList = (props) => {
         <UsersTable 
           toggle={toggle}
           loading={loading || sivitasData.loading}
-          users={(loading && sivitasData.loading ) ? [] : uniqueUUid(sivitasData, getDataUser)} 
+          dataState={(loading && sivitasData.loading ) ? [] : uniqueUUid(sivitasData, getDataUser)} 
         />
       </div>
     </div>

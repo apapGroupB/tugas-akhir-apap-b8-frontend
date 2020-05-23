@@ -121,15 +121,22 @@ const PengajuanSuratTable = props => {
                     </SpinnerCard>
                   </TableCell>
                 </TableRow>
-                  : _.orderBy(dataState, ['id'], ['desc']).slice((page) * rowsPerPage, (page + 1) * rowsPerPage).map((user, index) => (
+                  : _.orderBy(dataState, ['id'], ['desc'])
+                    .map(data => Object.assign({}, {
+                      ...data,
+                      tanggal_pengajuan: moment(data.tanggal_pengajuan).format('DD/MM/YYYY'),
+                      tanggal_disetujui: moment(data.tanggal_disetujui).format('DD/MM/YYYY')
+                    }))
+                  .concat(Array(dataState.length % 10 !== 0 ? 10 - dataState.length % 10 : 0).fill({}))
+                    .slice((page) * rowsPerPage, (page + 1) * rowsPerPage).map((user, index) => (
                     <TableRow
                       className={classes.tableRow}
                       hover
                       key={user.id}
                     >
-                      <TableCell>{(page*10)+(index + 1)}</TableCell>
+                      <TableCell>{user.tanggal_pengajuan && (page*10)+(index + 1)}</TableCell>
                       <TableCell>{user.nomor_surat === '0' ? '-' : user.nomor_surat}</TableCell>
-                      <TableCell>{jenisSurat.find(data => data.id === user.id_jenis_surat) ? jenisSurat.find(data => data.id === user.id_jenis_surat).description : '-'  }</TableCell>
+                      <TableCell>{jenisSurat.find(data => data.id === user.id_jenis_surat) ? jenisSurat.find(data => data.id === user.id_jenis_surat).description : ''  }</TableCell>
                       <TableCell>
                         {statusConfig.defaultStatus.find(data => data.id === user.status) ?
                         <div  className={classes.statusContainer}>
@@ -140,48 +147,56 @@ const PengajuanSuratTable = props => {
                           />
                           {statusConfig.defaultStatus[user.status].name}
                         </div> : 
-                        '-'  }</TableCell>
-                      <TableCell>{moment(user.tanggal_pengajuan).format('DD/MM/YYYY')}</TableCell>
+                        ''  }</TableCell>
+                      <TableCell>{user.tanggal_pengajuan == undefined ? '' : '-'}</TableCell>
                       <TableCell>
-                        {user.tanggal_disetujui === null ? '-' : moment(user.tanggal_disetujui).format('DD/MM/YYYY')}
+                        {user.tanggal_disetujui === undefined ? '' : '-'}
                       </TableCell>
                       <TableCell>{user.keterangan}</TableCell>
                       <TableCell>
-                        { (props.allCookies.user.id_role === 1 &&
-                          user.status) === 0 ||
-                          (props.allCookies.user.id_role === 2 &&
-                          user.status === 2)
-                           ?
-                        <IconButton 
-                          color="primary" 
-                          onClick={() => {
-                            toggle('Edit', user)
-                          }}
-                          >
-                          <EditIcon style={{width: 20, height: 20}} />
-                          </IconButton> :
+                          {user.tanggal_pengajuan ? <div>
+                            {(props.allCookies.user.id_role === 1 &&
+                            user.status) === 0 ||
+                            (props.allCookies.user.id_role === 2 &&
+                            user.status === 2)
+                            ?
                           <IconButton 
                             color="primary" 
-                            disabled
-                          >
-                          <EditIcon style={{width: 20, height: 20}} />
+                            onClick={() => {
+                              toggle('Edit', user)
+                            }}
+                            >
+                            <EditIcon style={{width: 20, height: 20}} />
+                            </IconButton> :
+                            <IconButton 
+                              color="primary" 
+                              disabled
+                            >
+                            <EditIcon style={{width: 20, height: 20}} />
+                            </IconButton>}
+                          {
+                            (user.uuid_user === props.allCookies.user.uuid ||
+                              access.delete.includes(props.allCookies.user.id_role)) &&
+                              user.status === 0
+                            ?
+                          <IconButton 
+                            style={{ color: '#c62828' }}
+                            onClick={() => {
+                              toggle('Hapus', user)
+                            }}
+                            component="span">
+                            <DeleteIcon style={{width: 20, height: 20}} />
+                          </IconButton> :
+                          <IconButton  disabled>
+                            <DeleteIcon style={{width: 20, height: 20}} />
                           </IconButton>}
-                        {
-                          (user.uuid_user === props.allCookies.user.uuid ||
-                            access.delete.includes(props.allCookies.user.id_role)) &&
-                            user.status === 0
-                           ?
-                        <IconButton 
-                          style={{ color: '#c62828' }}
-                          onClick={() => {
-                            toggle('Hapus', user)
-                          }}
-                          component="span">
-                          <DeleteIcon style={{width: 20, height: 20}} />
-                        </IconButton> :
-                        <IconButton  disabled>
-                          <DeleteIcon style={{width: 20, height: 20}} />
-                        </IconButton>}
+                          </div> : 
+                          <IconButton
+                            disabled
+                            style={{ color: '#FFFFFF' }}>
+                            <DeleteIcon style={{width: 20, height: 20}} />
+                          </IconButton>
+                         }
                       </TableCell>
                     </TableRow>
                   ))}

@@ -6,6 +6,7 @@ import { Button, Typography } from '@material-ui/core';
 
 import { SearchInput } from 'components';
 import { Colors } from 'styles';
+import { withCookies } from 'react-cookie';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -34,6 +35,7 @@ const PinjamanToolbar = props => {
     className, 
     setActionType, 
     deleteToggle,
+    allCookies,
     toggle,
     ...rest } = props;
 
@@ -55,6 +57,7 @@ const PinjamanToolbar = props => {
         <Button
           color="primary"
           variant="contained"
+          disabled={allCookies.user.id_role === 2 ? false : true}
           onClick={() => {
             toggle()
             setActionType('Tambah')
@@ -71,4 +74,4 @@ PinjamanToolbar.propTypes = {
   className: PropTypes.string
 };
 
-export default PinjamanToolbar;
+export default withCookies(PinjamanToolbar);

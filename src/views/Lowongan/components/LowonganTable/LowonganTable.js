@@ -116,26 +116,34 @@ const LowonganTable = props => {
                 </TableCell>
               </TableRow>
                  :
-                _.orderBy(dataState, ['id'], ['desc']).slice(0, rowsPerPage).map((user, index) => (
+                  _.orderBy(dataState, ['id'], ['desc'])
+                    .map(data => Object.assign({}, {
+                      ...data,
+                      tanggal_dibuka: moment(data.tanggal_dibuka).format('DD/MM/YYYY'),
+                      tanggal_ditutup: moment(data.tanggal_ditutup).format('DD/MM/YYYY')
+                    }))
+                  .concat(Array(dataState.length % 10 !== 0 ? 10 - dataState.length % 10 : 0).fill({}))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user, index) => (
                   <TableRow
                     className={classes.tableRow}
                     hover
                     key={user.id}
                   >
-                    <TableCell>{(page*10)+(index + 1)}</TableCell>
+                    <TableCell>{user.jumlah && (page*10)+(index + 1)}</TableCell>
                     <TableCell>{user.judul}</TableCell>
                     <TableCell>{
                     jenis.find(e => e.id === user.id_jenis_lowongan) ?
-                    jenis.find(e => e.id === user.id_jenis_lowongan).description : "None"}
+                    jenis.find(e => e.id === user.id_jenis_lowongan).description : ""}
                     </TableCell>
                     <TableCell>{user.jumlah}</TableCell>
-                    <TableCell>{moment(user.tanggal_dibuka).format('DD/MM/YYYY')}</TableCell>
+                    <TableCell>{user.tanggal_dibuka}</TableCell>
                     <TableCell>
-                      {moment(user.tanggal_ditutup).format('DD/MM/YYYY')}
+                      {user.tanggal_ditutup}
                     </TableCell>
                     <TableCell>{user.keterangan}</TableCell>
                     <TableCell>
-                      {props.allCookies.user.id_role === 2 &&
+                      {user.jumlah ? <div>
+                        {props.allCookies.user.id_role === 2 &&
                         moment().format() < moment(user.tanggal_dibuka).format() ?
                         <IconButton 
                           color="primary" 
@@ -164,6 +172,13 @@ const LowonganTable = props => {
                         <IconButton  disabled>
                           <DeleteIcon style={{width: 20, height: 20}} />
                         </IconButton>}
+                        </div> : 
+                        <IconButton 
+                          style={{ color: '#FFFFFF' }}
+                          >
+                          <DeleteIcon style={{width: 20, height: 20}} />
+                        </IconButton>
+                      }
                       </TableCell>
                   </TableRow>
                 ))}
@@ -180,7 +195,7 @@ const LowonganTable = props => {
           onChangeRowsPerPage={handleRowsPerPageChange}
           page={page}
           rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[10]}
         />
       </CardActions>
     </Card>

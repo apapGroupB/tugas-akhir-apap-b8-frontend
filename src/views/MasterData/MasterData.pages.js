@@ -16,10 +16,22 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const masterList = [{
+  id: 1,
+  title: "Jenis Surat",
+  query: BACKEND.GET_ALL_JENIS_SURAT
+},
+  {
+  id: 2,
+  title: "Jenis Lowongan",
+  query: BACKEND.GET_ALL_JENIS_LOWONGAN
+}]
+
 const MasterData = (props) => {
   const classes = useStyles();
   const [dataItem, setDataItem] = useState({})
   const [showModal, setShowModal] = useState(false)
+  const [masterSelected, setMasterSelected] = useState(1)
   const [actionType, setActionType] = useState('none')
   const [notif, setNotif] = useState({
     showNotif: false,
@@ -28,7 +40,7 @@ const MasterData = (props) => {
   })
 
   const [{ data: getData, loading, error: getError }, refetch] = useAxios(
-    getAxios(BACKEND.GET_ALL_JENIS_SURAT, props.allCookies.user.jwttoken)
+    getAxios(masterList.find(dt => dt.id === masterSelected).query, props.allCookies.user.jwttoken)
   );
 
   const toggle = (mode, user) => {
@@ -64,12 +76,14 @@ const MasterData = (props) => {
         status={notif.status}
         handleClose={handleClose} 
         description={notif.status === "success" ?
-          `Pengajuan Surat telah berhasil di${notif.title} !` :
+          `${masterList.find(dt => dt.id === masterSelected).title} telah berhasil di${notif.title} !` :
           `[Error] Something Wrong!`
         }
       />
       <MasterDataToolbar 
         toggle={toggle}
+        masterSelected={masterSelected}
+        setMasterSelected={setMasterSelected}
       />
       <div className={classes.content}>
         <MasterDataTable 

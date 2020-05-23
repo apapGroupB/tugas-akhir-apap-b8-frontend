@@ -17,6 +17,7 @@ import {
 } from '@material-ui/core';
 import { SpinnerCard } from '../../InsertPinjaman.style'
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { Colors } from 'styles';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -74,16 +75,21 @@ const PinjamanTable = props => {
                     </SpinnerCard>
                   </TableCell>
                 </TableRow>
-                 : dataState.slice(0, rowsPerPage).map((pinjaman, index) => (
+                  : dataState
+                    .concat(Array(dataState.length % 10 !== 0 ? 10 - dataState.length % 10 : 0).fill({}))
+                    .slice(0, rowsPerPage).map((pinjaman, index) => (
                   <TableRow
                     className={classes.tableRow}
                     hover
                     key={pinjaman.id}
                   >
-                    <TableCell>{(page*10)+(index + 1)}</TableCell>
+                    <TableCell style={{ color: !pinjaman.jumlah_pinjaman && Colors.White }} >
+                      {(page * 10) + (index + 1)}</TableCell>
                     <TableCell>{pinjaman.jumlah_pinjaman}</TableCell>
                     <TableCell>
-                      {moment(pinjaman.tanggal_pengajuan).format('DD-MM-YYYY')}
+                      {pinjaman.jumlah_pinjaman ?
+                        moment(pinjaman.tanggal_pengajuan).format('DD-MM-YYYY') :
+                        '  '}
                     </TableCell>
                   </TableRow>
                 ))}

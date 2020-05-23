@@ -48,7 +48,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UsersTable = props => {
-  const { className, users, toggle, loading, ...rest } = props;
+  const { className, dataState, toggle, loading, ...rest } = props;
 
   const classes = useStyles();
 
@@ -97,7 +97,9 @@ const UsersTable = props => {
                     </SpinnerCard>
                   </TableCell> 
                 </TableRow> :
-                 users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user, index) => (
+                  dataState
+                    .concat(Array(dataState.length % 10 !== 0 ? 10 - dataState.length % 10 : 0).fill({}))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user, index) => (
                   <TableRow
                     className={classes.tableRow}
                     hover
@@ -144,9 +146,6 @@ const UsersTable = props => {
                          <IconButton 
                            disabled
                             style={{ color: '#FFFFFF' }}
-                            onClick={() => {
-                              toggle('Hapus', user)
-                            }}
                             component="span">
                           <DeleteIcon style={{width: 20, height: 20}} />
                         </IconButton>
@@ -163,7 +162,7 @@ const UsersTable = props => {
       <CardActions className={classes.actions}>
         <TablePagination
           component="div"
-          count={users.length}
+          count={dataState.length}
           onChangePage={handlePageChange}
           onChangeRowsPerPage={onChangeRowsPerPage}
           page={page}
@@ -177,7 +176,7 @@ const UsersTable = props => {
 
 UsersTable.propTypes = {
   className: PropTypes.string,
-  users: PropTypes.array.isRequired
+  dataState: PropTypes.array.isRequired
 };
 
 export default withCookies(UsersTable);
