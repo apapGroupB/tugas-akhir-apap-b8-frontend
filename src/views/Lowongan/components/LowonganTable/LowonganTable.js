@@ -175,7 +175,7 @@ const LowonganTable = props => {
       <CardActions className={classes.actions}>
         <TablePagination
           component="div"
-          count={dataState.length}
+          count={loading || !dataState ? 0 : dataState.length}
           onChangePage={handlePageChange}
           onChangeRowsPerPage={handleRowsPerPageChange}
           page={page}

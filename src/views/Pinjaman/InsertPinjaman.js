@@ -7,12 +7,17 @@ import TextField from "@material-ui/core/TextField";
 import { Modal, Title, ColumnContainer, ButtonContainer } from './InsertPinjaman.style'
 import moment from 'moment'
 import DateFnsUtils from '@date-io/date-fns';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import 'date-fns';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import { BACKEND } from '../../utils'
+import useAxios from "axios-hooks";
+import axios from 'axios'
+import { withCookies } from 'react-cookie';
 
 
 const useStyles = makeStyles(theme => ({
@@ -26,12 +31,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const InsertPinjaman = props => {
-  const { toggle } = props;
+  const { toggle, refetch, setNotif } = props;
   const classes = useStyles();
+  const [postLoading, setPostLoading] = useState(false)
   const [errorField, setErrorField] = useState(false)
   const [dataState, setDataState] = useState({
     jumlah_pinjaman: "",
-    tanggal_pengajuan: moment()
+    tanggal_pengajuan: moment().format('YYYY-MM-DD')
   })
 
   const handleDateChange = date => {
@@ -48,9 +54,45 @@ const InsertPinjaman = props => {
     });
   };
 
+  const closeModal = (status, mode) => {
+    setNotif({
+      showNotif: true,
+      status: status,
+      title: mode
+    })
+    toggle()
+    refetch()
+    setPostLoading(false)
+  }
+
   const validation = () => {
-    if(dataState.jumlah_pinjaman !== "") {
-      toggle()
+    if (dataState.jumlah_pinjaman !== "") {
+      setPostLoading(true)
+      console.log('PINJAMAN: ', {
+        status: 1,
+        jumlah_pinjaman: parseInt(dataState.jumlah_pinjaman),
+        tanggal_pengajuan: moment(dataState.tanggal_pengajuan).format('YYYY-MM-DD'),
+        jumlah_pengembalian: null,
+        tanggal_pengembalian: null,
+        tanggal_disetujui: null
+      })
+      axios.post(BACKEND.ADD_PINJAMAN, {
+        status: 1,
+        jumlah_pinjaman: dataState.jumlah_pinjaman,
+        tanggal_pengajuan: dataState.tanggal_pengajuan,
+        jumlah_pengembalian: 0,
+        tanggal_pengembalian: null,
+        tanggal_disetujui: null
+      }, {
+      headers: {
+        'Authorization': `Bearer ${props.allCookies.user.jwttoken}`,
+        'Content-Type': 'application/json'
+      }
+      }).then(res => {
+        closeModal("success", "tambah")
+      }).catch(err => {
+        closeModal("error", "tambah")
+      })
     } else {
       setErrorField(true)
     }
@@ -104,16 +146,20 @@ const InsertPinjaman = props => {
       </div>
       <ButtonContainer>
         <Button 
+          disabled={postLoading}
           color="primary" 
           variant="contained"
           style={{width: 100, marginLeft: 20}} 
           onClick={validation}
-        >Save</Button>
+            >
+          {postLoading ? <CircularProgress color="inherit" size={20}/> : 'Simpan'}
+        </Button>
         <Button 
+          disabled={postLoading}
           color="primary" 
           style={{width: 100}} 
           onClick={toggle}
-        >Cancel</Button>
+        >Batal</Button>
       </ButtonContainer>
       </Modal>
       </Dialog>
@@ -121,4 +167,4 @@ const InsertPinjaman = props => {
   );
 };
 
-export default InsertPinjaman;
+export default withCookies(InsertPinjaman);

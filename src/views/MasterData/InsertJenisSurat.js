@@ -5,7 +5,7 @@ import Dialog from '@material-ui/core/Dialog';
 import { makeStyles } from '@material-ui/styles';
 import Backdrop from '@material-ui/core/Backdrop';
 import TextField from "@material-ui/core/TextField";
-import { Modal, Title, ColumnContainer, ButtonContainer } from './InsertJenisSurat.style'
+import { Modal, Title, ColumnContainer, ButtonContainer } from './MasterData.style'
 
 const useStyles = makeStyles(theme => ({
   backdrop: {

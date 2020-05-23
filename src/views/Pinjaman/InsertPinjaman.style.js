@@ -35,3 +35,11 @@ export const ButtonContainer = styled.div`
   align-items: flex-start;
   padding: 20px;
 `
+
+export const SpinnerCard = styled.div`
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  height: 200px;
+  width: auto;
+`

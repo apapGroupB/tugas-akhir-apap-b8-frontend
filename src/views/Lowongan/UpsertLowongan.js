@@ -214,7 +214,7 @@ const UpsertLowongan = props => {
             disabled={actionType === 'Edit' ? true : false}
             disableToolbar
             variant="inline"
-            format="MM/dd/yyy"
+            format="MM/dd/yyyy"
             margin="normal"
             id="date-picker-inline"
             label="Tanggal Dibuka"
@@ -234,7 +234,7 @@ const UpsertLowongan = props => {
               ''}
             disabled={actionType === 'Edit' ? true : false}
             variant="inline"
-            format="MM/dd/yyy"
+            format="MM/dd/yyyy"
             margin="normal"
             id="date-picker-inline"
             label="Tanggal Ditutup"

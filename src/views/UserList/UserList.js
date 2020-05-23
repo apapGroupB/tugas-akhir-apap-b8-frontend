@@ -23,14 +23,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-
-
-
 const UserList = (props) => {
   const requestGuru = axios.get(WEBSERVICE.GET_GURU_SIVITAS);
   const requestSiswa = axios.get(WEBSERVICE.GET_SISWA_SIVITAS);
   const requestPegawai = axios.get(WEBSERVICE.GET_PEGAWAI_SIVITAS);
   const classes = useStyles();
+  const [searchText, setSearch] = useState('')
   const [actionType, setActionType] = useState('none')
   const [dataItem, setDataItem] = useState({})
   const [notif, setNotif] = useState({
@@ -87,10 +85,12 @@ const UserList = (props) => {
 
   const uniqueUUid = (sivitasData, tuUser) => {
     if (sivitasData.sivitasUser && tuUser) {
-      const allUser = sivitasData.sivitasUser.filter(dt => !tuUser.map(dt => dt.uuid).includes(dt.idUser))
+      const allUser = sivitasData.sivitasUser
+        .filter(dt => !tuUser.map(dt => dt.uuid).includes(dt.idUser))
         .concat(_.orderBy(tuUser, ['id'], ['desc']))
-      const newRow = Array(allUser.length % 10 !== 0 ? 10 - allUser.length % 10 : 0).fill({});
-      return allUser.concat(newRow)
+      const userFiltered = allUser.filter(data => _.includes(data.nama.toLowerCase(), searchText.toLowerCase()))
+      const newRow = Array(userFiltered.length % 10 !== 0 ? 10 - userFiltered.length % 10 : 0).fill({});
+      return userFiltered.concat(newRow)
     } else {
       return []
     }
@@ -124,6 +124,7 @@ const UserList = (props) => {
       />
       <UsersToolbar 
         toggle={toggle}
+        setSearch={setSearch}
       />
       <div className={classes.content}>
         <UsersTable 

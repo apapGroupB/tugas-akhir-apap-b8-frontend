@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { Colors } from "../../../../styles";
+import { Colors } from "../../styles";
 
 export const Modal = styled.div`
   width: 600px;
@@ -35,5 +35,12 @@ export const ButtonContainer = styled.div`
   flex-direction: row-reverse;
   align-items: flex-start;
   padding: 20px;
+`
 
+export const SpinnerCard = styled.div`
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  height: 200px;
+  width: auto;
 `

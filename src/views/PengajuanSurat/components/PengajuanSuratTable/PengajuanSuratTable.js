@@ -71,6 +71,10 @@ const PengajuanSuratTable = props => {
   {
     id: 4,
     description: 'Surat Rekomendasi Beasiswa'
+    },
+  {
+    id: 5,
+    description: 'Surat Peringatan Pinjam Buku'
   }]
   const { 
     className, 

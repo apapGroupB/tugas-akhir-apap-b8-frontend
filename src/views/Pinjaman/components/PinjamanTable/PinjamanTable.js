@@ -6,20 +6,17 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/styles';
 import {
   Card,
-  CardActions,
-  CardContent,
-  Avatar,
-  Checkbox,
   Table,
+  TableRow,
   TableBody,
   TableCell,
   TableHead,
-  TableRow,
-  Typography,
+  CardActions,
+  CardContent,
   TablePagination
 } from '@material-ui/core';
-
-import { getInitials } from 'helpers';
+import { SpinnerCard } from '../../InsertPinjaman.style'
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -42,7 +39,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const PinjamanTable = props => {
-  const { className, users, ...rest } = props;
+  const { className, dataState, loading, ...rest } = props;
 
   const classes = useStyles();
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -50,10 +47,6 @@ const PinjamanTable = props => {
 
   const handlePageChange = (event, page) => {
     setPage(page);
-  };
-
-  const handleRowsPerPageChange = event => {
-    setRowsPerPage(event.target.value);
   };
 
   return (
@@ -67,40 +60,30 @@ const PinjamanTable = props => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Status</TableCell>
+                  <TableCell>No.</TableCell>
                   <TableCell>Jumlah Pinjaman</TableCell>
                   <TableCell>Tanggal Pengajuan</TableCell>
-                  <TableCell>Jumlah Pengembalian</TableCell>
-                  <TableCell>Tanggal Disetujui</TableCell>
-                  <TableCell>Tanggal Pengembalian</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.slice(0, rowsPerPage).map(user => (
+                {loading ? 
+                <TableRow>
+                  <TableCell colSpan={9} rowSpan={10} padding="checkbox">
+                    <SpinnerCard>
+                      <CircularProgress />
+                    </SpinnerCard>
+                  </TableCell>
+                </TableRow>
+                 : dataState.slice(0, rowsPerPage).map((pinjaman, index) => (
                   <TableRow
                     className={classes.tableRow}
                     hover
-                    key={user.id}
+                    key={pinjaman.id}
                   >
+                    <TableCell>{(page*10)+(index + 1)}</TableCell>
+                    <TableCell>{pinjaman.jumlah_pinjaman}</TableCell>
                     <TableCell>
-                      <div className={classes.nameContainer}>
-                        <Avatar
-                          className={classes.avatar}
-                          src={user.avatarUrl}
-                        >
-                          {getInitials(user.name)}
-                        </Avatar>
-                        <Typography variant="body1">{user.name}</Typography>
-                      </div>
-                    </TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>
-                      {user.address.city}, {user.address.state},{' '}
-                      {user.address.country}
-                    </TableCell>
-                    <TableCell>{user.phone}</TableCell>
-                    <TableCell>
-                      {moment(user.createdAt).format('DD/MM/YYYY')}
+                      {moment(pinjaman.tanggal_pengajuan).format('DD-MM-YYYY')}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -112,12 +95,11 @@ const PinjamanTable = props => {
       <CardActions className={classes.actions}>
         <TablePagination
           component="div"
-          count={users.length}
+          count={loading ? 0 : dataState.length}
           onChangePage={handlePageChange}
-          onChangeRowsPerPage={handleRowsPerPageChange}
           page={page}
           rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[10]}
         />
       </CardActions>
     </Card>
@@ -126,7 +108,7 @@ const PinjamanTable = props => {
 
 PinjamanTable.propTypes = {
   className: PropTypes.string,
-  users: PropTypes.array.isRequired
+  dataState: PropTypes.array.isRequired
 };
 
 export default PinjamanTable;

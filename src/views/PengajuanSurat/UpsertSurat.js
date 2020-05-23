@@ -200,7 +200,7 @@ const UpsertSurat = props => {
             <KeyboardDatePicker
                 disabled
                 variant="inline"
-                format="MM/dd/yyy"
+                format="MM/dd/yyyy"
                 margin="normal"
                 id="date-picker-inline"
                 label="Tanggal Diajukan"
@@ -216,7 +216,7 @@ const UpsertSurat = props => {
                 disabled
                 disableToolbar
                 variant="inline"
-                format="MM/dd/yyy"
+                format="MM/dd/yyyy"
                 margin="normal"
                 id="date-picker-inline"
                 label="Tanggal Disetujui"

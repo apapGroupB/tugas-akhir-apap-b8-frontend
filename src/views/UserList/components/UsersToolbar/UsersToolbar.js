@@ -33,10 +33,15 @@ const UsersToolbar = props => {
   const { 
     className, 
     allCookies,
+    setSearch,
     toggle,
     ...rest } = props;
 
   const classes = useStyles();
+
+  const onChange = (e) => {
+    setSearch(e.target.value)
+  }
 
   return (
     <div
@@ -44,10 +49,11 @@ const UsersToolbar = props => {
       className={clsx(classes.root, className)}
     >
       <div className={classes.row}>
-      <SearchInput
+        <SearchInput
           className={classes.searchInput}
-          placeholder="Search user"
-        />
+          onChange={onChange}
+            placeholder="Search user"
+          />
         <span className={classes.spacer} />
         <Button
           color="primary"
