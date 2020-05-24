@@ -2,6 +2,7 @@ import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import { ResponsivePie } from '@nivo/pie'
 import { makeStyles, useTheme } from '@material-ui/styles';
 import {
   Card,
@@ -104,6 +105,144 @@ const UsersByDevice = props => {
     }
   ];
 
+  const PieChart = ({ dataState }) => (
+    <ResponsivePie
+        data={dataState}
+        margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
+        innerRadius={0.5}
+      // colors={{ scheme: 'nivo' }}
+          colors={[
+          // '#914142',
+          // '#E67D63',
+          // '#FFDEBC',
+          '#D7DCFC',
+          '#938FC6',
+          // '#4B4F86',
+          '#67A4E0',
+          '#8ED0F4',
+          // '#659898',
+          '#E2EAC1',
+        ]}
+        borderColor={{ from: 'color', modifiers: [ [ 'darker', '0.2' ] ] }}
+        radialLabelsSkipAngle={1}
+        radialLabelsTextXOffset={6}
+        radialLabelsTextColor="#333333"
+        radialLabelsLinkOffset={-6}
+        radialLabelsLinkDiagonalLength={14}
+        radialLabelsLinkHorizontalLength={23}
+        radialLabelsLinkStrokeWidth={2}
+        radialLabelsLinkColor={{ from: 'color' }}
+        slicesLabelsSkipAngle={0}
+        slicesLabelsTextColor="#333333"
+        animate={true}
+        motionStiffness={90}
+        motionDamping={15}
+        fill={[
+            {
+                match: {
+                    id: 'ruby'
+                },
+                id: 'dots'
+            },
+            {
+                match: {
+                    id: 'c'
+                },
+                id: 'dots'
+            },
+            {
+                match: {
+                    id: 'go'
+                },
+                id: 'dots'
+            },
+            {
+                match: {
+                    id: 'python'
+                },
+                id: 'dots'
+            },
+            {
+                match: {
+                    id: 'scala'
+                },
+                id: 'lines'
+            },
+            {
+                match: {
+                    id: 'lisp'
+                },
+                id: 'lines'
+            },
+            {
+                match: {
+                    id: 'elixir'
+                },
+                id: 'lines'
+            },
+            {
+                match: {
+                    id: 'javascript'
+                },
+                id: 'lines'
+            }
+        ]}
+        legends={[
+            {
+                anchor: 'bottom',
+                direction: 'row',
+                translateY: 56,
+                itemWidth: 60,
+                itemHeight: 18,
+                itemTextColor: '#999',
+                symbolSize: 18,
+                symbolShape: 'circle',
+                effects: [
+                    {
+                        on: 'hover',
+                        style: {
+                          itemTextColor: '#000',
+                        }
+                    }
+                ]
+            }
+        ]}
+    />
+  )
+  
+  const dataState =[
+  {
+    "id": "python",
+    "label": "python",
+    "value": 154,
+    "color": "hsl(317, 70%, 50%)"
+  },
+  {
+    "id": "haskell",
+    "label": "haskell",
+    "value": 418,
+    "color": "hsl(239, 70%, 50%)"
+  },
+  {
+    "id": "java",
+    "label": "java",
+    "value": 465,
+    "color": "hsl(97, 70%, 50%)"
+  },
+  {
+    "id": "rust",
+    "label": "rust",
+    "value": 492,
+    "color": "hsl(345, 70%, 50%)"
+  },
+  {
+    "id": "javascript",
+    "label": "javascript",
+    "value": 23,
+    "color": "hsl(131, 70%, 50%)"
+  }
+]
+
   return (
     <Card
       {...rest}
@@ -118,31 +257,9 @@ const UsersByDevice = props => {
         title="Status Surat"
       />
       <Divider />
-      <CardContent>
-        <div className={classes.chartContainer}>
-          <Doughnut
-            data={data}
-            options={options}
-          />
-        </div>
-        <div className={classes.stats}>
-          {devices.map(device => (
-            <div
-              className={classes.device}
-              key={device.title}
-            >
-              <span className={classes.deviceIcon}>{device.icon}</span>
-              <Typography variant="body1">{device.title}</Typography>
-              <Typography
-                style={{ color: device.color }}
-                variant="h2"
-              >
-                {device.value}%
-              </Typography>
-            </div>
-          ))}
-        </div>
-      </CardContent>
+      <div style={{height: 400}}>
+        <PieChart dataState={dataState} />
+      </div>
     </Card>
   );
 };

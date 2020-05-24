@@ -24,7 +24,6 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import PengajuanSurat from '../../PengajuanSurat'
 
 import mockData from './data';
-import { StatusBullet } from 'components';
 
 const useStyles = makeStyles(theme => ({
   root: {

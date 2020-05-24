@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/styles';
 import Backdrop from '@material-ui/core/Backdrop';
 import TextField from "@material-ui/core/TextField";
 import { Modal, Title, ColumnContainer, ButtonContainer } from './MasterData.style'
+import { withCookies } from "react-cookie";
 
 const useStyles = makeStyles(theme => ({
   backdrop: {
@@ -17,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const InsertJenisSurat = props => {
+const UpserMasterData = props => {
   const { toggle } = props;
   const classes = useStyles();
   const [dataState, setDataState] = useState({
@@ -94,4 +95,4 @@ const InsertJenisSurat = props => {
   );
 };
 
-export default InsertJenisSurat;
+export default withCookies(UpserMasterData);

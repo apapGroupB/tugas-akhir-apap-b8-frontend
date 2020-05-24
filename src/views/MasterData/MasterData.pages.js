@@ -4,6 +4,7 @@ import { withCookies } from 'react-cookie';
 import { SnackBar } from '../../components';
 import { BACKEND, getAxios } from '../../utils';
 import { makeStyles } from '@material-ui/styles';
+import UpserMasterData from './InsertMasterData'
 
 import { MasterDataTable, MasterDataToolbar } from './components'
 
@@ -58,13 +59,13 @@ const MasterData = (props) => {
 
   return (
     <div className={classes.root}>
-      {/* {(actionType === 'Edit' || actionType === 'Tambah') && <UpsertUser 
+      {(actionType === 'Edit' || actionType === 'Tambah') && <UpserMasterData 
         toggle={toggle}
         refetch={refetch}
         dataItem={dataItem}
         setNotif={setNotif}
         actionType={actionType} />
-      } */}
+      }
       {/* {actionType === 'Hapus' && <DeleteUser
         toggle={toggle}
         refetch={refetch}

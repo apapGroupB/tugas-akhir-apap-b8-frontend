@@ -36,6 +36,7 @@
     "@material-ui/pickers": "^3.2.10",
     "@material-ui/styles": "^4.2.1",
     "@nivo/line": "^0.61.1",
+    "@nivo/pie": "^0.61.1",
     "axios": "^0.19.2",
     "axios-hooks": "^1.10.0",
     "chart.js": "^2.8.0",

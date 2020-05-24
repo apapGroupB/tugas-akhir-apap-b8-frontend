@@ -38,16 +38,16 @@ const PengajuanSurat = (props) => (
       legendPosition: 'middle'
     }}
     colors={[
+      '#4B4F86',
+      '#67A4E0',
+      '#8ED0F4',
+      '#659898',
+      '#E2EAC1',
       '#914142',
       '#E67D63',
       '#FFDEBC',
       '#D7DCFC',
       '#938FC6',
-      '#4B4F86',
-      '#67A4E0',
-      '#8ED0F4',
-      '#659898',
-      '#E2EAC1'
     ]}
     pointSize={10}
     pointColor={Colors.White}
