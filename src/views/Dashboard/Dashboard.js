@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Grid, Typography } from '@material-ui/core';
 import { withCookies } from 'react-cookie';
+import PengajuanSurat from './PengajuanSurat'
 
 import {
   Budget,
@@ -13,11 +14,12 @@ import {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    padding: theme.spacing(4),
+    padding: theme.spacing(2),
     justifyContent: 'center',
     alignItems: 'center',
   }
 }));
+
 
 const Dashboard = (props) => {
   const classes = useStyles();
@@ -28,7 +30,7 @@ const Dashboard = (props) => {
     <div className={classes.root}>
       <Grid
         container
-        spacing={4}
+        spacing={2}
       >
         <Grid
           item
@@ -64,6 +66,7 @@ const Dashboard = (props) => {
           xl={9}
           xs={12}
         >
+          {/* <PengajuanSurat dataState={dataState} /> */}
           <LatestOrders />
         </Grid>
         <Grid

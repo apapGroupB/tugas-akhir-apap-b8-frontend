@@ -22,10 +22,10 @@ const useStyles = makeStyles(theme => ({
     }
   },
   content: {
-    padding: theme.spacing(1, 5)
+    padding: theme.spacing(1, 1, 0, 1)
   },
   actions: {
-    padding: theme.spacing(1),
+    padding: theme.spacing(0, 1, 0, 1),
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start'
@@ -47,56 +47,57 @@ const UpgradePlan = props => {
           align="center"
           gutterBottom
           variant="h6"
+          style={{color: Colors.DarkGrey, fontWeight: 'bold'}}
         >
           QUICK ACCESS
         </Typography>
       </div>
       <div className={classes.actions}>
         <Button
-          color="primary"
           style={{
-            background: '#ffe8cf',
             width: "100%",
+            color: '#c48643',
             marginBottom: 10,
+            background: '#ffe8cf',
             justifyContent: 'flex-start',
-            color: '#c48643'
           }}
-          component="a"
-          target="_blank"
           size="small"
+          component="a"
+          color="primary"
+          target="_blank"
           href="https://si-perpus-b6-frontend.herokuapp.com/sign-in"
         >
           <HomeWorkIcon style={{ margin: 5 }} />
           SI Ruangan
         </Button>
         <Button
-          color="primary"
           style={{
-            background: '#DEE8E1',
             width: "100%",
+            color: '#4a6353',
             marginBottom: 10,
+            background: '#DEE8E1',
             justifyContent: 'flex-start',
-            color: '#4a6353'
           }}
-          target="_blank"
-          component="a"
           size="small"
+          component="a"
+          color="primary"
+          target="_blank"
           href="https://si-perpus-b6-frontend.herokuapp.com/sign-in"
         >
           <BookIcon style={{ margin: 5}} />
           SI Perpustakaan
         </Button>
         <Button
-          color="primary"
           style={{
-            background: '#dee5ff',
             width: "100%",
             marginBottom: 10,
+            background: '#dee5ff',
             justifyContent: 'flex-start'
           }}
-          component="a"
-          target="_blank"
           size="small"
+          component="a"
+          color="primary"
+          target="_blank"
           href="https://si-perpus-b6-frontend.herokuapp.com/sign-in"
         >
           <StoreIcon style={{ margin: 5 }} />

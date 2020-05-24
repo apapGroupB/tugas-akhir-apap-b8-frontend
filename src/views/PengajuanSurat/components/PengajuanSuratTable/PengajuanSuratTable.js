@@ -108,7 +108,7 @@ const PengajuanSuratTable = props => {
                     </SpinnerCard>
                   </TableCell>
                 </TableRow>
-                  : _.orderBy(dataState, ['id'], ['desc'])
+                  : dataState && _.orderBy(dataState, ['id'], ['desc'])
                     .map(data => Object.assign({}, {
                       ...data,
                       tanggal_pengajuan: data.tanggal_pengajuan !== null ? moment(data.tanggal_pengajuan).format('DD/MM/YYYY') : '-',
@@ -188,7 +188,7 @@ const PengajuanSuratTable = props => {
       <CardActions className={classes.actions}>
         <TablePagination
           component="div"
-          count={loading ? 0 : dataState.length}
+          count={!loading && dataState ? dataState.length : 0}
           onChangePage={handlePageChange}
           page={page}
           rowsPerPage={rowsPerPage}
