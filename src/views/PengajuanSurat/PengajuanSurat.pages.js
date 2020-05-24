@@ -50,10 +50,18 @@ const UserList = (props) => {
     });
   };
 
-  const [{ data: getData, loading, error: getError }, refetch] = useAxios(
+  const [{ data: getData, loading: dataLoading, error: getError }, refetch] = useAxios(
     getAxios(BACKEND.GET_ALL_PENGAJUAN, props.allCookies.user.jwttoken)
   );
 
+  const [{ data: getMasterData, loading, error }] = useAxios(
+    getAxios(BACKEND.GET_ALL_JENIS_SURAT, props.allCookies.user.jwttoken)
+  );
+
+  
+  const checkLoad = (loading || dataLoading) && (!getError && !error)
+  
+  console.log('getMasterData: ', getMasterData)
   return (
     <div className={classes.root}>
       {(actionType === 'Edit' || actionType === 'Tambah') && <UpsertSurat 
@@ -86,9 +94,10 @@ const UserList = (props) => {
       <div className={classes.content}>
         <PengajuanSuratTable
           toggle={toggle}
-          loading={loading}
+          loading={checkLoad}
           access={access}
-          dataState={loading || getError ? [] : getData }
+          masterData={checkLoad ? [] : getMasterData}
+          dataState={checkLoad ? [] : getData }
         />
       </div>
     </div>

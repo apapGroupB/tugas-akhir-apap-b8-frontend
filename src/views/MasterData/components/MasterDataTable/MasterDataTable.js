@@ -23,6 +23,7 @@ import {
   TablePagination
 } from '@material-ui/core';
 import { withCookies } from 'react-cookie';
+import { Colors } from 'styles';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -81,26 +82,28 @@ const MasterDataTable = props => {
                     </TableCell>
                   </TableRow>
                   :
-                  dataState.slice(0, rowsPerPage).map((user, index) => (
+                  dataState
+                  .concat(Array(dataState.length % 10 !== 0 ? 10 - dataState.length % 10 : 0).fill({}))
+                  .slice(0, rowsPerPage).map((user, index) => (
                   <TableRow
                     className={classes.tableRow}
                     hover
                     key={user.id}
                   >
-                    <TableCell>{(page*10)+(index + 1)}</TableCell>
+                    <TableCell>{user.nama && (page*10)+(index + 1)}</TableCell>
                     <TableCell>{user.nama}</TableCell>
                     <TableCell>{user.keterangan}</TableCell>
                     <TableCell>{
                       props.allCookies.user.id_role === 2
                         ?
                       <IconButton 
-                        style={{ color: '#c62828' }}
+                        style={{ color: !user.nama ? Colors.White : '#c62828' }}
                         // onClick={}
                         component="span">
                         <DeleteIcon style={{width: 20, height: 20}} />
                       </IconButton> :
                       <IconButton  disabled>
-                        <DeleteIcon style={{width: 20, height: 20}} />
+                        <DeleteIcon style={{ color: !user.nama && Colors.White, width: 20, height: 20}} />
                       </IconButton>}
                     </TableCell>
                   </TableRow>

@@ -27,6 +27,7 @@ import { StatusBullet } from 'components';
 import { SpinnerCard } from './PengajuanSuratTable.style'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import _ from 'lodash'
+import { Colors } from 'styles/color.js';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -56,31 +57,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const PengajuanSuratTable = props => {
-  const jenisSurat = [{
-    id: 1,
-    description: 'Surat Izin Ikut Kegiatan'
-  },
-  {
-    id: 2,
-    description: 'Surat Izin Sakit'
-  },
-  {
-    id: 3,
-    description: 'Surat Keterangan Lulus'
-  },
-  {
-    id: 4,
-    description: 'Surat Rekomendasi Beasiswa'
-    },
-  {
-    id: 5,
-    description: 'Surat Peringatan Pinjam Buku'
-  }]
   const { 
-    className, 
-    dataState, 
     toggle,
     access,
+    className, 
+    dataState, 
+    masterData,
     loading, ...rest } = props;
   const classes = useStyles();
 
@@ -90,6 +72,11 @@ const PengajuanSuratTable = props => {
   const handlePageChange = (event, page) => {
     setPage(page);
   };
+
+  console.log('masterData: ', masterData)
+  console.log('masterData: ', dataState)
+
+  const btnStyle = (data) => Object.assign({}, { color: !data && Colors.White, width: 20, height: 20})
   
   return (
     <Card
@@ -124,19 +111,20 @@ const PengajuanSuratTable = props => {
                   : _.orderBy(dataState, ['id'], ['desc'])
                     .map(data => Object.assign({}, {
                       ...data,
-                      tanggal_pengajuan: moment(data.tanggal_pengajuan).format('DD/MM/YYYY'),
-                      tanggal_disetujui: moment(data.tanggal_disetujui).format('DD/MM/YYYY')
+                      tanggal_pengajuan: data.tanggal_pengajuan !== null ? moment(data.tanggal_pengajuan).format('DD/MM/YYYY') : '-',
+                      tanggal_disetujui: data.tanggal_disetujui !== null ? moment(data.tanggal_disetujui).format('DD/MM/YYYY') : '-'
                     }))
-                  .concat(Array(dataState.length % 10 !== 0 ? 10 - dataState.length % 10 : 0).fill({}))
+                    .concat(Array(dataState.length % 10 !== 0 ? 10 - dataState.length % 10 : 0).fill({}))
                     .slice((page) * rowsPerPage, (page + 1) * rowsPerPage).map((user, index) => (
                     <TableRow
                       className={classes.tableRow}
                       hover
-                      key={user.id}
+                      key={index}
                     >
                       <TableCell>{user.tanggal_pengajuan && (page*10)+(index + 1)}</TableCell>
                       <TableCell>{user.nomor_surat === '0' ? '-' : user.nomor_surat}</TableCell>
-                      <TableCell>{jenisSurat.find(data => data.id === user.id_jenis_surat) ? jenisSurat.find(data => data.id === user.id_jenis_surat).description : ''  }</TableCell>
+                        <TableCell>{masterData.find(data => data.id === user.id_jenis_surat) ?
+                          masterData.find(data => data.id === user.id_jenis_surat).nama : ''}</TableCell>
                       <TableCell>
                         {statusConfig.defaultStatus.find(data => data.id === user.status) ?
                         <div  className={classes.statusContainer}>
@@ -148,13 +136,12 @@ const PengajuanSuratTable = props => {
                           {statusConfig.defaultStatus[user.status].name}
                         </div> : 
                         ''  }</TableCell>
-                      <TableCell>{user.tanggal_pengajuan == undefined ? '' : '-'}</TableCell>
+                      <TableCell>{user.tanggal_pengajuan}</TableCell>
                       <TableCell>
-                        {user.tanggal_disetujui === undefined ? '' : '-'}
+                        {user.tanggal_disetujui}
                       </TableCell>
                       <TableCell>{user.keterangan}</TableCell>
                       <TableCell>
-                          {user.tanggal_pengajuan ? <div>
                             {(props.allCookies.user.id_role === 1 &&
                             user.status) === 0 ||
                             (props.allCookies.user.id_role === 2 &&
@@ -166,13 +153,13 @@ const PengajuanSuratTable = props => {
                               toggle('Edit', user)
                             }}
                             >
-                            <EditIcon style={{width: 20, height: 20}} />
+                            <EditIcon style={btnStyle(user.tanggal_pengajuan)} />
                             </IconButton> :
                             <IconButton 
                               color="primary" 
                               disabled
                             >
-                            <EditIcon style={{width: 20, height: 20}} />
+                            <EditIcon style={btnStyle(user.tanggal_pengajuan)} />
                             </IconButton>}
                           {
                             (user.uuid_user === props.allCookies.user.uuid ||
@@ -180,7 +167,7 @@ const PengajuanSuratTable = props => {
                               user.status === 0
                             ?
                           <IconButton 
-                            style={{ color: '#c62828' }}
+                            style={{ color: !user.tanggal_pengajuan ? Colors.White : '#c62828' }}
                             onClick={() => {
                               toggle('Hapus', user)
                             }}
@@ -188,15 +175,8 @@ const PengajuanSuratTable = props => {
                             <DeleteIcon style={{width: 20, height: 20}} />
                           </IconButton> :
                           <IconButton  disabled>
-                            <DeleteIcon style={{width: 20, height: 20}} />
+                            <DeleteIcon style={btnStyle(user.tanggal_pengajuan)} />
                           </IconButton>}
-                          </div> : 
-                          <IconButton
-                            disabled
-                            style={{ color: '#FFFFFF' }}>
-                            <DeleteIcon style={{width: 20, height: 20}} />
-                          </IconButton>
-                         }
                       </TableCell>
                     </TableRow>
                   ))}
@@ -208,7 +188,7 @@ const PengajuanSuratTable = props => {
       <CardActions className={classes.actions}>
         <TablePagination
           component="div"
-          count={dataState.length}
+          count={loading ? 0 : dataState.length}
           onChangePage={handlePageChange}
           page={page}
           rowsPerPage={rowsPerPage}

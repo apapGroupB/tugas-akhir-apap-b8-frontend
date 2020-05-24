@@ -85,9 +85,8 @@ const UserList = (props) => {
 
   const uniqueUUid = (sivitasData, tuUser) => {
     if (sivitasData.sivitasUser && tuUser) {
-      const allUser = sivitasData.sivitasUser
-        .filter(dt => !tuUser.map(dt => dt.uuid).includes(dt.idUser))
-        .concat(_.orderBy(tuUser, ['id'], ['desc']))
+      const allUser = _.orderBy(tuUser, ['id'], ['desc']).concat(sivitasData.sivitasUser
+        .filter(dt => !tuUser.map(dt => dt.uuid).includes(dt.idUser))) 
       const userFiltered = allUser.filter(data => _.includes(data.nama.toLowerCase(), searchText.toLowerCase()))
       const newRow = Array(userFiltered.length % 10 !== 0 ? 10 - userFiltered.length % 10 : 0).fill({});
       return userFiltered
