@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 700
   },
   avatar: {
-    backgroundColor: theme.palette.success.main,
+    backgroundColor: '#84d36e',
     height: 56,
     width: 56
   },
@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const TotalUsers = props => {
-  const { className, ...rest } = props;
+  const { className, loading, dashboardData, ...rest } = props;
 
   const classes = useStyles();
 
@@ -64,7 +64,7 @@ const TotalUsers = props => {
             >
               TOTAL USER
             </Typography>
-            <Typography variant="h3">1,600</Typography>
+            <Typography variant="h3">{loading ? '...' : dashboardData.totalUser} User</Typography>
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}>

@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 700
   },
   avatar: {
-    backgroundColor: theme.palette.error.main,
+    backgroundColor: '#efb062',
     height: 56,
     width: 56
   },
@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Budget = props => {
-  const { className, ...rest } = props;
+  const { className, loading, dashboardData, ...rest } = props;
 
   const classes = useStyles();
 
@@ -61,9 +61,9 @@ const Budget = props => {
               gutterBottom
               variant="body2"
             >
-              TOTAL SURAT
+              TOTAL PENGAJUAN SURAT
             </Typography>
-            <Typography variant="h3">214 Surat</Typography>
+            <Typography variant="h3">{loading ? '...' : dashboardData.totalPengajuan} Surat</Typography>
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}>

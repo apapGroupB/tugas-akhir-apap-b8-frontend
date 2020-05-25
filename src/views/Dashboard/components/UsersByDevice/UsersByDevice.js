@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -16,6 +16,8 @@ import LaptopMacIcon from '@material-ui/icons/LaptopMac';
 import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import TabletMacIcon from '@material-ui/icons/TabletMac';
+import Dialog from '@material-ui/core/Dialog';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -40,208 +42,105 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UsersByDevice = props => {
-  const { className, ...rest } = props;
+  const { className, dashboardData, loading, ...rest } = props;
+  const [dataState, setDataState] = useState([
+  {
+    id: "Menunggu Persetujuan",
+    label: "0",
+    value: 1,
+    color: "hsl(317, 70%, 50%)"
+  },
+  {
+    id: "Disetujui",
+    label: "1",
+    value: 1,
+    color: "hsl(239, 70%, 50%)"
+  },
+  {
+    id: "Ditolak",
+    label: "2",
+    value: 1,
+    color: "hsl(97, 70%, 50%)"
+  },
+  {
+    id: "Diproses",
+    label: "3",
+    value: 1,
+    color: "hsl(345, 70%, 50%)"
+  },
+  {
+    id: "Selesai",
+    label: "4",
+    value: 1,
+    color: "hsl(131, 70%, 50%)"
+  }
+])
 
   const classes = useStyles();
   const theme = useTheme();
 
-  const data = {
-    datasets: [
-      {
-        data: [63, 15, 22],
-        backgroundColor: [
-          theme.palette.primary.main,
-          theme.palette.error.main,
-          theme.palette.warning.main
-        ],
-        borderWidth: 8,
-        borderColor: theme.palette.white,
-        hoverBorderColor: theme.palette.white
-      }
-    ],
-    labels: ['Desktop', 'Tablet', 'Mobile']
-  };
-
-  const options = {
-    legend: {
-      display: false
-    },
-    responsive: true,
-    maintainAspectRatio: false,
-    animation: false,
-    cutoutPercentage: 80,
-    layout: { padding: 0 },
-    tooltips: {
-      enabled: true,
-      mode: 'index',
-      intersect: false,
-      borderWidth: 1,
-      borderColor: theme.palette.divider,
-      backgroundColor: theme.palette.white,
-      titleFontColor: theme.palette.text.primary,
-      bodyFontColor: theme.palette.text.secondary,
-      footerFontColor: theme.palette.text.secondary
-    }
-  };
-
-  const devices = [
-    {
-      title: 'Proses',
-      value: '63',
-      // icon: <LaptopMacIcon />,
-      color: theme.palette.primary.main
-    },
-    {
-      title: 'Disetujui',
-      value: '15',
-      // icon: <TabletMacIcon />,
-      color: theme.palette.error.main
-    },
-    {
-      title: 'Ditolak',
-      value: '23',
-      // icon: <PhoneIphoneIcon />,
-      color: theme.palette.warning.main
-    }
-  ];
-
   const PieChart = ({ dataState }) => (
     <ResponsivePie
         data={dataState}
-        margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
+        margin={{ top: 30, right: 80, bottom: 20, left: -100 }}
         innerRadius={0.5}
-      // colors={{ scheme: 'nivo' }}
-          colors={[
+        colors={[
+          '#D7DCFC',
+          '#938FC6',
+          '#67A4E0',
+          '#8ED0F4',
+          '#E2EAC1',
+          // '#4B4F86',
+          // '#659898',
           // '#914142',
           // '#E67D63',
           // '#FFDEBC',
-          '#D7DCFC',
-          '#938FC6',
-          // '#4B4F86',
-          '#67A4E0',
-          '#8ED0F4',
-          // '#659898',
-          '#E2EAC1',
         ]}
-        borderColor={{ from: 'color', modifiers: [ [ 'darker', '0.2' ] ] }}
-        radialLabelsSkipAngle={1}
+        borderWidth={1}
+        borderColor={{ from: 'color', modifiers: [ [ 'darker', 0.2 ] ] }}
+        enableRadialLabels={false}
+        // radialLabel={function(e){return e.id+" ("+e.value+")"}}
+        radialLabelsSkipAngle={5}
         radialLabelsTextXOffset={6}
         radialLabelsTextColor="#333333"
-        radialLabelsLinkOffset={-6}
-        radialLabelsLinkDiagonalLength={14}
-        radialLabelsLinkHorizontalLength={23}
-        radialLabelsLinkStrokeWidth={2}
-        radialLabelsLinkColor={{ from: 'color' }}
+        radialLabelsLinkOffset={0}
+        radialLabelsLinkDiagonalLength={16}
+        radialLabelsLinkHorizontalLength={9}
+        radialLabelsLinkStrokeWidth={1}
+        radialLabelsLinkColor={{ from: 'color', modifiers: [] }}
         slicesLabelsSkipAngle={0}
         slicesLabelsTextColor="#333333"
         animate={true}
         motionStiffness={90}
         motionDamping={15}
-        fill={[
-            {
-                match: {
-                    id: 'ruby'
-                },
-                id: 'dots'
-            },
-            {
-                match: {
-                    id: 'c'
-                },
-                id: 'dots'
-            },
-            {
-                match: {
-                    id: 'go'
-                },
-                id: 'dots'
-            },
-            {
-                match: {
-                    id: 'python'
-                },
-                id: 'dots'
-            },
-            {
-                match: {
-                    id: 'scala'
-                },
-                id: 'lines'
-            },
-            {
-                match: {
-                    id: 'lisp'
-                },
-                id: 'lines'
-            },
-            {
-                match: {
-                    id: 'elixir'
-                },
-                id: 'lines'
-            },
-            {
-                match: {
-                    id: 'javascript'
-                },
-                id: 'lines'
-            }
-        ]}
         legends={[
+        {
+          anchor: 'bottom-right',
+          direction: 'column',
+          justify: false,
+          translateX: -20,
+          translateY: -50,
+          itemsSpacing: 0,
+          itemDirection: 'left-to-right',
+          itemWidth: 81,
+          itemHeight: 20,
+          itemOpacity: 0.75,
+          symbolSize: 12,
+          symbolShape: 'circle',
+          symbolBorderColor: 'rgba(0, 0, 0, .5)',
+          effects: [
             {
-                anchor: 'bottom',
-                direction: 'row',
-                translateY: 56,
-                itemWidth: 60,
-                itemHeight: 18,
-                itemTextColor: '#999',
-                symbolSize: 18,
-                symbolShape: 'circle',
-                effects: [
-                    {
-                        on: 'hover',
-                        style: {
-                          itemTextColor: '#000',
-                        }
-                    }
-                ]
+              on: 'hover',
+              style: {
+                itemBackground: 'rgba(0, 0, 0, .03)',
+                itemOpacity: 1
+              }
             }
-        ]}
+          ]
+        }
+      ]}
     />
   )
-  
-  const dataState =[
-  {
-    "id": "python",
-    "label": "python",
-    "value": 154,
-    "color": "hsl(317, 70%, 50%)"
-  },
-  {
-    "id": "haskell",
-    "label": "haskell",
-    "value": 418,
-    "color": "hsl(239, 70%, 50%)"
-  },
-  {
-    "id": "java",
-    "label": "java",
-    "value": 465,
-    "color": "hsl(97, 70%, 50%)"
-  },
-  {
-    "id": "rust",
-    "label": "rust",
-    "value": 492,
-    "color": "hsl(345, 70%, 50%)"
-  },
-  {
-    "id": "javascript",
-    "label": "javascript",
-    "value": 23,
-    "color": "hsl(131, 70%, 50%)"
-  }
-]
 
   return (
     <Card
@@ -249,16 +148,20 @@ const UsersByDevice = props => {
       className={clsx(classes.root, className)}
     >
       <CardHeader
-        action={
-          <IconButton size="small">
-            <RefreshIcon />
-          </IconButton>
-        }
         title="Status Surat"
       />
       <Divider />
-      <div style={{height: 400}}>
-        <PieChart dataState={dataState} />
+      <div style={{ height: 240 }}>
+        {loading || !dashboardData ?
+          <CircularProgress color="primary" size={80} style={{ margin: 80 }} /> :
+          <PieChart dataState={dataState.map(dt => Object.assign({}, {
+            ...dt,
+            value: dashboardData.statusList.filter(e => e[1] == parseInt(dt.label)).length > 0 ?
+              dashboardData.statusList.find(e => e[1] === parseInt(dt.label))[0] : 0
+          }))
+          }
+          />
+         }
       </div>
     </Card>
   );

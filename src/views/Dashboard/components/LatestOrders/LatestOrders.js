@@ -34,7 +34,7 @@ import { withCookies } from 'react-cookie';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    height: 500
+    height: 400
   },
   content: {
     padding: 0
@@ -79,14 +79,9 @@ const LatestOrders = props => {
     getAxios(BACKEND.GET_ALL_JENIS_SURAT, allCookies.user.jwttoken)
   );
 
-  // const [{ data: dashboardData, loading, error }, refetch] = useAxios(
-  //   getAxios(BACKEND.GET_DASHBOARD, allCookies.user.jwttoken)
-  // );
-  
-
   useEffect(() => {
     if (masterData && dashboardData) {
-      const weeks = new Array(14).fill(0)
+      const weeks = new Array(10).fill(0)
       const dateList = _.reverse(weeks.map(((e, index) =>
         moment().subtract(index, 'days').format('YYYY-MM-DD'))))
 
@@ -95,9 +90,7 @@ const LatestOrders = props => {
           dashboardData.pengajuanSuratList.find(dt => dt[2] === e && id == dt[1])[index] : 0
       
       const allData = masterData.map(dt => Object.assign({}, {
-        id: dt.nama.length > 20 ?
-          `${dt.nama.replace("Surat", "Srt.").slice(0, 20)}..` :
-          dt.nama.replace("Surat", "Srt."),
+        id: dt.nama.replace("Surat", "Srt."),
         color: "hsl(120, 70%, 50%)",
         data: dateList.map((data, index) =>
           Object.assign({}, {
@@ -124,7 +117,7 @@ const LatestOrders = props => {
             <RefreshIcon />
           </IconButton>
         }
-        title="Status Surat"
+        title="Pengajuan Surat Harian"
       />
       <Divider />
       {!dataState ? 

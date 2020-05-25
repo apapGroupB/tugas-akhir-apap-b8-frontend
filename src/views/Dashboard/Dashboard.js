@@ -10,9 +10,10 @@ import useAxios from "axios-hooks";
 import {
   Budget,
   TotalUsers,
+  LatestOrders,
   TasksProgress,
   UsersByDevice,
-  LatestOrders
+  TopFiveLowongan
 } from './components';
 
 const useStyles = makeStyles(theme => ({
@@ -30,48 +31,24 @@ const Dashboard = (props) => {
   const [{ data: dashboardData, loading, error }, refetch] = useAxios(
     getAxios(BACKEND.GET_DASHBOARD, allCookies.user.jwttoken)
   );
-  
+
+
+  console.log('dashboardData: ', dashboardData)
+
   return (
     <div className={classes.root}>
+      
       <Grid
         container
-        spacing={2}
+        spacing={1}
       >
         <Grid
           item
-          lg={4}
-          sm={6}
-          xl={3}
-          xs={12}
-        >
-          <Budget />
-        </Grid>
-        <Grid
-          item
-          lg={4}
-          sm={6}
-          xl={3}
-          xs={12}
-        >
-          <TotalUsers />
-        </Grid>
-        <Grid
-          item
-          lg={4}
-          sm={6}
-          xl={3}
-          xs={12}
-        >
-          <TasksProgress />
-        </Grid>
-        <Grid
-          item
-          lg={8}
+          lg={12}
           md={12}
-          xl={9}
+          xl={12}
           xs={12}
         >
-          {/* <PengajuanSurat dataState={dataState} /> */}
           <LatestOrders
             refetch={refetch}
             dashboardData={dashboardData}
@@ -81,11 +58,47 @@ const Dashboard = (props) => {
         <Grid
           item
           lg={4}
+          sm={6}
+          xl={3}
+          xs={12}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <Budget
+              style={{marginBottom: 8}}
+              dashboardData={dashboardData}
+              loading={loading}
+            />
+            <TotalUsers
+              style={{marginBottom: 8}}
+              dashboardData={dashboardData}
+              loading={loading}
+            />
+            <TasksProgress
+              dashboardData={dashboardData}
+              loading={loading}
+            />
+          </div>
+        </Grid>
+        <Grid
+          item
+          lg={4}
           md={6}
           xl={3}
           xs={12}
         >
-          <UsersByDevice />
+          <UsersByDevice
+            loading={loading}
+            dashboardData={dashboardData}
+          />
+        </Grid>
+        <Grid
+          item
+          lg={4}
+          md={6}
+          xl={3}
+          xs={12}
+        >
+          <TopFiveLowongan />
         </Grid>
       </Grid>
     </div>

@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 700
   },
   avatar: {
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: '#6e9fea',
     color: theme.palette.primary.contrastText,
     height: 56,
     width: 56
@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const TasksProgress = props => {
-  const { className, ...rest } = props;
+  const { className, loading, dashboardData,  ...rest } = props;
 
   const classes = useStyles();
 
@@ -62,7 +62,7 @@ const TasksProgress = props => {
             >
               TOTAL LOWONGAN
             </Typography>
-            <Typography variant="h3">25 Lowongan</Typography>
+            <Typography variant="h3">{loading ? '...' : dashboardData.totalLowongan} Lowongan</Typography>
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}>

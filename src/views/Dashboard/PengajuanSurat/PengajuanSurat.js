@@ -7,7 +7,7 @@ import { Colors } from '../../../styles'
 const PengajuanSurat = (props) => (
   <ResponsiveLine
     data={props.dataState}
-    margin={{ top: 50, right: 160, bottom: 80, left: 70 }}
+    margin={{ top: 50, right: 200, bottom: 80, left: 70 }}
     xScale={{ type: 'point' }}
     yScale={{
       type: 'linear',
@@ -25,7 +25,7 @@ const PengajuanSurat = (props) => (
       tickPadding: 10,
       tickRotation: 0,
       legend: 'Hari',
-      legendOffset: 60,
+      legendOffset: 50,
       legendPosition: 'middle'
     }}
     axisLeft={{
@@ -87,7 +87,7 @@ const PengajuanSurat = (props) => (
 )
 
 const LineWrapper = (props) => (
-  <div style={{height: 400}}>
+  <div style={{height: 350}}>
     <PengajuanSurat dataState={props.dataState} />
   </div>
 )

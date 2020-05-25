@@ -8,6 +8,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
 import { Logout } from '../../../../components'
+import WorkTwoToneIcon from '@material-ui/icons/WorkTwoTone';
+import { Colors } from 'styles';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -43,14 +45,20 @@ const Topbar = props => {
       {showLogout && <Logout toggle={toggle}/>}
       <Toolbar>
         <RouterLink to="/">
-          <Typography
-            className={classes.title}
-            // color="#FFF"
-            gutterBottom
-            variant="body2"
-          >
-            SI - TU Group B
-          </Typography>
+          <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+            <div style={{color: Colors.White, marginTop: -5, marginRight: 15}}>
+              <WorkTwoToneIcon fontSize="large" />
+            </div>
+            
+            <Typography
+              className={classes.title}
+              // color="#FFF"
+              gutterBottom
+              variant="body2"
+            >
+              SI - TU Group B
+            </Typography>
+          </div>
         </RouterLink>
         <div className={classes.flexGrow} />
         <Hidden mdDown>
