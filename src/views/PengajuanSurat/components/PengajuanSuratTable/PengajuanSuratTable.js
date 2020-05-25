@@ -8,14 +8,11 @@ import {
   Card,
   CardActions,
   CardContent,
-  Avatar,
-  Checkbox,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-  Typography,
   TablePagination
 } from '@material-ui/core';
 import { withCookies } from 'react-cookie';
@@ -63,6 +60,7 @@ const PengajuanSuratTable = props => {
     className, 
     dataState, 
     masterData,
+    allCookies,
     loading, ...rest } = props;
   const classes = useStyles();
 
@@ -72,9 +70,6 @@ const PengajuanSuratTable = props => {
   const handlePageChange = (event, page) => {
     setPage(page);
   };
-
-  console.log('masterData: ', masterData)
-  console.log('masterData: ', dataState)
 
   const btnStyle = (data) => Object.assign({}, { color: !data && Colors.White, width: 20, height: 20})
   
@@ -142,9 +137,9 @@ const PengajuanSuratTable = props => {
                       </TableCell>
                       <TableCell>{user.keterangan}</TableCell>
                       <TableCell>
-                            {(props.allCookies.user.id_role === 1 &&
+                            {(allCookies.user.id_role === 1 &&
                             user.status) === 0 ||
-                            (props.allCookies.user.id_role === 2 &&
+                            (allCookies.user.id_role === 2 &&
                             user.status === 2)
                             ?
                           <IconButton 
@@ -162,8 +157,8 @@ const PengajuanSuratTable = props => {
                             <EditIcon style={btnStyle(user.tanggal_pengajuan)} />
                             </IconButton>}
                           {
-                            (user.uuid_user === props.allCookies.user.uuid ||
-                              access.delete.includes(props.allCookies.user.id_role)) &&
+                            (user.uuid_user === allCookies.user.uuid ||
+                              access.delete.includes(allCookies.user.id_role)) &&
                               user.status === 0
                             ?
                           <IconButton 

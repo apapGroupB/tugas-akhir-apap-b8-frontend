@@ -14,10 +14,10 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import { BACKEND } from '../../utils'
 import useAxios from "axios-hooks";
 import axios from 'axios'
 import { withCookies } from 'react-cookie';
+import { BACKEND } from 'utils';
 
 
 const useStyles = makeStyles(theme => ({
@@ -68,14 +68,6 @@ const InsertPinjaman = props => {
   const validation = () => {
     if (dataState.jumlah_pinjaman !== "") {
       setPostLoading(true)
-      console.log('PINJAMAN: ', {
-        status: 1,
-        jumlah_pinjaman: parseInt(dataState.jumlah_pinjaman),
-        tanggal_pengajuan: moment(dataState.tanggal_pengajuan).format('YYYY-MM-DD'),
-        jumlah_pengembalian: null,
-        tanggal_pengembalian: null,
-        tanggal_disetujui: null
-      })
       axios.post(BACKEND.ADD_PINJAMAN, {
         status: 1,
         jumlah_pinjaman: dataState.jumlah_pinjaman,

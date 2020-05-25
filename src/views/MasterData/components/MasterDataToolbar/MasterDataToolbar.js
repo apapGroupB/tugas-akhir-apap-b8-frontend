@@ -1,13 +1,13 @@
+import clsx from 'clsx';
 import React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
+import { withCookies } from 'react-cookie';
 import Select from '@material-ui/core/Select';
+import { makeStyles } from '@material-ui/styles';
 import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -46,14 +46,12 @@ const masterList = [{
 }]
 
 const MasterDataToolbar = props => {
-  const { className, toggle, masterSelected, setMasterSelected, ...rest } = props;
+  const { className, toggle, allCookies, masterSelected, setMasterSelected, ...rest } = props;
   const classes = useStyles();
 
   const handleChange = (event) => {
     setMasterSelected(event.target.value);
   };
-
-  console.log('masterSelected: ', masterSelected)
 
   return (
     <div
@@ -70,14 +68,15 @@ const MasterDataToolbar = props => {
             onChange={handleChange}
             label="List Master Data"
             >
-          {masterList.map(data => <MenuItem value={data.id}>{data.title}</MenuItem>)}
+          {masterList.map((data, index) => <MenuItem key={index} value={data.id}>{data.title}</MenuItem>)}
         </Select>
       </FormControl>
         <span className={classes.spacer} />
         <Button
           color="primary"
           variant="contained"
-          onClick={toggle}
+          onClick={() => toggle('add')}
+          disabled={allCookies.user.id_role === 2 ? false : true}
         >
           {`Tambah ${masterList.find(dt => dt.id === masterSelected).title}`}
         </Button>
@@ -91,4 +90,4 @@ MasterDataToolbar.propTypes = {
   className: PropTypes.string
 };
 
-export default MasterDataToolbar;
+export default withCookies(MasterDataToolbar);

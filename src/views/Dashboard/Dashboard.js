@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { withCookies } from 'react-cookie';
-import PengajuanSurat from './PengajuanSurat'
 import { BACKEND, getAxios } from 'utils';
 import useAxios from "axios-hooks";
 
@@ -31,9 +30,6 @@ const Dashboard = (props) => {
   const [{ data: dashboardData, loading, error }, refetch] = useAxios(
     getAxios(BACKEND.GET_DASHBOARD, allCookies.user.jwttoken)
   );
-
-
-  console.log('dashboardData: ', dashboardData)
 
   return (
     <div className={classes.root}>

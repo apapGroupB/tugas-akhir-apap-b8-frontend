@@ -17,7 +17,7 @@ import {
   TableHead,
   Divider,
 } from '@material-ui/core';
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -65,9 +65,7 @@ const UsersByDevice = props => {
       setDataState(sortedData)
     }
   }, [getData])
-
-  console.log('dataState: ', dataState)
-
+  
   const classes = useStyles();
   const theme = useTheme();
 

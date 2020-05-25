@@ -48,7 +48,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UsersTable = props => {
-  const { className, dataState, toggle, loading, ...rest } = props;
+  const { className, dataState, allCookies, toggle, loading, ...rest } = props;
 
   const classes = useStyles();
 
@@ -115,7 +115,7 @@ const UsersTable = props => {
                      <TableCell> {
                        user.nama ? 
                          <div>
-                           {props.allCookies.user.id_role === 2 && user.id ?
+                           {allCookies.user.id_role === 2 && user.id ?
                         <IconButton 
                           color="primary" 
                           onClick={() => {
@@ -130,7 +130,7 @@ const UsersTable = props => {
                           >
                           <EditIcon style={{width: 20, height: 20}} />
                           </IconButton>}
-                        { (props.allCookies.user.id_role === 2 && user.id) && user.uuid !==  props.allCookies.user.uuid ?
+                        { (allCookies.user.id_role === 2 && user.id) && user.uuid !==  allCookies.user.uuid ?
                         <IconButton 
                           style={{ color: '#c62828' }}
                           onClick={() => {

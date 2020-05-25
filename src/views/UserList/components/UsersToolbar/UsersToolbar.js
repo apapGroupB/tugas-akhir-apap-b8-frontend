@@ -31,10 +31,10 @@ const useStyles = makeStyles(theme => ({
 
 const UsersToolbar = props => {
   const { 
+    toggle,
+    setSearch,
     className, 
     allCookies,
-    setSearch,
-    toggle,
     ...rest } = props;
 
   const classes = useStyles();
@@ -57,8 +57,8 @@ const UsersToolbar = props => {
         <span className={classes.spacer} />
         <Button
           color="primary"
-          disabled={allCookies.user.id_role === 2 ? false : true}
           variant="contained"
+          disabled={allCookies.user.id_role === 2 ? false : true}
           onClick={() => {
             toggle('Tambah')
           }}

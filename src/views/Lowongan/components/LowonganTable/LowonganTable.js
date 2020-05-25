@@ -6,21 +6,17 @@ import { makeStyles } from '@material-ui/styles';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
   Card,
-  CardActions,
-  CardContent,
-  Avatar,
-  Checkbox,
   Table,
+  TableRow,
   TableBody,
   TableCell,
   TableHead,
-  TableRow,
-  Typography,
+  CardContent,
+  CardActions,
   TablePagination
 } from '@material-ui/core';
 import _ from 'lodash'
 import { withCookies } from 'react-cookie';
-import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { SpinnerCard } from './LowonganTable.style'
@@ -49,14 +45,15 @@ const useStyles = makeStyles(theme => ({
 
 const LowonganTable = props => {
   const { 
+    toggle,
+    loading, 
     className, 
     dataState, 
-    deleteToggle, 
-    loading, 
     deleteAct, 
-    toggle,
-    setActionType,
+    allCookies,
     setDataItem,
+    deleteToggle, 
+    setActionType,
     ...rest } = props;
 
   const classes = useStyles();
@@ -143,7 +140,7 @@ const LowonganTable = props => {
                     <TableCell>{user.keterangan}</TableCell>
                     <TableCell>
                       {user.jumlah ? <div>
-                        {props.allCookies.user.id_role === 2 &&
+                        {allCookies.user.id_role === 2 &&
                         moment().format() < moment(user.tanggal_dibuka).format() ?
                         <IconButton 
                           color="primary" 
@@ -159,7 +156,7 @@ const LowonganTable = props => {
                           >
                           <EditIcon style={{width: 20, height: 20}} />
                           </IconButton>}
-                        {props.allCookies.user.id_role === 2  &&
+                        {allCookies.user.id_role === 2  &&
                         moment().format() < moment(user.tanggal_dibuka).format() ?
                         <IconButton 
                           style={{ color: '#c62828' }}

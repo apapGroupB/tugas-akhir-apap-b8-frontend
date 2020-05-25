@@ -88,7 +88,6 @@ const UpsertLowongan = props => {
   };
 
   const handleDateChange = (id, date) => {
-    console.log(id, date)
     setDataState({
       ...dataState,
       [id]: moment(date).format('YYYY-MM-DD')

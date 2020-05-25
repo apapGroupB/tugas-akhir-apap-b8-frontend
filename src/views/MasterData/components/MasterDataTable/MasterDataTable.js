@@ -48,7 +48,7 @@ const useStyles = makeStyles(theme => ({
 const MasterDataTable = props => {
   const classes = useStyles();
   const [page, setPage] = useState(0);
-  const { className, loading, dataState, ...rest } = props;
+  const { className, toggle, allCookies, loading, dataState, ...rest } = props;
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handlePageChange = (event, page) => {
@@ -73,7 +73,7 @@ const MasterDataTable = props => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {loading ?
+                {loading || !dataState ?
                   <TableRow>
                     <TableCell colSpan={9} rowSpan={10} padding="checkbox">
                       <SpinnerCard>
@@ -84,21 +84,21 @@ const MasterDataTable = props => {
                   :
                   dataState
                   .concat(Array(dataState.length % 10 !== 0 ? 10 - dataState.length % 10 : 0).fill({}))
-                  .slice(0, rowsPerPage).map((user, index) => (
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user, index) => (
                   <TableRow
                     className={classes.tableRow}
                     hover
-                    key={user.id}
+                    key={index}
                   >
                     <TableCell>{user.nama && (page*10)+(index + 1)}</TableCell>
                     <TableCell>{user.nama}</TableCell>
                     <TableCell>{user.keterangan}</TableCell>
                     <TableCell>{
-                      props.allCookies.user.id_role === 2
+                      allCookies.user.id_role === 2
                         ?
                       <IconButton 
                         style={{ color: !user.nama ? Colors.White : '#c62828' }}
-                        // onClick={}
+                        onClick={() => toggle('delete', user)}
                         component="span">
                         <DeleteIcon style={{width: 20, height: 20}} />
                       </IconButton> :
@@ -116,7 +116,7 @@ const MasterDataTable = props => {
       <CardActions className={classes.actions}>
         <TablePagination
           component="div"
-          count={dataState.length}
+          count={dataState ? dataState.length : 0}
           onChangePage={handlePageChange}
           page={page}
           rowsPerPage={rowsPerPage}

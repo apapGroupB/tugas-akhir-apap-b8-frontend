@@ -10,7 +10,7 @@ import useAxios from "axios-hooks";
 import axios from 'axios'
 import { withCookies } from 'react-cookie';
 
-import { DeleteModal, Title, ColumnContainer, ButtonContainer, Subtitle } from './UpsertLowongan.style'
+import { DeleteModal, Title, ColumnContainer, ButtonContainer, Subtitle } from './MasterData.style'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
 
 
 const DeleteLowongan = props => {
-  const { toggle, dataItem, refetch, allCookies, setNotif } = props;
+  const { toggle, dataItem, masterSelected, refetch, setNotif } = props;
   const classes = useStyles();
   const [postLoading, setPostLoading] = useState(false)
 
@@ -49,9 +49,9 @@ const DeleteLowongan = props => {
 
   const validation = () => {
     setPostLoading(true)
-    axios.get(`${BACKEND.DELETE_LOWONGAN}/${dataItem.id}`, {
+    axios.get(`${masterSelected.delete}/${dataItem.id}`, {
       headers: {
-        'Authorization': `Bearer ${allCookies.user.jwttoken}`,
+        'Authorization': `Bearer ${props.allCookies.user.jwttoken}`,
         'Content-Type': 'application/json'
       }
     }).then(res => {
@@ -71,10 +71,13 @@ const DeleteLowongan = props => {
     >
       <DeleteModal>
       <div>
-        <Title>{'Hapus Lowongan'}</Title>
+        <Title>{`Hapus ${masterSelected.title}`}</Title>
         <ColumnContainer full>
           <Subtitle>
-            Apakah anda ingin menghapus lowongan ini?
+            {`Apakah anda ingin enghapus ${masterSelected.title.toLowerCase()} ini?`}
+          </Subtitle>
+          <Subtitle>
+            {`Note: Semua data transaksional yang terkait dengan data ini akan terhapus`}
           </Subtitle>
         </ColumnContainer>
       </div>

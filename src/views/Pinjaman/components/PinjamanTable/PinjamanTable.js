@@ -81,7 +81,7 @@ const PinjamanTable = props => {
                   <TableRow
                     className={classes.tableRow}
                     hover
-                    key={pinjaman.id}
+                    key={index}
                   >
                     <TableCell style={{ color: !pinjaman.jumlah_pinjaman && Colors.White }} >
                       {(page * 10) + (index + 1)}</TableCell>

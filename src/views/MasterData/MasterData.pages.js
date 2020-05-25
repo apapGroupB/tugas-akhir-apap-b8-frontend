@@ -5,6 +5,7 @@ import { SnackBar } from '../../components';
 import { BACKEND, getAxios } from '../../utils';
 import { makeStyles } from '@material-ui/styles';
 import UpserMasterData from './InsertMasterData'
+import DeleteMasterData from './DeleteMasterData'
 
 import { MasterDataTable, MasterDataToolbar } from './components'
 
@@ -20,20 +21,23 @@ const useStyles = makeStyles(theme => ({
 const masterList = [{
   id: 1,
   title: "Jenis Surat",
-  query: BACKEND.GET_ALL_JENIS_SURAT
+  query: BACKEND.GET_ALL_JENIS_SURAT,
+  mutation: BACKEND.ADD_JENIS_SURAT,
+  delete: BACKEND.DELETE_JENIS_SURAT
 },
   {
   id: 2,
   title: "Jenis Lowongan",
-  query: BACKEND.GET_ALL_JENIS_LOWONGAN
+  query: BACKEND.GET_ALL_JENIS_LOWONGAN,
+  mutation: BACKEND.ADD_JENIS_LOWONGAN,
+  delete: BACKEND.DELETE_JENIS_LOWONGAN
 }]
 
 const MasterData = (props) => {
   const classes = useStyles();
+  const [showModal, setShowModal] = useState('none')
   const [dataItem, setDataItem] = useState({})
-  const [showModal, setShowModal] = useState(false)
   const [masterSelected, setMasterSelected] = useState(1)
-  const [actionType, setActionType] = useState('none')
   const [notif, setNotif] = useState({
     showNotif: false,
     status: "success",
@@ -44,10 +48,9 @@ const MasterData = (props) => {
     getAxios(masterList.find(dt => dt.id === masterSelected).query, props.allCookies.user.jwttoken)
   );
 
-  const toggle = (mode, user) => {
-    setShowModal(!showModal)
-    setActionType(mode)
-    setDataItem(user)
+  const toggle = (mode, dataItem) => {
+    setShowModal(mode)
+    setDataItem(dataItem)
   }
 
   const handleClose = (event, reason) => {
@@ -59,19 +62,19 @@ const MasterData = (props) => {
 
   return (
     <div className={classes.root}>
-      {(actionType === 'Edit' || actionType === 'Tambah') && <UpserMasterData 
+      {showModal === 'add' && <UpserMasterData 
         toggle={toggle}
         refetch={refetch}
-        dataItem={dataItem}
         setNotif={setNotif}
-        actionType={actionType} />
+        masterSelected={masterList.find(dt => dt.id === masterSelected)} />
       }
-      {/* {actionType === 'Hapus' && <DeleteUser
+      {showModal === 'delete' && <DeleteMasterData
         toggle={toggle}
         refetch={refetch}
         dataItem={dataItem}
         setNotif={setNotif}
-      />} */}
+        masterSelected={masterList.find(dt => dt.id === masterSelected)}
+      />}
       <SnackBar 
         notif={notif.showNotif}
         status={notif.status}

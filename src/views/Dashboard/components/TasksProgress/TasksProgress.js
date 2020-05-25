@@ -1,16 +1,15 @@
-import React from 'react';
 import clsx from 'clsx';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
+import WorkOutlineIcon from '@material-ui/icons/WorkOutline';
 import {
   Card,
-  CardContent,
   Grid,
-  Typography,
   Avatar,
-  LinearProgress
+  Typography,
+  CardContent,
 } from '@material-ui/core';
-import WorkOutlineIcon from '@material-ui/icons/WorkOutline';
 
 const useStyles = makeStyles(theme => ({
   root: {

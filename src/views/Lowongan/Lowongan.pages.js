@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UserList = (props) => {
+const Lowongan = (props) => {
   const classes = useStyles();
 
   const [users] = useState(mockData);
@@ -91,4 +91,4 @@ const UserList = (props) => {
   );
 };
 
-export default withCookies(UserList);
+export default withCookies(Lowongan);

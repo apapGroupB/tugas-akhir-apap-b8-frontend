@@ -61,7 +61,6 @@ const UserList = (props) => {
   
   const checkLoad = (loading || dataLoading) && (!getError && !error)
   
-  console.log('getMasterData: ', getMasterData)
   return (
     <div className={classes.root}>
       {(actionType === 'Edit' || actionType === 'Tambah') && <UpsertSurat 

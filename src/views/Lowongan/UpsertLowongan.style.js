@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { Colors } from "../../styles";
 
 export const Modal = styled.div`
@@ -57,5 +57,4 @@ export const ButtonContainer = styled.div`
   flex-direction: row-reverse;
   align-items: flex-start;
   padding: 20px;
-
 `

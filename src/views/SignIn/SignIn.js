@@ -190,7 +190,6 @@ const SignIn = props => {
       mainHistory.push('/dashboard')
     }).catch(err => {
       setPostLoading(false)
-      console.log('ERROR LUR: ', err)
       setError({
         username: true,
         password: true,

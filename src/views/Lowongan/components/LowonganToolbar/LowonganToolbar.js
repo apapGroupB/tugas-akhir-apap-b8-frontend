@@ -31,8 +31,8 @@ const useStyles = makeStyles(theme => ({
 const LowonganToolbar = props => {
   const { 
     toggle, 
-    allCookies,
     className,
+    allCookies,
     ...rest } = props;
   const classes = useStyles();
   return (
