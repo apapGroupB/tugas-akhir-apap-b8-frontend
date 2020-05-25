@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -10,20 +10,27 @@ import {
   CardHeader,
   CardContent,
   Button,
-  Divider,
   Table,
   TableBody,
   TableCell,
   TableHead,
+  Divider,
+  IconButton,
   TableRow,
   Tooltip,
   TableSortLabel
 } from '@material-ui/core';
+import useAxios from "axios-hooks";
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import _ from 'lodash'
 
 import PengajuanSurat from '../../PengajuanSurat'
+import LinearProgress from '@material-ui/core/LinearProgress';
+import RefreshIcon from '@material-ui/icons/Refresh';
 
 import mockData from './data';
+import { BACKEND, getAxios } from 'utils';
+import { withCookies } from 'react-cookie';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -54,165 +61,54 @@ const statusColors = {
 };
 
 
-const dataState = [
-  {
-    "id": "Surat",
-    "color": "hsl(120, 70%, 50%)",
-    "data": [
-      {
-        "x": "Senin",
-        "y": 281
-      },
-      {
-        "x": "Selasa",
-        "y": 38
-      },
-      {
-        "x": "Rabu",
-        "y": 23
-      },
-      {
-        "x": "Kamis",
-        "y": 241
-      },
-      {
-        "x": "Jumat",
-        "y": 242
-      },
-      {
-        "x": "Sabtu",
-        "y": 80
-      }
-    ]
-  },
-  {
-    "id": "france",
-    "color": "hsl(71, 70%, 50%)",
-    "data": [
-      {
-        "x": "Senin",
-        "y": 294
-      },
-      {
-        "x": "Selasa",
-        "y": 92
-      },
-      {
-        "x": "Rabu",
-        "y": 202
-      },
-      {
-        "x": "Kamis",
-        "y": 99
-      },
-      {
-        "x": "Jumat",
-        "y": 138
-      },
-      {
-        "x": "Sabtu",
-        "y": 80
-      }
-    ]
-  },
-  {
-    "id": "us",
-    "color": "hsl(118, 70%, 50%)",
-    "data": [
-      {
-        "x": "Senin",
-        "y": 4
-      },
-      {
-        "x": "Selasa",
-        "y": 133
-      },
-      {
-        "x": "Rabu",
-        "y": 282
-      },
-      {
-        "x": "Kamis",
-        "y": 294
-      },
-      {
-        "x": "Jumat",
-        "y": 190
-      },
-      {
-        "x": "Sabtu",
-        "y": 80
-      }
-    ]
-  },
-  {
-    "id": "germany",
-    "color": "hsl(36, 70%, 50%)",
-    "data": [
-      {
-        "x": "Senin",
-        "y": 30
-      },
-      {
-        "x": "Selasa",
-        "y": 141
-      },
-      {
-        "x": "Rabu",
-        "y": 94
-      },
-      {
-        "x": "Kamis",
-        "y": 203
-      },
-      {
-        "x": "Jumat",
-        "y": 98
-      },
-      {
-        "x": "Sabtu",
-        "y": 80
-      }
-    ]
-  },
-  {
-    "id": "norway",
-    "color": "hsl(180, 70%, 50%)",
-    "data": [
-      {
-        "x": "Senin",
-        "y": 62
-      },
-      {
-        "x": "Selasa",
-        "y": 190
-      },
-      {
-        "x": "Rabu",
-        "y": 127
-      },
-      {
-        "x": "Kamis",
-        "y": 92
-      },
-      {
-        "x": "Jumat",
-        "y": 97
-      },
-      {
-        "x": "Sabtu",
-        "y": 80
-      }
-    ]
-  }
-]
 
 const LatestOrders = props => {
-  const { className, ...rest } = props;
+  const {
+    className,
+    allCookies,
+    loading,
+    refetch,
+    dashboardData,
+    ...rest
+  } = props;
 
   const classes = useStyles();
+  const [dataState, setDataState] = useState(null)
 
-  const [orders] = useState(mockData);
+  const [{ data: masterData, loading: dataLoading, error: getError }] = useAxios(
+    getAxios(BACKEND.GET_ALL_JENIS_SURAT, allCookies.user.jwttoken)
+  );
+
+  // const [{ data: dashboardData, loading, error }, refetch] = useAxios(
+  //   getAxios(BACKEND.GET_DASHBOARD, allCookies.user.jwttoken)
+  // );
+  
+
+  useEffect(() => {
+    if (masterData && dashboardData) {
+      const weeks = new Array(14).fill(0)
+      const dateList = _.reverse(weeks.map(((e, index) =>
+        moment().subtract(index, 'days').format('YYYY-MM-DD'))))
+
+      const filtered = (e, index, id) =>
+        dashboardData.pengajuanSuratList.filter(dt => dt[2] === e && id == dt[1]).length > 0 ? 
+          dashboardData.pengajuanSuratList.find(dt => dt[2] === e && id == dt[1])[index] : 0
+      
+      const allData = masterData.map(dt => Object.assign({}, {
+        id: dt.nama.length > 20 ?
+          `${dt.nama.replace("Surat", "Srt.").slice(0, 20)}..` :
+          dt.nama.replace("Surat", "Srt."),
+        color: "hsl(120, 70%, 50%)",
+        data: dateList.map((data, index) =>
+          Object.assign({}, {
+          x: moment(data, 'YYYY-MM-DD').format('DD/MM'),
+          y: filtered(data, 0, dt.id)
+        }))
+      }))
+      setDataState(allData)
+    }
+  }, [dashboardData, masterData])
+
 
   return (
     <Card
@@ -220,19 +116,20 @@ const LatestOrders = props => {
       className={clsx(classes.root, className)}
     >
       <CardHeader
-        title="Pengajuan Surat Terakhir"
+        action={
+          <IconButton
+            size="small"
+            onClick={() => refetch()}
+          >
+            <RefreshIcon />
+          </IconButton>
+        }
+        title="Status Surat"
       />
-      <PengajuanSurat dataState={dataState} />
-      
-      <CardActions className={classes.actions}>
-        <Button
-          color="primary"
-          size="small"
-          variant="text"
-        >
-          View all <ArrowRightIcon />
-        </Button>
-      </CardActions>
+      <Divider />
+      {!dataState ? 
+      <LinearProgress /> :
+      <PengajuanSurat dataState={dataState} />}
     </Card>
   );
 };
@@ -241,4 +138,4 @@ LatestOrders.propTypes = {
   className: PropTypes.string
 };
 
-export default LatestOrders;
+export default withCookies(LatestOrders);

@@ -11,6 +11,7 @@ const BACKEND = {
   AUTHENTICATE: SITE_URL + '/authenticate',
   EDIT_LOWONGAN: SITE_URL + '/lowongan/update',
   DELETE_LOWONGAN: SITE_URL + '/lowongan/delete',
+  GET_DASHBOARD: SITE_URL + '/dashboard/viewall',
   GET_ALL_PINJAMAN: SITE_URL + '/pinjaman/viewall',
   GET_ALL_LOWONGAN: SITE_URL + '/lowongan/viewall',
   GET_ALL_JENIS_SURAT: SITE_URL + '/jenis-surat/viewall',
