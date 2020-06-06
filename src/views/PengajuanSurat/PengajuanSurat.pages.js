@@ -67,6 +67,7 @@ const UserList = (props) => {
         access={access}
         toggle={toggle} 
         refetch={refetch}
+        masterData={getMasterData}
         setNotif={setNotif}
         dataItem={dataItem}
         actionType={actionType}/>

@@ -55,8 +55,10 @@ const DeleteLowongan = props => {
         'Content-Type': 'application/json'
       }
     }).then(res => {
+      console.log('RES SUCCESS: ', res)
       closeModal("success")
     }).catch(res => {
+      console.log('RES ERROR: ', res)
       closeModal("error")
     })
   }

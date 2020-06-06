@@ -42,12 +42,15 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UpsertSurat = props => {
-  const { toggle, actionType, dataItem, access, refetch, setNotif } = props;
+  const { toggle, actionType, dataItem, access, refetch, setNotif, masterData } = props;
   const classes = useStyles();
   const [postLoading, setPostLoading] = useState(false)
   const [dataState, setDataState] = useState(
     actionType === 'Edit' ?
-    dataItem :
+      {
+        ...dataItem,
+        tanggal_disetujui: null,
+      } :
     {
     nomor_surat: "0",
     id_jenis_surat: 1,
@@ -56,7 +59,9 @@ const UpsertSurat = props => {
     tanggal_disetujui: null,
     keterangan: "",
     uuid_user: props.allCookies.user.uuid
-  })
+      })
+  
+  console.log('dataState: ', dataState)
 
 
   
@@ -107,13 +112,16 @@ const UpsertSurat = props => {
       }).then(res => {
         closeModal("success", "tambah")
       }).catch(err => {
+        console.log('RES ERROR: ', err)
         closeModal("error", "tambah")
       })
     } else {
+      console.log('dataState: ', dataState)
       axios.post(`${BACKEND.EDIT_PENGAJUAN_SURAT}/${dataState.id}`, {
         ...dataState,
-      nomor_surat: (dataState.status === 2 ? moment().format('HHmmssSSYYMMDD') : dataState.nomor_surat ),
-      tanggal_disetujui: (dataState.status === 2 ? moment().format('YYYY-MM-DD') : dataState.tanggal_disetujui),
+        nomor_surat: (dataState.status === 2 ? moment().format('HHmmssSSYYMMDD') : dataState.nomor_surat),
+        tanggal_pengajuan: moment(dataState.tanggal_pengajuan).format('YYYY-MM-DD'),
+        tanggal_disetujui: (dataState.status === 2 ? moment().format('YYYY-MM-DD') : dataState.tanggal_disetujui),
       }, {
       headers: {
         'Authorization': `Bearer ${props.allCookies.user.jwttoken}`,
@@ -169,11 +177,13 @@ const UpsertSurat = props => {
             id="id_jenis_surat"
             value={dataState.id_jenis_surat}
             onChange={e => (handleChange("id_jenis_surat", e))}
-          >
-            <MenuItem value={1}>Surat Izin Ikut Kegiatan</MenuItem>
-            <MenuItem value={2}>Surat Izin Sakit</MenuItem>
-            <MenuItem value={3}>Surat Keterangan Lulus</MenuItem>
-            <MenuItem value={4}>Surat Rekomendasi Beasiswa</MenuItem>
+            >
+            <MenuItem key={0} value={dataState.status}>
+              {statusConfig.defaultStatus[dataState.status].name}
+            </MenuItem>
+            {masterData.map((data, i) => 
+              <MenuItem key={data.id} value={data.id}>{data.nama}</MenuItem>
+            )}
           </Select>
         </ColumnContainer>
         <ColumnContainer>

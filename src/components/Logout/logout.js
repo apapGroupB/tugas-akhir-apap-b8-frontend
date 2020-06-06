@@ -28,14 +28,6 @@ const Logout = props => {
     keterangan: ""
   })
 
-
-  const handleChange = (id, event) => {
-    setDataState({
-      ...dataState,
-      [id]: event.target.value
-    });
-  };
-
   const handleLogout = () => {
     setUser('user', {}, { path: '/' })
     window.location.reload()
