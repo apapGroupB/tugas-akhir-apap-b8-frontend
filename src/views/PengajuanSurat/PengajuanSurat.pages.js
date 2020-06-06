@@ -50,8 +50,13 @@ const UserList = (props) => {
     });
   };
 
+  console.log('ASDASD: ', `${BACKEND.GET_PENGAJUAN_UUID}/${props.allCookies.user.uuid}`)
+
   const [{ data: getData, loading: dataLoading, error: getError }, refetch] = useAxios(
-    getAxios(BACKEND.GET_ALL_PENGAJUAN, props.allCookies.user.jwttoken)
+    getAxios([3, 4].includes(props.allCookies.user.id_role) ?
+      `${BACKEND.GET_PENGAJUAN_UUID}/${props.allCookies.user.uuid}` :
+      BACKEND.GET_ALL_PENGAJUAN,
+      props.allCookies.user.jwttoken)
   );
 
   const [{ data: getMasterData, loading, error }] = useAxios(

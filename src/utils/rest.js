@@ -19,6 +19,7 @@ const BACKEND = {
   ADD_JENIS_LOWONGAN : SITE_URL + '/jenis-lowongan/add',
   GET_ALL_JENIS_SURAT: SITE_URL + '/jenis-surat/viewall',
   ADD_PENGAJUAN_SURAT: SITE_URL + '/pengajuan-surat/add',
+  GET_PENGAJUAN_UUID: SITE_URL + '/pengajuan-surat/view',
   GET_ALL_PENGAJUAN: SITE_URL + '/pengajuan-surat/viewall',
   GET_JENIS_LOWONGAN: SITE_URL + '/lowongan/jenis/viewall',
   DELETE_JENIS_LOWONGAN: SITE_URL + '/jenis-lowongan/delete',

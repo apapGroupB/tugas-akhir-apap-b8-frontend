@@ -61,7 +61,7 @@ const UpsertSurat = props => {
     uuid_user: props.allCookies.user.uuid
       })
   
-  console.log('dataState: ', dataState)
+  console.log('masterData: ', masterData)
 
 
   
@@ -178,9 +178,7 @@ const UpsertSurat = props => {
             value={dataState.id_jenis_surat}
             onChange={e => (handleChange("id_jenis_surat", e))}
             >
-            <MenuItem key={0} value={dataState.status}>
-              {statusConfig.defaultStatus[dataState.status].name}
-            </MenuItem>
+            <MenuItem key={0} value={dataState.status}>{' '}</MenuItem>
             {masterData.map((data, i) => 
               <MenuItem key={data.id} value={data.id}>{data.nama}</MenuItem>
             )}
