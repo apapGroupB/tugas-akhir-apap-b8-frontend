@@ -13,7 +13,7 @@ const PengajuanSurat = (props) => (
       type: 'linear',
       min: 0,
       max: 'auto',
-      stacked: true,
+      stacked: false,
       reverse: false
     }}
     curve="natural"

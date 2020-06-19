@@ -50,6 +50,7 @@ const UpsertSurat = props => {
       {
         ...dataItem,
         tanggal_disetujui: null,
+        tanggal_pengajuan: moment(dataItem.tanggal_pengajuan).format('YYYY-MM-DD'),
       } :
     {
     nomor_surat: "0",
@@ -61,7 +62,7 @@ const UpsertSurat = props => {
     uuid_user: props.allCookies.user.uuid
       })
   
-  console.log('masterData: ', masterData)
+  console.log('masterData: ', dataState)
 
 
   
