@@ -12,6 +12,7 @@ import ReorderIcon from '@material-ui/icons/Reorder';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
 import { Profile, SidebarNav, UpgradePlan } from './components';
+import { withCookies } from 'react-cookie';
 
 const useStyles = makeStyles(theme => ({
   drawer: {
@@ -37,11 +38,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Sidebar = props => {
-  const { open, variant, onClose, className, ...rest } = props;
+  const { open, variant, onClose, className, allCookies, ...rest } = props;
+
 
   const classes = useStyles();
 
-  const pages = [
+  const pages = allCookies.user.id_role === 2 ? [
     {
       title: 'Home',
       href: '/dashboard',
@@ -71,12 +73,23 @@ const Sidebar = props => {
       title: 'Pinjaman',
       href: '/pinjaman',
       icon: <AccountBalanceWalletIcon />
+    }
+  ] : [
+    {
+      title: 'Home',
+      href: '/dashboard',
+      icon: <DashboardIcon />
     },
     {
-      title: 'Lainnya',
-      href: '/lainnya',
-      icon: <ReorderIcon />
+      title: 'Pengajuan Surat',
+      href: '/pengajuan-surat',
+      icon: <EmailIcon />
     },
+    {
+      title: 'Pinjaman',
+      href: '/pinjaman',
+      icon: <AccountBalanceWalletIcon />
+    }
   ];
 
   return (
@@ -110,4 +123,4 @@ Sidebar.propTypes = {
   variant: PropTypes.string.isRequired
 };
 
-export default Sidebar;
+export default withCookies(Sidebar);

@@ -126,7 +126,7 @@ const UpsertUser = props => {
     >
       <Modal>
       <div>
-        <Title>{'Tambah User'}</Title>
+        <Title>{`${actionType} User`}</Title>
         <ColumnContainer full>
           <TextField
             error={errorField.find((dt) => dt === "nama") ? true : false}
