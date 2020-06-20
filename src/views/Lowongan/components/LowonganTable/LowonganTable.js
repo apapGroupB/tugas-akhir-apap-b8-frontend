@@ -82,6 +82,8 @@ const LowonganTable = props => {
     setRowsPerPage(event.target.value);
   };
 
+  console.log('_.orderBy', _.orderBy(dataState, ['id'], ['desc']))
+
   return (
     <Card
       {...rest}
@@ -126,7 +128,7 @@ const LowonganTable = props => {
                     hover
                     key={user.id}
                   >
-                    <TableCell>{user.jumlah && (page*10)+(index + 1)}</TableCell>
+                    <TableCell>{user.judul && (page*10)+(index + 1)}</TableCell>
                     <TableCell>{user.judul}</TableCell>
                     <TableCell>{
                     jenis.find(e => e.id === user.id_jenis_lowongan) ?
@@ -139,7 +141,7 @@ const LowonganTable = props => {
                     </TableCell>
                     <TableCell>{user.keterangan}</TableCell>
                     <TableCell>
-                      {user.jumlah ? <div>
+                      {user.judul ? <div>
                         {allCookies.user.id_role === 2 &&
                         moment().format() < moment(user.tanggal_dibuka).format() ?
                         <IconButton 

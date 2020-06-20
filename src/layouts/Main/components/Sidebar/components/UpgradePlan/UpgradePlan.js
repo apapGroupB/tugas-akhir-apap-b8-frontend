@@ -65,7 +65,7 @@ const UpgradePlan = props => {
           component="a"
           color="primary"
           target="_blank"
-          href="https://si-perpus-b6-frontend.herokuapp.com/sign-in"
+          href="http://si-ruangan-groupb.herokuapp.com/"
         >
           <HomeWorkIcon style={{ margin: 5 }} />
           SI Ruangan

@@ -49,8 +49,9 @@ const UpsertSurat = props => {
     actionType === 'Edit' ?
       {
         ...dataItem,
-        tanggal_disetujui: null,
-        tanggal_pengajuan: moment(dataItem.tanggal_pengajuan).format('YYYY-MM-DD'),
+        tanggal_disetujui: dataItem.tanggal_disetujui !== '-'
+          ? moment(dataItem.tanggal_disetujui, 'DD/MM/YYYY').format('YYYY-MM-DD') : null,
+        tanggal_pengajuan: moment(dataItem.tanggal_pengajuan, 'DD/MM/YYYY').format('YYYY-MM-DD'),
       } :
     {
     nomor_surat: "0",
@@ -61,10 +62,6 @@ const UpsertSurat = props => {
     keterangan: "",
     uuid_user: props.allCookies.user.uuid
       })
-  
-  console.log('masterData: ', dataState)
-
-
   
   const handleNumberChange = (event) => {
     setDataState({
@@ -171,7 +168,7 @@ const UpsertSurat = props => {
         <InputLabel id="demo-simple-select-label">Jenis Surat</InputLabel>
           <Select
             disabled={(actionType === 'Edit' &&
-            dataState.uuid_user === props.allCookies.user.uuid) ||
+            dataState.uuid_user === props.allCookies.user.uuid) && !dataState.tanggal_disetujui ||
             actionType === 'Tambah' ? 
             false : true}
             labelId="demo-simple-select-label"
@@ -241,7 +238,7 @@ const UpsertSurat = props => {
         <ColumnContainer full>
             <TextField
               disabled={(actionType === 'Edit' &&
-              dataState.uuid_user === props.allCookies.user.uuid) ||
+              dataState.uuid_user === props.allCookies.user.uuid) && !dataState.tanggal_disetujui ||
               actionType === 'Tambah' ?
               false : true}
               id="nomor_surat"
