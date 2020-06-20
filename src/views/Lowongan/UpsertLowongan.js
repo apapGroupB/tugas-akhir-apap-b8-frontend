@@ -50,7 +50,11 @@ const UpsertLowongan = props => {
   const [postLoading, setPostLoading] = useState(false)
   const [dataState, setDataState] = useState(
     actionType === 'Edit' ?
-    dataItem : 
+      {
+        ...dataItem,
+        tanggal_dibuka: moment(dataItem.tanggal_dibuka, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+        tanggal_ditutup: moment(dataItem.tanggal_ditutup, 'DD/MM/YYYY').add(7, 'days').format('YYYY-MM-DD'),
+      } : 
     {
     judul: "",
     jumlah: "",
@@ -66,6 +70,8 @@ const UpsertLowongan = props => {
     id_jenis_lowongan: false,
     tanggal_dibuka: false,
   })
+
+  console.log('LOWONGAN: ', dataState)
   
   const handleNumberChange = (event) => {
     setDataState({
@@ -206,8 +212,8 @@ const UpsertLowongan = props => {
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <ColumnContainer>
           <KeyboardDatePicker
-            error={dataState.tanggal_dibuka < moment().format('YYYY-MM-DD')}
-            helperText={dataState.tanggal_dibuka < moment().format('YYYY-MM-DD') ?
+            error={actionType === 'Tambah' && dataState.tanggal_dibuka < moment().format('YYYY-MM-DD')}
+            helperText={actionType === 'Tambah' && dataState.tanggal_dibuka < moment().format('YYYY-MM-DD') ?
               'Tanggal dibuka minimal hari ini' :
               ''}
             disabled={actionType === 'Edit' ? true : false}
@@ -227,8 +233,8 @@ const UpsertLowongan = props => {
         <ColumnContainer>
         <KeyboardDatePicker
             disableToolbar
-            error={dataState.tanggal_ditutup < moment(dataState.tanggal_dibuka).add(1, 'days').format('YYYY-MM-DD')}
-            helperText={dataState.tanggal_ditutup < moment(dataState.tanggal_dibuka).add(1, 'days').format('YYYY-MM-DD') ?
+            error={actionType === 'Tambah' && dataState.tanggal_ditutup < moment(dataState.tanggal_dibuka).add(1, 'days').format('YYYY-MM-DD')}
+            helperText={actionType === 'Tambah' && dataState.tanggal_ditutup < moment(dataState.tanggal_dibuka).add(1, 'days').format('YYYY-MM-DD') ?
               'Minimal 1 hari setelah tanggal dibuka' :
               ''}
             disabled={actionType === 'Edit' ? true : false}

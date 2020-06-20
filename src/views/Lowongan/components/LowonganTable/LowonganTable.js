@@ -143,7 +143,7 @@ const LowonganTable = props => {
                     <TableCell>
                       {user.judul ? <div>
                         {allCookies.user.id_role === 2 &&
-                        moment().format() < moment(user.tanggal_dibuka).format() ?
+                        moment().format() < moment(user.tanggal_dibuka, 'DD/MM/YYYY').format() ?
                         <IconButton 
                           color="primary" 
                           onClick={() => {
